@@ -2,7 +2,7 @@ package beyond.momentours.plan.command.application.controller;
 
 import beyond.momentours.common.exception.CommonException;
 import beyond.momentours.plan.command.application.dto.PlanDTO;
-import beyond.momentours.plan.command.application.mapper.PlanMapper;
+import beyond.momentours.plan.command.application.mapper.PlanConverter;
 import beyond.momentours.plan.command.application.service.PlanService;
 import beyond.momentours.plan.command.domain.vo.request.RequestRegisterPlanVO;
 import beyond.momentours.plan.command.domain.vo.response.ResponseRegisterPlanVO;
@@ -19,15 +19,15 @@ import org.springframework.web.bind.annotation.*;
 public class PlanController {
 
     private final PlanService planService;
-    private final PlanMapper planMapper;
+    private final PlanConverter planConverter;
 
     @PostMapping("/register")
     public ResponseEntity<?> registerPlan(@RequestBody RequestRegisterPlanVO request) {
         log.info("등록 요청된 request 데이터 : {}", request);
         try {
-            PlanDTO planDTO = planMapper.fromRegisterVOToDTO(request);
+            PlanDTO planDTO = planConverter.fromRegisterVOToDTO(request);
             PlanDTO savePlanDTO = planService.registerPlan(planDTO);
-            ResponseRegisterPlanVO response = planMapper.fromDTOToRegisterVO(savePlanDTO);
+            ResponseRegisterPlanVO response = planConverter.fromDTOToRegisterVO(savePlanDTO);
 
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (CommonException e) {

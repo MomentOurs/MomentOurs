@@ -1,4 +1,4 @@
-package beyond.momentours.mapper;
+package beyond.momentours.plan.query.repository;
 
 import org.apache.ibatis.annotations.Mapper;
 
