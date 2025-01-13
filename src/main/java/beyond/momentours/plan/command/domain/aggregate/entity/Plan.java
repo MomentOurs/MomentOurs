@@ -19,31 +19,31 @@ public class Plan {
     @Column(name = "plan_id")
     private Long planId;
 
-    @Column(name = "plan_title")
+    @Column(name = "plan_title", nullable = false)
     private String planTitle;
 
-    @Column(name = "plan_content")
+    @Column(name = "plan_content", nullable = false)
     private String planContent;
 
-    @Column(name = "plan_start_date")
+    @Column(name = "plan_start_date", nullable = false)
     private LocalDateTime planStartDate;
 
-    @Column(name = "plan_end_date")
+    @Column(name = "plan_end_date", nullable = false)
     private LocalDateTime planEndDate;
 
-    @Column(name = "plan_status")
+    @Column(name = "plan_status", nullable = false)
     private Boolean planStatus;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    @Column(name = "member_id")
+    @Column(name = "member_id", nullable = false)
     private Long memberId;
 
-    @Column(name = "couple_id")
+    @Column(name = "couple_id", nullable = false)
     private Long coupleId;
 
     @Column(name = "course_id")
