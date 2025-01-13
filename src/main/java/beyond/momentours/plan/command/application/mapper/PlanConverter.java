@@ -7,7 +7,7 @@ import beyond.momentours.plan.command.domain.vo.response.ResponseRegisterPlanVO;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PlanMapper {
+public class PlanConverter {
     public PlanDTO fromRegisterVOToDTO(RequestRegisterPlanVO registerPlanVO) {
         return PlanDTO.builder()
                 .planTitle(registerPlanVO.getPlanTitle())

@@ -1,9 +1,10 @@
 package beyond.momentours.plan.command.application.service;
 
-import beyond.momentours.mapper.PlanMapper;
+import beyond.momentours.plan.command.application.mapper.PlanConverter;
 import beyond.momentours.plan.command.application.dto.PlanDTO;
 import beyond.momentours.plan.command.domain.aggregate.entity.Plan;
 import beyond.momentours.plan.command.domain.repository.PlanRepository;
+import beyond.momentours.plan.query.repository.PlanMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,8 +15,8 @@ import org.springframework.stereotype.Service;
 public class PlanServiceImpl implements PlanService {
 
     private final PlanRepository planRepository;
+    private final PlanConverter planConverter;
     private final PlanMapper planDAO;
-    private final beyond.momentours.plan.command.application.mapper.PlanMapper planMapper;
 
     @Override
     public PlanDTO registerPlan(PlanDTO planDTO) {
@@ -24,7 +25,7 @@ public class PlanServiceImpl implements PlanService {
 
         log.info("memberId : {} , coupleId : {}", memberId, coupleId);
 
-        Plan plan = planMapper.fromDTOToEntity(planDTO, coupleId);
+        Plan plan = planConverter.fromDTOToEntity(planDTO, coupleId);
 
         if (planDTO.getCourseId() != null) {
             Long courseId = planDAO.findByCourseId(planDTO.getCourseId());
@@ -38,7 +39,7 @@ public class PlanServiceImpl implements PlanService {
         planRepository.save(plan);
         log.info("저장 후 plan : {}", plan);
 
-        PlanDTO result = planMapper.fromEntityToDTO(plan);
+        PlanDTO result = planConverter.fromEntityToDTO(plan);
 
         return result;
     }
