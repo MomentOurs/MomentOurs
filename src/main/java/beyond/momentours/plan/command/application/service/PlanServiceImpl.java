@@ -23,7 +23,7 @@ public class PlanServiceImpl implements PlanService {
     @Override
     public PlanDTO registerPlan(PlanDTO planDTO) {
         // 로그인 사용자 ID를 토큰에서 가져오기
-        Long memberId = getLoggedInMemberId(); // getLoggedInMemberId 는 로그인한 유저의 memberId를 토큰에서 가져온다는 가정으로 써둔 메서드
+        Long memberId = getLoggedInMemberId();; // getLoggedInMemberId 는 로그인한 유저의 memberId를 토큰에서 가져온다는 가정으로 써둔 메서드
         planDTO.setMemberId(memberId);
 
         Long coupleId = planDAO.findByCoupleId(memberId);
@@ -50,7 +50,7 @@ public class PlanServiceImpl implements PlanService {
 
     @Override
     public PlanDTO editPlan(PlanDTO planDTO) {
-        Long memberId = getLoggedInMemberId(); // 로그인한 사용자의 ID 가져오기
+        Long memberId = getLoggedInMemberId();; // 로그인한 사용자의 ID 가져오기
         planDTO.setMemberId(memberId);
 
         Plan existingPlan = planRepository.findById(planDTO.getPlanId()).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_PLAN));
