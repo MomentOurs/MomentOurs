@@ -24,6 +24,9 @@ public class ResponseRegisterPlanVO {
     @JsonProperty("plan_end_date")
     private LocalDateTime planEndDate;
 
+    @JsonProperty("plan_reminder_datetime")
+    private LocalDateTime planReminderDatetime;
+
     @JsonProperty("created_at")
     private LocalDateTime createdAt;
 
