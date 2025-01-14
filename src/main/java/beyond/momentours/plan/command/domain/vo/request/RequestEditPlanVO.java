@@ -1,4 +1,4 @@
-package beyond.momentours.plan.command.domain.vo.response;
+package beyond.momentours.plan.command.domain.vo.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -6,12 +6,14 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Getter
-@ToString
-@EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ResponseRegisterPlanVO {
+@ToString
+public class RequestEditPlanVO {
+    @JsonProperty("plan_id")
+    private Long planId;
+
     @JsonProperty("plan_title")
     private String planTitle;
 
@@ -26,18 +28,6 @@ public class ResponseRegisterPlanVO {
 
     @JsonProperty("plan_reminder_datetime")
     private LocalDateTime planReminderDatetime;
-
-    @JsonProperty("created_at")
-    private LocalDateTime createdAt;
-
-    @JsonProperty("updated_at")
-    private LocalDateTime updatedAt;
-
-    @JsonProperty("member_id")
-    private Long memberId;
-
-    @JsonProperty("couple_id")
-    private Long coupleId;
 
     @JsonProperty("course_id")
     private Long courseId;

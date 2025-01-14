@@ -16,6 +16,7 @@ public class PlanDTO {
     private String planContent;
     private LocalDateTime planStartDate;
     private LocalDateTime planEndDate;
+    private LocalDateTime planReminderDatetime;
     private Boolean planStatus;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

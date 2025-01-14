@@ -23,8 +23,8 @@ public class RequestRegisterPlanVO {
     @JsonProperty("plan_end_date")
     private LocalDateTime planEndDate;
 
-    @JsonProperty("member_id")
-    private Long memberId;
+    @JsonProperty("plan_reminder_datetime")
+    private LocalDateTime planReminderDatetime;
 
     @JsonProperty("course_id")
     private Long courseId;
