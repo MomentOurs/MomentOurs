@@ -33,22 +33,56 @@ public class MomentServiceImpl implements MomentService {
     @Transactional
     @Override
     public ResponseMomentDTO createMoment(RequestMomentDTO requestMomentDTO) {
+        System.out.println("Latitude: " + requestMomentDTO.getLatitude());
+        System.out.println("Longitude: " + requestMomentDTO.getLongitude());
 
         // 추억 등록 시 참조하는 장소가 DB에 존재하는 장소인지 확인
         Location location = locationRepository.findByLatitudeAndLongitude(
                 requestMomentDTO.getLatitude(),
                 requestMomentDTO.getLongitude()
         ).orElseGet(() -> { // 존재하지 않으면, 장소 테이블에 새로운 장소 삽입
-            Location newLocation = modelMapper.map(requestMomentDTO, Location.class);
+            Location newLocation = Location.builder()
+                    .latitude(requestMomentDTO.getLatitude())
+                    .longitude(requestMomentDTO.getLongitude())
+                    .locationName(requestMomentDTO.getLocationName())
+                    .build();
             return locationRepository.save(newLocation);
         });
 
-        Moment moment = modelMapper.map(requestMomentDTO, Moment.class);
-        moment.setLocationId(location.getLocationId());
-        moment.setCreatedAt(LocalDateTime.now());
-        moment.setUpdatedAt(LocalDateTime.now());
+        // 추억 저장
+        Moment moment = Moment.builder()
+                .momentTitle(requestMomentDTO.getMomentTitle())
+                .momentCategory(requestMomentDTO.getMomentCategory())
+                .momentContent(requestMomentDTO.getMomentContent())
+                .momentDisclosure(requestMomentDTO.isMomentDisclosure())
+                .momentCommentStatus(requestMomentDTO.isMomentCommentStatus())
+                .momentLike(0)
+                .momentView(0)
+                .momentStatus(true)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .locationId(location.getLocationId())
+                .memberId(requestMomentDTO.getMemberId())
+        .build();
 
         Moment savedMoment = momentRepository.save(moment);
-        return modelMapper.map(savedMoment, ResponseMomentDTO.class);
+
+        ResponseMomentDTO responseMomentDTO = ResponseMomentDTO.builder()
+                .momentId(savedMoment.getMomentId())
+                .momentTitle(savedMoment.getMomentTitle())
+                .momentCategory(savedMoment.getMomentCategory())
+                .momentContent(savedMoment.getMomentContent())
+                .momentDisclosure(savedMoment.isMomentDisclosure())
+                .momentCommentStatus(savedMoment.isMomentCommentStatus())
+                .momentLike(savedMoment.getMomentLike())
+                .momentView(savedMoment.getMomentView())
+                .momentStatus(savedMoment.isMomentStatus())
+                .createdAt(savedMoment.getCreatedAt())
+                .updatedAt(savedMoment.getUpdatedAt())
+                .locationId(savedMoment.getLocationId())
+                .memberId(savedMoment.getMemberId())
+                .build();
+
+        return responseMomentDTO;
     }
 }

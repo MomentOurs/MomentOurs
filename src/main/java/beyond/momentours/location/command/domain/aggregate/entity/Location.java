@@ -1,19 +1,17 @@
 package beyond.momentours.location.command.domain.aggregate.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
 @Table(name = "tb_location")
 @Entity
+@ToString
 @Builder
 public class Location {
 
@@ -22,10 +20,10 @@ public class Location {
     @Column(name = "location_id")
     private Long locationId;
 
-    @Column(name = "latitude")
+    @Column(name = "latitude", precision = 10, scale = 7)
     private BigDecimal latitude;
 
-    @Column(name = "longitude")
+    @Column(name = "longitude", precision = 10, scale = 7)
     private BigDecimal longitude;
 
     @Column(name = "location_name")
