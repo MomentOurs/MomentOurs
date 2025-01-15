@@ -1,19 +1,14 @@
 package beyond.momentours.member.domain.vo.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 public class RequestSignupMemberVO {
-
-    @JsonProperty("member_id")
-    private Long memberId;
 
     @JsonProperty("member_email")
     private String memberEmail;

@@ -2,10 +2,7 @@ package beyond.momentours.member.domain.aggregate.entity;
 
 import beyond.momentours.plan.command.domain.aggregate.entity.Plan;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -14,6 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 @Table(name = "tb_member")
 public class Member {
 
@@ -68,6 +66,11 @@ public class Member {
     @PreUpdate
     private void preUpdate() {
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public void memberInfo(String memberEmail, String memberRole) {
+        this.memberEmail = memberEmail;
+        this.memberRole = MemberRole.valueOf(memberRole);
     }
 
 }
