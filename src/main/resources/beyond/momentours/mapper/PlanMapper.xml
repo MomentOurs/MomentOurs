@@ -27,9 +27,18 @@
 
     <select id="findByCourseId" resultType="int" parameterType="int">
         SELECT course_id
-        FROM tb_date_course
-        WHERE course_id = #{courseId}
-        AND course_status = 1;
+          FROM tb_date_course
+         WHERE course_id = #{courseId}
+           AND course_status = 1;
+    </select>
+
+    <select id="findByCoupleIdAndDateRange" resultMap="planResultMap">
+        SELECT plan_id, plan_title, plan_content, plan_start_date, plan_end_date, plan_status, created_at, updated_at, member_id, couple_id, course_id
+          FROM tb_plan
+         WHERE couple_id = #{coupleId}
+           AND plan_start_date >= #{planStartDate}
+           AND plan_end_date <= #{planEndDate}
+           AND plan_status = 1;
     </select>
 
 </mapper>
