@@ -103,4 +103,8 @@ public class Plan {
         }
     }
 
+    public void updateStatus(boolean status) {
+        this.planStatus = status;
+        this.updatedAt = LocalDateTime.now();
+    }
 }
