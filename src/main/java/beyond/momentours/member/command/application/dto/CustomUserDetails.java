@@ -1,6 +1,6 @@
 package beyond.momentours.member.command.application.dto;
 
-import beyond.momentours.member.domain.aggregate.entity.Member;
+import beyond.momentours.member.command.domain.aggregate.entity.Member;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
