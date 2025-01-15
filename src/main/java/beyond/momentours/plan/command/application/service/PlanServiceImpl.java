@@ -11,6 +11,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Slf4j
 @Service("commandPlanService")
 @RequiredArgsConstructor
@@ -96,6 +100,27 @@ public class PlanServiceImpl implements PlanService {
         return planConverter.fromEntityToDTO(existingPlan);
     }
 
+    @Override
+    public List<PlanDTO> getSchedules(int year, int month) {
+        LocalDateTime planStartDate = LocalDateTime.of(year, month, 1, 0, 0, 0);
+        LocalDateTime planEndDate = planStartDate.withDayOfMonth(planStartDate.toLocalDate().lengthOfMonth())
+                .withHour(23)
+                .withMinute(59)
+                .withSecond(59);
+
+        log.info("스케줄 조회 - 시작 날짜: {}, 종료 날짜: {}", planStartDate, planEndDate);
+
+//        Long memberId = getLoggedInMemberId(); // 로그인한 사용자의 ID 가져오기
+        Long memberId = 0L;
+        Long coupleId = planDAO.findByCoupleId(memberId);
+        log.info("memberId : {} , coupleId : {}", memberId, coupleId);
+
+        List<Plan> plans = planDAO.findByCoupleIdAndDateRange(coupleId, planStartDate, planEndDate);
+
+        return plans.stream()
+                .map(planConverter::fromEntityToDTO)
+                .toList();
+    }
 
     private void updatePlan(PlanDTO planDTO, Plan existingPlan) {
         if (planDTO.getPlanTitle() != null) existingPlan.updateTitle(planDTO.getPlanTitle());
