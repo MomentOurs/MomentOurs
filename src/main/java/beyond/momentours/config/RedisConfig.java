@@ -1,4 +1,4 @@
-package com.threeping.syncday.user.config;
+package beyond.momentours.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

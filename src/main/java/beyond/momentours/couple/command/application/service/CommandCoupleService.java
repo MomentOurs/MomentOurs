@@ -1,2 +1,5 @@
-package beyond.momentours.couple.command.application.service;public interface CommandCoupleService {
+package beyond.momentours.couple.command.application.service;
+
+public interface CommandCoupleService {
+
 }
