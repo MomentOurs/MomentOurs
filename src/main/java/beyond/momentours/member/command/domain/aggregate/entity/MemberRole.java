@@ -1,4 +1,4 @@
-package beyond.momentours.member.domain.aggregate.entity;
+package beyond.momentours.member.command.domain.aggregate.entity;
 
 public enum MemberRole {
     ROLE_MEMBER,

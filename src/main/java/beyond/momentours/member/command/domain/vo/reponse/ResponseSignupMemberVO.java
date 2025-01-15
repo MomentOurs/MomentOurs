@@ -1,14 +1,22 @@
-package beyond.momentours.member.domain.vo.request;
+package beyond.momentours.member.command.domain.vo.reponse;
 
+import beyond.momentours.member.command.domain.aggregate.entity.MemberRole;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString
-public class RequestSignupMemberVO {
+public class ResponseSignupMemberVO {
+
+//    @JsonProperty("member_id")
+//    private Long memberId;
 
     @JsonProperty("member_email")
     private String memberEmail;
@@ -33,4 +41,13 @@ public class RequestSignupMemberVO {
 
     @JsonProperty("member_mbti")
     private String memberMbti;
+
+    @JsonProperty("created_at")
+    private LocalDateTime createdAt;
+
+    @JsonProperty("updated_at")
+    private LocalDateTime updatedAt;
+
+    @JsonProperty("member_role")
+    private MemberRole memberRole;
 }

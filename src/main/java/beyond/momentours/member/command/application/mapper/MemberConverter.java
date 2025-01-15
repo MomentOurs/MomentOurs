@@ -2,12 +2,12 @@ package beyond.momentours.member.command.application.mapper;
 
 import beyond.momentours.member.command.application.dto.LoginDTO;
 import beyond.momentours.member.command.application.dto.MemberDTO;
-import beyond.momentours.member.domain.aggregate.entity.Member;
-import beyond.momentours.member.domain.aggregate.entity.MemberRole;
-import beyond.momentours.member.domain.vo.reponse.ResponseLoginMemberVO;
-import beyond.momentours.member.domain.vo.reponse.ResponseSignupMemberVO;
-import beyond.momentours.member.domain.vo.request.RequestLoginMemberVO;
-import beyond.momentours.member.domain.vo.request.RequestSignupMemberVO;
+import beyond.momentours.member.command.domain.aggregate.entity.Member;
+import beyond.momentours.member.command.domain.aggregate.entity.MemberRole;
+import beyond.momentours.member.command.domain.vo.reponse.ResponseLoginMemberVO;
+import beyond.momentours.member.command.domain.vo.reponse.ResponseSignupMemberVO;
+import beyond.momentours.member.command.domain.vo.request.RequestLoginMemberVO;
+import beyond.momentours.member.command.domain.vo.request.RequestSignupMemberVO;
 import org.springframework.stereotype.Component;
 
 @Component

@@ -1,6 +1,6 @@
-package beyond.momentours.member.domain.repository;
+package beyond.momentours.member.command.domain.repository;
 
-import beyond.momentours.member.domain.aggregate.entity.Member;
+import beyond.momentours.member.command.domain.aggregate.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {

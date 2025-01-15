@@ -1,7 +1,7 @@
 package beyond.momentours.security;
 
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
-import beyond.momentours.member.domain.aggregate.entity.Member;
+import beyond.momentours.member.command.domain.aggregate.entity.Member;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

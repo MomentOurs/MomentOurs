@@ -1,6 +1,6 @@
 package beyond.momentours.member.command.application.dto;
 
-import beyond.momentours.member.domain.aggregate.entity.MemberRole;
+import beyond.momentours.member.command.domain.aggregate.entity.MemberRole;
 import lombok.*;
 
 import java.time.LocalDateTime;

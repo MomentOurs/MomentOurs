@@ -1,4 +1,4 @@
-package beyond.momentours.member.domain.vo.request;
+package beyond.momentours.member.command.domain.vo.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;

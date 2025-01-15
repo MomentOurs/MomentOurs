@@ -1,6 +1,5 @@
-package beyond.momentours.member.domain.aggregate.entity;
+package beyond.momentours.member.command.domain.aggregate.entity;
 
-import beyond.momentours.plan.command.domain.aggregate.entity.Plan;
 import jakarta.persistence.*;
 import lombok.*;
 
