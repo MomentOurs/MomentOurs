@@ -56,8 +56,11 @@ public class PlanServiceImpl implements PlanService {
         Plan existingPlan = planRepository.findById(planDTO.getPlanId()).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_PLAN));
         log.info("기존 Plan 데이터: {}", existingPlan);
 
-        if (!existingPlan.getMemberId().equals(memberId)) {
-            log.error("수정 권한 없음 : 요청한 사용자 ID: {}, Plan 소유자 ID: {}", memberId, existingPlan.getMemberId());
+        Long coupleId = planDAO.findByCoupleId(memberId);
+        log.info("memberId : {} , coupleId : {}", memberId, coupleId);
+
+        if (!existingPlan.getCoupleId().equals(coupleId)) {
+            log.error("수정 권한 없음 : 요청한 사용자 ID: {}, 요청한 사용자의 커플 ID: {}, Plan 소유자 ID: {}, Plan 소유자의 커플 ID: {}", memberId, coupleId, existingPlan.getMemberId(), existingPlan.getCoupleId());
             throw new CommonException(ErrorCode.ACCESS_DENIED);
         }
 
@@ -77,8 +80,11 @@ public class PlanServiceImpl implements PlanService {
 
 //        Long memberId = getLoggedInMemberId(); // 로그인한 사용자의 ID 가져오기
         Long memberId = 0L;
-        if (!existingPlan.getMemberId().equals(memberId)) {
-            log.error("삭제 권한 없음: 요청한 사용자 ID: {}, Plan 소유자 ID: {}", memberId, existingPlan.getMemberId());
+        Long coupleId = planDAO.findByCoupleId(memberId);
+        log.info("memberId : {} , coupleId : {}", memberId, coupleId);
+
+        if (!existingPlan.getCoupleId().equals(coupleId)) {
+            log.error("삭제 권한 없음 : 요청한 사용자 ID: {}, 요청한 사용자의 커플 ID: {}, Plan 소유자 ID: {}, Plan 소유자의 커플 ID: {}", memberId, coupleId, existingPlan.getMemberId(), existingPlan.getCoupleId());
             throw new CommonException(ErrorCode.ACCESS_DENIED);
         }
 
