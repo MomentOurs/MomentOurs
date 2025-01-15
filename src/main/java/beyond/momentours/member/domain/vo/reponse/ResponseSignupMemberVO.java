@@ -15,8 +15,8 @@ import java.time.LocalDateTime;
 @Builder
 public class ResponseSignupMemberVO {
 
-    @JsonProperty("member_id")
-    private Long memberId;
+//    @JsonProperty("member_id")
+//    private Long memberId;
 
     @JsonProperty("member_email")
     private String memberEmail;
