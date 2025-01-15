@@ -23,7 +23,8 @@ public class PlanServiceImpl implements PlanService {
     @Override
     public PlanDTO registerPlan(PlanDTO planDTO) {
         // 로그인 사용자 ID를 토큰에서 가져오기
-        Long memberId = getLoggedInMemberId(); // getLoggedInMemberId 는 로그인한 유저의 memberId를 토큰에서 가져온다는 가정으로 써둔 메서드
+//        Long memberId = getLoggedInMemberId(); // getLoggedInMemberId 는 로그인한 유저의 memberId를 토큰에서 가져온다는 가정으로 써둔 메서드
+        Long memberId = 0L;
         planDTO.setMemberId(memberId);
 
         Long coupleId = planDAO.findByCoupleId(memberId);
@@ -43,21 +44,23 @@ public class PlanServiceImpl implements PlanService {
         planRepository.save(plan);
         log.info("저장 후 plan : {}", plan);
 
-        PlanDTO result = planConverter.fromEntityToDTO(plan);
-
-        return result;
+        return planConverter.fromEntityToDTO(plan);
     }
 
     @Override
     public PlanDTO editPlan(PlanDTO planDTO) {
-        Long memberId = getLoggedInMemberId(); // 로그인한 사용자의 ID 가져오기
+//        Long memberId = getLoggedInMemberId(); // 로그인한 사용자의 ID 가져오기
+        Long memberId = 0L;
         planDTO.setMemberId(memberId);
 
         Plan existingPlan = planRepository.findById(planDTO.getPlanId()).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_PLAN));
         log.info("기존 Plan 데이터: {}", existingPlan);
 
-        if (!existingPlan.getMemberId().equals(memberId)) {
-            log.error("수정 권한 없음 : 요청한 사용자 ID: {}, Plan 소유자 ID: {}", memberId, existingPlan.getMemberId());
+        Long coupleId = planDAO.findByCoupleId(memberId);
+        log.info("memberId : {} , coupleId : {}", memberId, coupleId);
+
+        if (!existingPlan.getCoupleId().equals(coupleId)) {
+            log.error("수정 권한 없음 : 요청한 사용자 ID: {}, 요청한 사용자의 커플 ID: {}, Plan 소유자 ID: {}, Plan 소유자의 커플 ID: {}", memberId, coupleId, existingPlan.getMemberId(), existingPlan.getCoupleId());
             throw new CommonException(ErrorCode.ACCESS_DENIED);
         }
 
@@ -68,6 +71,31 @@ public class PlanServiceImpl implements PlanService {
 
         return planConverter.fromEntityToDTO(existingPlan);
     }
+
+    @Override
+    public PlanDTO deletePlan(Long planId) {
+        // Plan 조회
+        Plan existingPlan = planRepository.findById(planId).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_PLAN));
+        log.info("삭제 요청된 Plan 데이터: {}", existingPlan);
+
+//        Long memberId = getLoggedInMemberId(); // 로그인한 사용자의 ID 가져오기
+        Long memberId = 0L;
+        Long coupleId = planDAO.findByCoupleId(memberId);
+        log.info("memberId : {} , coupleId : {}", memberId, coupleId);
+
+        if (!existingPlan.getCoupleId().equals(coupleId)) {
+            log.error("삭제 권한 없음 : 요청한 사용자 ID: {}, 요청한 사용자의 커플 ID: {}, Plan 소유자 ID: {}, Plan 소유자의 커플 ID: {}", memberId, coupleId, existingPlan.getMemberId(), existingPlan.getCoupleId());
+            throw new CommonException(ErrorCode.ACCESS_DENIED);
+        }
+
+        existingPlan.updateStatus(false);
+        log.info("상태 변경 후 Plan : {}", existingPlan);
+
+        planRepository.save(existingPlan);
+
+        return planConverter.fromEntityToDTO(existingPlan);
+    }
+
 
     private void updatePlan(PlanDTO planDTO, Plan existingPlan) {
         if (planDTO.getPlanTitle() != null) existingPlan.updateTitle(planDTO.getPlanTitle());
