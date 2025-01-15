@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController("commandPlanController")
 @RequestMapping("api/plan")
 @Slf4j
@@ -73,4 +75,20 @@ public class PlanController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("예상치 못한 오류가 발생했습니다");
         }
     }
+
+    @GetMapping("/schedules")
+    public ResponseEntity<?> getSchedules(@RequestParam int year, @RequestParam int month) {
+        log.info("스케줄 요청 year: {}, month: {}", year, month);
+        try {
+            List<PlanDTO> schedules = planService.getSchedules(year, month);
+            return ResponseEntity.status(HttpStatus.OK).body(schedules);
+        } catch (CommonException e) {
+            log.error("스케줄 조회 오류: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            log.error("예상치 못한 오류", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("예상치 못한 오류가 발생했습니다");
+        }
+    }
+
 }
