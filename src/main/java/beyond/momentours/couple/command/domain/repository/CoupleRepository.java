@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface CoupleRepository extends JpaRepository<Long, CoupleList> {
+public interface CoupleRepository extends JpaRepository<CoupleList, Long> {
     @Query("SELECT c FROM CoupleList c " +
             "WHERE (c.memberId1 = :memberId OR c.memberId2 = :memberId) " +
             "AND c.coupleStatus = true")

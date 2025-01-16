@@ -1,9 +1,6 @@
 package beyond.momentours.couple.command.domain.aggregate.entity;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -11,6 +8,7 @@ import java.util.UUID;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Setter
 public class MatchingCode {
     private String id;
     private Long userId;
@@ -25,9 +23,5 @@ public class MatchingCode {
                 LocalDateTime.now(),
                 MatchingStatus.PENDING
         );
-    }
-
-    public void setMatchingStatus(MatchingStatus matchingStatus) {
-        this.matchingStatus = matchingStatus;
     }
 }

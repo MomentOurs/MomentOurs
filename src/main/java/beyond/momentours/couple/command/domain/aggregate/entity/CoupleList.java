@@ -34,7 +34,7 @@ public class CoupleList {
     private Boolean coupleStatus;
 
     @Column(name = "couple_matching_status")
-    private Boolean coupleMatchingStatus;
+    private CoupleMatchingStatus coupleMatchingStatus;
 
     @Column(name = "member_id1")
     private Long memberId1;

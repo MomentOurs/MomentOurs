@@ -4,6 +4,7 @@ import beyond.momentours.common.ResponseDTO;
 import beyond.momentours.couple.command.application.service.CommandCoupleService;
 import beyond.momentours.couple.command.application.service.CoupleMatchingService;
 import beyond.momentours.couple.command.domain.aggregate.entity.MatchingCode;
+import beyond.momentours.couple.command.domain.vo.MatchingCodeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +24,7 @@ public class CommandCoupleController {
     @PostMapping("/{userId}")
     public ResponseDTO<?> createMatchingCode(@PathVariable Long userId) {
         byte[] matchingCode = coupleMatchingService.createMatchingCode(userId);
-        return ResponseDTO.ok(matchingCode);
+        MatchingCodeVO matchingCodeVO = new MatchingCodeVO(matchingCode);
+        return ResponseDTO.ok(matchingCodeVO);
     }
 }

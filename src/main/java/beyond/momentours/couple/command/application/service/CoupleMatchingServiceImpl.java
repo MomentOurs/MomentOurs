@@ -3,6 +3,7 @@ package beyond.momentours.couple.command.application.service;
 import beyond.momentours.common.exception.CommonException;
 import beyond.momentours.common.exception.ErrorCode;
 import beyond.momentours.couple.command.domain.aggregate.entity.CoupleList;
+import beyond.momentours.couple.command.domain.aggregate.entity.CoupleMatchingStatus;
 import beyond.momentours.couple.command.domain.aggregate.entity.MatchingCode;
 import beyond.momentours.couple.command.domain.aggregate.entity.MatchingStatus;
 import beyond.momentours.couple.command.domain.repository.CoupleRepository;
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -99,9 +101,19 @@ public class CoupleMatchingServiceImpl implements CoupleMatchingService {
         // 매칭 코드 검증 후 정보 가져옴
         MatchingCode validCode = validateAndGetMatchingCode(matchingCode, requestUserId);
 
-        // 인증된 코드에서 회원번호 추출 후, 커플 생성
-        createCouple(validCode.getUserId(), requestUserId);
+        // 회원 서비스에서 회원번호 기반 이름 닉네임 조회
 
+        // 인증된 코드에서 회원번호 추출 후, 커플 생성
+        CoupleList newCouple = new CoupleList();
+        newCouple.setCoupleName("회원 서비스에서 양쪽 회원 이름을 조회해서 붙여넣을 예정");
+        newCouple.setMemberId1(validCode.getUserId());
+        newCouple.setMemberId2(requestUserId);
+        newCouple.setCoupleMatchingStatus(CoupleMatchingStatus.AUTHENTICATED);
+        newCouple.setCoupleStatus(false);
+        newCouple.setCoupleStartDate(LocalDateTime.now());
+        coupleRepository.save(newCouple);
+
+        // 사용된 매칭 코드는 사용됨으로 마킹
         markMatchingCodeAsUsed(matchingCode);
     }
 
@@ -161,6 +173,23 @@ public class CoupleMatchingServiceImpl implements CoupleMatchingService {
 
     // 사용된 QR코드로 마킹하는 메서드입니다.
     private void markMatchingCodeAsUsed(String matchingCode) {
+        String key = CODE_PREFIX + matchingCode;
 
+        redisTemplate.execute(new SessionCallback<Object>() {
+           @Override
+           public Object execute(RedisOperations operations) throws DataAccessException {
+               operations.multi();
+
+               MatchingCode foundedCode = (MatchingCode) operations.opsForValue().get(key);
+               Long remainingTTL = operations.getExpire(key, TimeUnit.MILLISECONDS);
+
+               if (remainingTTL > 0) {
+                   foundedCode.setMatchingStatus(MatchingStatus.USED);
+                   operations.opsForValue().set(key, foundedCode, remainingTTL, TimeUnit.MILLISECONDS);
+               }
+
+               return operations.exec();
+           }
+        });
     }
 }
