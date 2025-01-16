@@ -141,10 +141,9 @@ class CoupleMatchingServiceImplTests {
                 .thenThrow(new CommonException(ErrorCode.USED_CODE_REQUEST));
 
         // when & then
-        assertThrows(
-                CommonException.class,
-                () -> coupleMatchingService.authenticationMatchingCode(matchingCode, requestMemberId)
-        );
+        CommonException exception = assertThrows(CommonException.class,
+                () -> coupleMatchingService.authenticationMatchingCode(matchingCode, requestMemberId));
+        assertEquals(exception.getErrorCode(), ErrorCode.USED_CODE_REQUEST);
     }
 
     @Test
