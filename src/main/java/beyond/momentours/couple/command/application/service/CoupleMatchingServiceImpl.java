@@ -168,7 +168,7 @@ public class CoupleMatchingServiceImpl implements CoupleMatchingService {
     }
 
     // 사용된 코드로 마킹하는 메서드입니다.
-    private void markMatchingCodeAsUsed(String matchingCode) {
+    public void markMatchingCodeAsUsed(String matchingCode) {
         String key = CODE_PREFIX + matchingCode;
         log.info("사용된 매칭코드 마킹 메서드 시작");
         redisTemplate.execute(new SessionCallback<Object>() {

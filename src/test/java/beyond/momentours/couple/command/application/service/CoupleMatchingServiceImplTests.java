@@ -15,12 +15,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -142,6 +144,44 @@ class CoupleMatchingServiceImplTests {
         assertThrows(
                 CommonException.class,
                 () -> coupleMatchingService.authenticationMatchingCode(matchingCode, requestMemberId)
+        );
+    }
+
+    @Test
+    @DisplayName("Redis Transaction 테스트")
+    void testRedisTransaction() {
+        // given
+        String matchingCode = "test_code";
+        String key = "matching_code:" + matchingCode;
+
+        RedisOperations<String, MatchingCode> operations = mock(RedisOperations.class);
+        ValueOperations<String, MatchingCode> valueOps = mock(ValueOperations.class);
+
+        // mock 객체들 동작 설정
+        when(operations.opsForValue()).thenReturn(valueOps);
+        MatchingCode foundedCode = MatchingCode.create(1L);
+        when(valueOps.get(key)).thenReturn(foundedCode);
+        when(operations.getExpire(key, TimeUnit.MILLISECONDS))
+                .thenReturn(3600000L);
+
+        when(redisTemplate.execute(any(SessionCallback.class))).thenAnswer(invocation -> {
+            // SessionCallback 객체 가져옴(sessioncallback은 트랜잭션을 보장함으로서 데이터 무결성 유지에 도움이 됩니다)
+            SessionCallback<?> sessionCallback = invocation.getArgument(0);
+            // 해당 callback의 execute 메서드를 RedisOperations와 함께 실행
+            return sessionCallback.execute(operations);
+        });
+
+        // when
+        coupleMatchingService.markMatchingCodeAsUsed(matchingCode);
+
+        // then
+        verify(operations).multi(); // 트랜잭션 시작 검증
+        verify(operations).exec(); // 트랜잭션 완료 검증
+        verify(valueOps).set(
+                eq(key),
+                argThat(code -> code.getMatchingStatus().equals(MatchingStatus.USED)), // 사용된 코드로 바뀌었는지 검증
+                eq(3600000L),
+                eq(TimeUnit.MILLISECONDS)
         );
     }
 }
