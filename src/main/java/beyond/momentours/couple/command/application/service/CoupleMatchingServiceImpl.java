@@ -9,7 +9,6 @@ import beyond.momentours.couple.command.domain.aggregate.entity.CoupleMatchingSt
 import beyond.momentours.couple.command.domain.aggregate.entity.MatchingCode;
 import beyond.momentours.couple.command.domain.aggregate.entity.MatchingStatus;
 import beyond.momentours.couple.command.domain.repository.CoupleRepository;
-import com.google.zxing.qrcode.QRCodeWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -32,10 +31,6 @@ public class CoupleMatchingServiceImpl implements CoupleMatchingService {
     private static final String KEY_PREFIX = "matching_user:";
     private static final String CODE_PREFIX = "matching_code:";
     private static final Duration MATCHING_CODE_TTL = Duration.ofHours(6);
-    // QRCodeWriter를 싱글톤으로 관리해 리소스 낭비 감소 및 이를 위한 변수 미리 선언
-    private static final QRCodeWriter qrCodeWriter = new QRCodeWriter();
-    private static final int QR_CODE_SIZE = 300;
-    private static final String QR_CODE_FORMAT = "PNG";
 
     @Autowired
     public CoupleMatchingServiceImpl(RedisTemplate<String, MatchingCode> redisTemplate, CoupleRepository coupleRepository) {
