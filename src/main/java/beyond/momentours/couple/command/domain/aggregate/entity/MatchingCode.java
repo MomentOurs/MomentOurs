@@ -26,4 +26,8 @@ public class MatchingCode {
                 MatchingStatus.PENDING
         );
     }
+
+    public void setMatchingStatus(MatchingStatus matchingStatus) {
+        this.matchingStatus = matchingStatus;
+    }
 }

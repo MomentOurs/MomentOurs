@@ -22,8 +22,7 @@ public class CommandCoupleController {
 
     @PostMapping("/{userId}")
     public ResponseDTO<?> createMatchingCode(@PathVariable Long userId) {
-
-
-        return ResponseDTO.ok();
+        byte[] matchingCode = coupleMatchingService.createMatchingCode(userId);
+        return ResponseDTO.ok(matchingCode);
     }
 }
