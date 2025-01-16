@@ -21,6 +21,7 @@ public enum ErrorCode {
     INVALID_CODE_REQUEST(40013, HttpStatus.BAD_REQUEST, "자기 자신과 커플을 맺을 순 없습니다."),
     USED_CODE_REQUEST(40014, HttpStatus.BAD_REQUEST, "사용된 QR코드입니다."),
     ALREADY_COUPLE_STATUS(40014, HttpStatus.BAD_REQUEST, "이미 커플인 회원입니다."),
+    INVALID_COMMENT_TYPE(40015, HttpStatus.BAD_REQUEST, "올바르지 않은 댓글 타입입니다."), // 댓글 타입이 올바르지 않은 경우
 
     // 401: 인증 실패 (Unauthorized)
     INVALID_HEADER_VALUE(40100, HttpStatus.UNAUTHORIZED, "올바르지 않은 헤더값입니다."), // 헤더 값이 잘못되었거나 누락된 경우
