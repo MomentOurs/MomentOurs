@@ -9,7 +9,6 @@ import beyond.momentours.couple.command.domain.aggregate.entity.CoupleMatchingSt
 import beyond.momentours.couple.command.domain.aggregate.entity.MatchingCode;
 import beyond.momentours.couple.command.domain.aggregate.entity.MatchingStatus;
 import beyond.momentours.couple.command.domain.repository.CoupleRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
