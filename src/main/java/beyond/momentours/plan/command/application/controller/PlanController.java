@@ -61,11 +61,12 @@ public class PlanController {
         }
     }
 
-    @PatchMapping("/delete")
+    @PatchMapping("/delete/{planId}")
     public ResponseEntity<?> deletePlan(@PathVariable Long planId) {
         log.info("삭제 요청한 일정 ID : {}", planId);
         try {
             PlanDTO deletedPlan = planService.deletePlan(planId);
+            log.info("삭제된 planId : {}, 해당 일정의 상태 : {}", deletedPlan.getPlanId(), deletedPlan.getPlanStatus());
             return ResponseEntity.status(HttpStatus.OK).body("성공적으로 삭제되었습니다.");
         } catch (CommonException e) {
             log.error("일정 삭제 오류: {}", e.getMessage());
@@ -91,4 +92,33 @@ public class PlanController {
         }
     }
 
+    @GetMapping("/schedules/date")
+    public ResponseEntity<?> getSchedulesByDate(@RequestParam int year, @RequestParam int month, @RequestParam int day) {
+        log.info("특정 날짜 일정 요청 year: {}, month: {}, day: {}", year, month, day);
+        try {
+            List<PlanDTO> schedules = planService.getSchedulesByDate(year, month, day);
+            return ResponseEntity.status(HttpStatus.OK).body(schedules);
+        } catch (CommonException e) {
+            log.error("스케줄 조회 오류: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            log.error("예상치 못한 오류", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("예상치 못한 오류가 발생했습니다");
+        }
+    }
+
+    @GetMapping("/{planId}")
+    public ResponseEntity<?> getPlanById(@PathVariable Long planId) {
+        log.info("조회 요청된 planId: {}", planId);
+        try {
+            PlanDTO plan = planService.getPlanById(planId);
+            return ResponseEntity.status(HttpStatus.OK).body(plan);
+        } catch (CommonException e) {
+            log.error("스케줄 조회 오류: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            log.error("예상치 못한 오류", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("예상치 못한 오류가 발생했습니다");
+        }
+    }
 }
