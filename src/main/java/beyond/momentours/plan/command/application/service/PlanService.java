@@ -18,4 +18,6 @@ public interface PlanService {
     List<PlanDTO> getSchedules(int year, int month);
 
     List<PlanDTO> getSchedulesByDate(int year, int month, int day);
+
+    PlanDTO getPlanById(Long planId);
 }

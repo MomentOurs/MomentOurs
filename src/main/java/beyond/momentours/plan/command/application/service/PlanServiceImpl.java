@@ -139,6 +139,13 @@ public class PlanServiceImpl implements PlanService {
                 .toList();
     }
 
+    @Override
+    public PlanDTO getPlanById(Long planId) {
+        Plan plan = planRepository.findById(planId).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_PLAN));
+
+        return planConverter.fromEntityToDTO(plan);
+    }
+
     private void updatePlan(PlanDTO planDTO, Plan existingPlan) {
         if (planDTO.getPlanTitle() != null) existingPlan.updateTitle(planDTO.getPlanTitle());
         if (planDTO.getPlanContent() != null) existingPlan.updateContent(planDTO.getPlanContent());
