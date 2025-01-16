@@ -102,7 +102,7 @@ public class CoupleMatchingServiceImpl implements CoupleMatchingService {
                 if (foundedCode == null) {
                     log.info("redis에서 조회된 QR코드가 없는 경우 발생하는 에러");
                     operations.discard();
-                    throw new CommonException(ErrorCode.NOT_FOUND_QRCODE);
+                    throw new CommonException(ErrorCode.NOT_FOUND_CODE);
                 }
 
                 if (requestMemberId.equals(foundedCode.getMemberId())) {
@@ -178,12 +178,22 @@ public class CoupleMatchingServiceImpl implements CoupleMatchingService {
                log.info("사용된 매칭코드 마킹을 위한 redis transaction 시작");
 
                MatchingCode foundedCode = (MatchingCode) operations.opsForValue().get(key);
+               if (foundedCode == null) {
+                   log.info("마킹 하기 전에 만료가 되어 redis에서 삭제된 경우 발생하는 에러");
+                   operations.discard();
+                   throw new CommonException(ErrorCode.NOT_FOUND_CODE);
+               }
                Long remainingTTL = operations.getExpire(key, TimeUnit.MILLISECONDS);
                log.info("redis에 저장된 코드의 남은 TTL: {}", remainingTTL);
 
                if (remainingTTL > 0) {
                    foundedCode.setMatchingStatus(MatchingStatus.USED);
                    operations.opsForValue().set(key, foundedCode, remainingTTL, TimeUnit.MILLISECONDS);
+               }
+               else {
+                   log.info("redis에 저장된 코드의 ttl이 만료된 경우(음수) 발생하는 에러");
+                   operations.discard();
+                   throw new CommonException(ErrorCode.EXPIRED_CODE);
                }
 
                log.info("사용된 매칭코드 마킹을 위한 redis transaction 종료");

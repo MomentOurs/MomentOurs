@@ -37,6 +37,7 @@ public enum ErrorCode {
     EXIST_USER(40112, HttpStatus.UNAUTHORIZED, "이미 회원가입한 회원입니다."), // 이미 회원가입된 사용자
     NOT_FOUND_USER_ID(40113, HttpStatus.UNAUTHORIZED, "아이디를 잘못 입력하셨습니다."), // 잘못된 아이디 입력
     INVALID_PASSWORD(40114, HttpStatus.UNAUTHORIZED, "비밀번호를 잘못 입력하셨습니다."), // 비밀번호가 잘못된 경우
+    EXPIRED_CODE(40115, HttpStatus.UNAUTHORIZED, "만료된 코드입니다."), // redis TTL이 만료된 경우(음수)
 
     // 403: 권한 부족 (Forbidden)
     FORBIDDEN_ROLE(40300, HttpStatus.FORBIDDEN, "요청한 리소스에 대한 권한이 없습니다."), // 사용자가 요청한 리소스에 대한 권한이 없는 경우
@@ -55,7 +56,7 @@ public enum ErrorCode {
     NOT_FOUND_RANDOM_QUESTION(40410, HttpStatus.NOT_FOUND, "랜덤질문이 존재하지 않습니다."),
     NOT_FOUND_QUES_ANSWER(40411, HttpStatus.NOT_FOUND, "답변이 존재하지 않습니다."),
     NOT_FOUND_PLAN(40412, HttpStatus.NOT_FOUND, "일정이 존재하지 않습니다."),
-    NOT_FOUND_QRCODE(40413, HttpStatus.NOT_FOUND, "QR코드가 존재하지 않습니다"),
+    NOT_FOUND_CODE(40413, HttpStatus.NOT_FOUND, "매칭코드가 존재하지 않습니다"),
 
     // 429: 요청 과다 (Too Many Requests)
     TOO_MANY_REQUESTS(42900, HttpStatus.TOO_MANY_REQUESTS, "요청 횟수가 너무 많습니다. 잠시 후 다시 시도해 주세요."),

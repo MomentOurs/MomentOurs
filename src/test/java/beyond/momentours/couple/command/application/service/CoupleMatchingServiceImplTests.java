@@ -148,8 +148,8 @@ class CoupleMatchingServiceImplTests {
     }
 
     @Test
-    @DisplayName("Redis Transaction 테스트")
-    void testRedisTransaction() {
+    @DisplayName("Redis Transaction 성공 테스트")
+    void testRedisTransaction_Success() {
         // given
         String matchingCode = "test_code";
         String key = "matching_code:" + matchingCode;
@@ -183,5 +183,33 @@ class CoupleMatchingServiceImplTests {
                 eq(3600000L),
                 eq(TimeUnit.MILLISECONDS)
         );
+    }
+
+    @Test
+    @DisplayName("Redis Transactions 실패")
+    void testRedisTransaction_Fail() {
+        // given
+        String matchingCode = "test_code";
+        String key = "matching_code:" + matchingCode;
+
+        RedisOperations<String, MatchingCode> redisOperations = mock(RedisOperations.class);
+        ValueOperations<String, MatchingCode> valueOps = mock(ValueOperations.class);
+
+        when(redisOperations.opsForValue()).thenReturn(valueOps);
+        when(valueOps.get(key)).thenReturn(null); // 코드가 사라진 상태
+
+        when(redisTemplate.execute(any(SessionCallback.class))).thenAnswer(invocation -> {
+           SessionCallback<?> sessionCallback = invocation.getArgument(0);
+           return sessionCallback.execute(redisOperations);
+        });
+
+        // when & then
+        CommonException exception = assertThrows(CommonException.class, () ->
+                coupleMatchingService.markMatchingCodeAsUsed(matchingCode));
+        assertEquals(ErrorCode.NOT_FOUND_CODE, exception.getErrorCode());
+
+        verify(redisOperations).multi();
+        verify(redisOperations).discard(); // 트랜잭션 취소 확인
+        verify(redisOperations, never()).exec(); // exec이 호출되지 않았음을 확인
     }
 }
