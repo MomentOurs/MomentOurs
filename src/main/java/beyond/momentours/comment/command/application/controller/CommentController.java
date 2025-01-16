@@ -24,7 +24,7 @@ public class CommentController {
     private final CommentService commentService;
     private final CommentConverter commentConverter;
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<?> createComment(@RequestBody RequestCreateCommentVO request) {
         log.info("등록 요청된 댓글 데이터 : {}", request);
         try {
