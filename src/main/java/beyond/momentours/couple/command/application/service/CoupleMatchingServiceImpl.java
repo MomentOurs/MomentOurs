@@ -78,6 +78,7 @@ public class CoupleMatchingServiceImpl implements CoupleMatchingService {
         MatchingCode validCode = validateAndGetMatchingCode(matchingCode, requestMemberId);
 
         // 인증된 코드에서 회원번호 추출 후, 커플 생성
+        // code 속 회원번호는 memberId1에, 인증 요청 회원번호는 memberId2에 입력
         CoupleListDTO coupleListDTO = createCouple(validCode.getMemberId(), requestMemberId);
 
         // 사용된 매칭 코드는 사용됨으로 마킹
