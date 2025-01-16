@@ -106,4 +106,19 @@ public class PlanController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("예상치 못한 오류가 발생했습니다");
         }
     }
+
+    @GetMapping("/{planId}")
+    public ResponseEntity<?> getPlanById(@PathVariable Long planId) {
+        log.info("조회 요청된 planId: {}", planId);
+        try {
+            PlanDTO plan = planService.getPlanById(planId);
+            return ResponseEntity.status(HttpStatus.OK).body(plan);
+        } catch (CommonException e) {
+            log.error("스케줄 조회 오류: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            log.error("예상치 못한 오류", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("예상치 못한 오류가 발생했습니다");
+        }
+    }
 }
