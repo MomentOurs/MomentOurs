@@ -41,4 +41,14 @@
            AND plan_status = 1;
     </select>
 
+    <select id="findByDate" resultMap="planResultMap">
+        SELECT plan_id, plan_title, plan_content, plan_start_date, plan_end_date, plan_status, created_at, updated_at, member_id, couple_id, course_id
+          FROM tb_plan
+         WHERE couple_id = #{coupleId}
+           AND plan_start_date &lt;= #{selectedDateEnd}
+           AND plan_end_date >= #{selectedDateStart}
+           AND plan_end_date <= #{planEndDate}
+           AND plan_status = 1;
+    </select>
+
 </mapper>
