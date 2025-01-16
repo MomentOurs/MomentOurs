@@ -25,7 +25,7 @@ public class PlanController {
     private final PlanService planService;
     private final PlanConverter planConverter;
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<?> createPlan(@RequestBody RequestCreatePlanVO request) {
         log.info("등록 요청된 request 데이터 : {}", request);
         try {
@@ -43,7 +43,7 @@ public class PlanController {
         }
     }
 
-    @PatchMapping("/update")
+    @PatchMapping
     public ResponseEntity<?> updatePlan(@RequestBody RequestUpdatePlanVO request) {
         log.info("수정 요청된 request 데이터 : {}", request);
         try {
@@ -61,7 +61,7 @@ public class PlanController {
         }
     }
 
-    @PatchMapping("/delete/{planId}")
+    @PatchMapping("/{planId}/soft-delete")
     public ResponseEntity<?> deletePlan(@PathVariable Long planId) {
         log.info("삭제 요청한 일정 ID : {}", planId);
         try {
@@ -77,7 +77,7 @@ public class PlanController {
         }
     }
 
-    @GetMapping("/plans")
+    @GetMapping("/schedules")
     public ResponseEntity<?> getPlans(@RequestParam int year, @RequestParam int month) {
         log.info("스케줄 월별 조회 요청 year: {}, month: {}", year, month);
         try {
@@ -92,7 +92,7 @@ public class PlanController {
         }
     }
 
-    @GetMapping("/plans/date")
+    @GetMapping("/schedules/date")
     public ResponseEntity<?> getPlansByDate(@RequestParam int year, @RequestParam int month, @RequestParam int day) {
         log.info("특정 날짜 일정 요청 year: {}, month: {}, day: {}", year, month, day);
         try {
