@@ -39,9 +39,21 @@ public class Comment {
     @Column(name = "member_id", nullable = false)
     private Long memberId;
 
-    @Column(name = "moment_id", nullable = false)
+    @Column(name = "moment_id")
     private Long momentId;
 
-    @Column(name = "couple_log_id", nullable = false)
+    @Column(name = "couple_log_id")
     private Long coupleLogId;
+
+    @PrePersist
+    public void prePersist() {
+        if (commentStatus == null) {
+            commentStatus = true;
+        }
+    }
+
+    public void create(Comment comment) {
+        comment.createdAt = LocalDateTime.now();
+        comment.updatedAt = LocalDateTime.now();
+    }
 }
