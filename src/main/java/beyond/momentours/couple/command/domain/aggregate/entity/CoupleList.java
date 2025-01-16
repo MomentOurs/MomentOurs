@@ -32,6 +32,7 @@ public class CoupleList {
     private Boolean coupleStatus;
 
     @Column(name = "couple_matching_status")
+    @Enumerated(EnumType.STRING)
     private CoupleMatchingStatus coupleMatchingStatus;
 
     @Column(name = "member_id1")

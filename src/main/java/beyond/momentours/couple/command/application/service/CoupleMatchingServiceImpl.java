@@ -145,7 +145,7 @@ public class CoupleMatchingServiceImpl implements CoupleMatchingService {
         log.info("생성된 커플 정보 newCouple: {}", newCouple);
         coupleRepository.save(newCouple);
 
-        CoupleListDTO coupleListDTO = CoupleListDTO.builder()
+        return CoupleListDTO.builder()
                 .coupleId(newCouple.getCoupleId())
                 .coupleName(newCouple.getCoupleName())
                 .couplePhoto(newCouple.getCouplePhoto())
@@ -155,8 +155,6 @@ public class CoupleMatchingServiceImpl implements CoupleMatchingService {
                 .memberId1(newCouple.getMemberId1())
                 .memberId2(newCouple.getMemberId2())
                 .build();
-
-        return coupleListDTO;
     }
 
     // 회원 번호를 기반으로 커플인지 검증하는 메서드입니다.
