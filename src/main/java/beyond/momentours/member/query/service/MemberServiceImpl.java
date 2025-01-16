@@ -17,7 +17,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Long findByMemberId(Long memberId) {
+    public Long findByMemberId(String memberId) {
 
         Long memId = memberMapper.findByMemberId(memberId);
 

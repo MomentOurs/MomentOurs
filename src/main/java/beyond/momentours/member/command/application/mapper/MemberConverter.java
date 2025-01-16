@@ -1,12 +1,9 @@
 package beyond.momentours.member.command.application.mapper;
 
-import beyond.momentours.member.command.application.dto.LoginDTO;
 import beyond.momentours.member.command.application.dto.MemberDTO;
 import beyond.momentours.member.command.domain.aggregate.entity.Member;
 import beyond.momentours.member.command.domain.aggregate.entity.MemberRole;
-import beyond.momentours.member.command.domain.vo.reponse.ResponseLoginMemberVO;
 import beyond.momentours.member.command.domain.vo.reponse.ResponseSignupMemberVO;
-import beyond.momentours.member.command.domain.vo.request.RequestLoginMemberVO;
 import beyond.momentours.member.command.domain.vo.request.RequestSignupMemberVO;
 import org.springframework.stereotype.Component;
 
@@ -70,30 +67,6 @@ public class MemberConverter {
                 .memberRole(member.getMemberRole())
                 .createdAt(member.getCreatedAt())
                 .updatedAt(member.getUpdatedAt())
-                .build();
-    }
-
-
-    public LoginDTO fromEntityToLoginDTO(Member member) {
-        return LoginDTO.builder()
-                .memberEmail(member.getMemberEmail())
-                .memberPassword(member.getMemberPassword())
-//                .accessToken(member.getAccessToken())
-//                .refreshToken(member.getRefreshToken())
-                .build();
-    }
-
-    public MemberDTO fromLoginVOToDTO(RequestLoginMemberVO requestLoginMemberVO) {
-        return MemberDTO.builder()
-                .memberEmail(requestLoginMemberVO.getMemberEmail())
-                .memberPassword(requestLoginMemberVO.getMemberPassword())
-                .build();
-    }
-
-    public ResponseLoginMemberVO fromDTOToLoginVO(LoginDTO loginDTO) {
-        return ResponseLoginMemberVO.builder()
-                .memberEmail(loginDTO.getMemberEmail())
-                .memberPassword(loginDTO.getMemberPassword())
                 .build();
     }
 }

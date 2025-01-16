@@ -5,5 +5,5 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface MemberMapper {
 
-    Long findByMemberId(Long memberId);
+    Long findByMemberId(String memberId);
 }

@@ -20,10 +20,10 @@
         <result property="updatedAt" column="updated_at"/>
     </resultMap>
 
-    <select id="findByMemberId" resultType="Long" parameterType="Long">
+    <select id="findByMemberId" resultType="Long" parameterType="string">
         SELECT member_id
         FROM tb_member
-        WHERE member_id = #{memberId}
+        WHERE member_email = #{memberEmail}
         AND member_status = 1;
     </select>
 

@@ -1,13 +1,10 @@
 package beyond.momentours.member.command.application.controller;
 
 import beyond.momentours.common.ResponseDTO;
-import beyond.momentours.member.command.application.dto.LoginDTO;
 import beyond.momentours.member.command.application.dto.MemberDTO;
 import beyond.momentours.member.command.application.mapper.MemberConverter;
 import beyond.momentours.member.command.application.service.MemberService;
-import beyond.momentours.member.command.domain.vo.reponse.ResponseLoginMemberVO;
 import beyond.momentours.member.command.domain.vo.reponse.ResponseSignupMemberVO;
-import beyond.momentours.member.command.domain.vo.request.RequestLoginMemberVO;
 import beyond.momentours.member.command.domain.vo.request.RequestSignupMemberVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,19 +33,5 @@ public class MemberController {
 
         return ResponseDTO.ok(response);
     }
-
-    @PostMapping("/login")
-    public ResponseDTO<?> login(@RequestBody RequestLoginMemberVO requestLoginMemberVO) {
-
-        log.info("이이이ㅣ잉: " + requestLoginMemberVO);
-
-        MemberDTO requestMemberDTO = memberConverter.fromLoginVOToDTO(requestLoginMemberVO);
-        LoginDTO responseMemberDTO = memberService.login(requestMemberDTO);
-        ResponseLoginMemberVO responseLoginMemberVO = memberConverter.fromDTOToLoginVO(responseMemberDTO);
-
-        return ResponseDTO.ok(responseLoginMemberVO);
-    }
-
-
 
 }

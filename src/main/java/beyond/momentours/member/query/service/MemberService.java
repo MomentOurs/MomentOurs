@@ -1,5 +1,5 @@
 package beyond.momentours.member.query.service;
 
 public interface MemberService {
-    Long findByMemberId(Long memberId);
+    Long findByMemberId(String memberId);
 }

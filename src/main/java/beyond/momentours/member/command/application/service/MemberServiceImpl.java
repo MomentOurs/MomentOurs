@@ -1,7 +1,7 @@
 package beyond.momentours.member.command.application.service;
 
+
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
-import beyond.momentours.member.command.application.dto.LoginDTO;
 import beyond.momentours.member.command.application.dto.MemberDTO;
 import beyond.momentours.member.command.application.mapper.MemberConverter;
 import beyond.momentours.member.command.domain.aggregate.entity.Member;
@@ -55,24 +55,6 @@ public class MemberServiceImpl implements MemberService {
 
         // 사용자 데이터를 기반으로 CustomUserDetails 생성
         return new CustomUserDetails(member);
-    }
-
-    @Override
-    @Transactional
-    public LoginDTO login(MemberDTO memberDTO) {
-
-        if (memberDTO.getMemberPassword() != null) {
-            memberDTO.encodedPwd(bCryptPasswordEncoder.encode(memberDTO.getMemberPassword()));
-        }
-
-        Member member = memberRepository.findByMemberEmail(memberDTO.getMemberEmail());
-
-//        if (!bCryptPasswordEncoder.matches(memberDTO.getMemberPassword(), member.getMemberPassword())) {
-//            throw new BadCredentialsException("Invalid password");
-//        }
-
-        LoginDTO result = memberConverter.fromEntityToLoginDTO(member);
-        return result;
     }
 
 }
