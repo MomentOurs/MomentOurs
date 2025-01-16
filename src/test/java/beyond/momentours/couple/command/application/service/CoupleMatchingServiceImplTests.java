@@ -20,8 +20,7 @@ import java.time.Duration;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @Transactional
@@ -67,6 +66,33 @@ class CoupleMatchingServiceImplTests {
                 eq(userKey),
                 any(MatchingCode.class),
                 eq(Duration.ofHours(6))
+        );
+    }
+
+    @Test
+    @DisplayName("기존 매칭 코드가 있는 경우 테스트")
+    void createNewMatchingCode_ExistingCode() {
+        // given
+        Long memberId = 1L;
+        String userKey = "matching_user:" + memberId;
+        MatchingCode existingCode = MatchingCode.create(memberId);
+
+        // redis에 존재하는 코드를 반환했다고 가정
+        when(valueOperations.get(userKey)).thenReturn(existingCode);
+
+        // when
+        MatchingCodeDTO result = coupleMatchingService.createMatchingCode(memberId);
+
+        // then
+        assertNotNull(result);
+        assertEquals(existingCode.getId(), result.getId());
+        assertEquals(memberId, result.getMemberId());
+
+        // redis에 새로 저장하지 않았음을 검증
+        verify(valueOperations, never()).set(
+                eq(userKey),
+                any(MatchingCode.class),
+                any(Duration.class)
         );
     }
 }
