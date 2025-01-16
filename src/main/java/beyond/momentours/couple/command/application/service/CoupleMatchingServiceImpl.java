@@ -2,15 +2,13 @@ package beyond.momentours.couple.command.application.service;
 
 import beyond.momentours.common.exception.CommonException;
 import beyond.momentours.common.exception.ErrorCode;
+import beyond.momentours.couple.command.application.dto.CoupleListDTO;
+import beyond.momentours.couple.command.application.dto.MatchingCodeDTO;
 import beyond.momentours.couple.command.domain.aggregate.entity.CoupleList;
 import beyond.momentours.couple.command.domain.aggregate.entity.CoupleMatchingStatus;
 import beyond.momentours.couple.command.domain.aggregate.entity.MatchingCode;
 import beyond.momentours.couple.command.domain.aggregate.entity.MatchingStatus;
 import beyond.momentours.couple.command.domain.repository.CoupleRepository;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.WriterException;
-import com.google.zxing.client.j2se.MatrixToImageWriter;
-import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +19,6 @@ import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
@@ -48,14 +44,19 @@ public class CoupleMatchingServiceImpl implements CoupleMatchingService {
     }
 
     @Override
-    public byte[] createMatchingCode(Long userId) {
+    public MatchingCodeDTO createMatchingCode(Long userId) {
         // 0. 기존 코드가 있는지 확인
         String userKey = KEY_PREFIX + userId;
         MatchingCode existingCode = redisTemplate.opsForValue().get(userKey);
 
         // 만약 있다면 그대로 반환
         if (existingCode != null) {
-            return createQRCode(existingCode.getId());
+            return MatchingCodeDTO.builder()
+                    .id(existingCode.getId())
+                    .memberId(existingCode.getMemberId())
+                    .createdAt(existingCode.getCreatedAt())
+                    .matchingStatus(existingCode.getMatchingStatus())
+                    .build();
         }
 
         // 1. 없으면 새로운 MatchingCode 생성
@@ -68,64 +69,37 @@ public class CoupleMatchingServiceImpl implements CoupleMatchingService {
         redisTemplate.opsForValue().set(CODE_PREFIX + matchingCode.getId(), matchingCode, MATCHING_CODE_TTL);
 
         // 3. QR코드로 변환
-        return createQRCode(matchingCode.getId());
+        return MatchingCodeDTO.builder()
+                .id(matchingCode.getId())
+                .memberId(matchingCode.getMemberId())
+                .createdAt(matchingCode.getCreatedAt())
+                .matchingStatus(matchingCode.getMatchingStatus())
+                .build();
     }
 
     @Override
-    public byte[] createQRCode(String matchingCode) {
-        try {
-            // QR코드 내용 설정
-            // 1. BitMatrix는 QR코드의 기본 구조를 나타내는 2차원 행렬. QR코드의 각 픽샐은 1(검은색), 0(흰색)으로 구성되어 있다.
-            BitMatrix bitMatrix = qrCodeWriter.encode(
-                    matchingCode, // 코드에 담을 데이터
-                    BarcodeFormat.QR_CODE, // 바코드 형식 지정
-                    QR_CODE_SIZE, // 가로(px)
-                    QR_CODE_SIZE // 세로 크기(px)
-            );
-
-            // BitMatrix를 PNG로 변환하기 위해 사용
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            MatrixToImageWriter.writeToStream(
-                    bitMatrix, // 변환할 비트 행렬
-                    QR_CODE_FORMAT, // 출력할 이미지 형식
-                    baos); // 이미지 데이터를 담을 stream(한 번에 처리 대신 점진적 처리)
-
-            return baos.toByteArray();
-
-        } catch (WriterException | IOException e) {
-            throw new CommonException(ErrorCode.QRCODE_CREATE_FAIL);
-        }
-    }
-
-    public void authenticationMatchingCode(String matchingCode, Long requestUserId) {
+    public CoupleListDTO authenticationMatchingCode(String matchingCode, Long requestMemberId) {
         // 매칭 코드 검증 후 정보 가져옴
-        MatchingCode validCode = validateAndGetMatchingCode(matchingCode, requestUserId);
-
-        // 회원 서비스에서 회원번호 기반 이름 닉네임 조회
+        MatchingCode validCode = validateAndGetMatchingCode(matchingCode, requestMemberId);
 
         // 인증된 코드에서 회원번호 추출 후, 커플 생성
-        CoupleList newCouple = new CoupleList();
-        newCouple.setCoupleName("회원 서비스에서 양쪽 회원 이름을 조회해서 붙여넣을 예정");
-        newCouple.setMemberId1(validCode.getUserId());
-        newCouple.setMemberId2(requestUserId);
-        newCouple.setCoupleMatchingStatus(CoupleMatchingStatus.AUTHENTICATED);
-        newCouple.setCoupleStatus(false);
-        newCouple.setCoupleStartDate(LocalDateTime.now());
-        coupleRepository.save(newCouple);
+        CoupleListDTO coupleListDTO = createCouple(validCode.getMemberId(), requestMemberId);
 
         // 사용된 매칭 코드는 사용됨으로 마킹
         markMatchingCodeAsUsed(matchingCode);
+
+        return coupleListDTO;
     }
 
     // redis와 통신하여 QR코드를 조회하고 유효성 검사를 시도하는 메서드입니다.
-    private MatchingCode validateAndGetMatchingCode(String matchingCode, Long requestUserId) {
+    private MatchingCode validateAndGetMatchingCode(String matchingCode, Long requestMemberId) {
         String key = CODE_PREFIX + matchingCode;
-
+        log.info("validateAndGetMatchingCode method 시작");
         return (MatchingCode) redisTemplate.execute(new SessionCallback<Object>() {
             @Override // 데이터 일관성을 보장하기 위한 redis execute method 사용
             public Object execute(RedisOperations operations) throws DataAccessException {
                 operations.multi(); // multi transaction
-
+                log.info("매칭 코드 검증을 위한 redis transaction 시작");
                 MatchingCode foundedCode = (MatchingCode) operations.opsForValue().get(key);
 
                 // 각종 유효성 검사
@@ -135,7 +109,7 @@ public class CoupleMatchingServiceImpl implements CoupleMatchingService {
                     throw new CommonException(ErrorCode.NOT_FOUND_QRCODE);
                 }
 
-                if (requestUserId.equals(foundedCode.getUserId())) {
+                if (requestMemberId.equals(foundedCode.getMemberId())) {
                     log.info("요청자가 자신의 QR코드로 신청한 경우 발생하는 에러");
                     operations.discard();
                     throw new CommonException(ErrorCode.INVALID_CODE_REQUEST);
@@ -147,12 +121,13 @@ public class CoupleMatchingServiceImpl implements CoupleMatchingService {
                     throw new CommonException(ErrorCode.USED_CODE_REQUEST);
                 }
 
-                if (CheckCoupleStatus(requestUserId) || CheckCoupleStatus(foundedCode.getUserId())) {
+                if (CheckCoupleStatus(requestMemberId) || CheckCoupleStatus(foundedCode.getMemberId())) {
                     log.info("상대방 혹은 자신이 커플인 상태에서 요청한 경우 발생하는 에러");
                     operations.discard();
                     throw new CommonException(ErrorCode.ALREADY_COUPLE_STATUS);
                 }
 
+                log.info("매칭코드 유효성 검사를 위한 redis transaction 종료");
                 operations.exec();
                 return foundedCode;
             }
@@ -160,34 +135,62 @@ public class CoupleMatchingServiceImpl implements CoupleMatchingService {
     }
 
     // DB와 연동하여 커플 상태로 전환하는 메서드입니다.
-    private void createCouple(Long memberId1, Long memberId2) {
+    private CoupleListDTO createCouple(Long memberId1, Long memberId2) {
+        log.info("커플 생성 메서드 시작");
+        // 회원 서비스에서 회원번호 기반 이름 닉네임 조회
 
+        CoupleList newCouple = new CoupleList();
+        newCouple.setCoupleName("회원 서비스에서 양쪽 회원 이름을 조회해서 붙여넣을 예정");
+        newCouple.setMemberId1(memberId1);
+        newCouple.setMemberId2(memberId2);
+        newCouple.setCoupleMatchingStatus(CoupleMatchingStatus.AUTHENTICATED);
+        newCouple.setCoupleStatus(false);
+        newCouple.setCoupleStartDate(LocalDateTime.now());
+        log.info("생성된 커플 정보 newCouple: {}", newCouple);
+        coupleRepository.save(newCouple);
+
+        CoupleListDTO coupleListDTO = CoupleListDTO.builder()
+                .coupleId(newCouple.getCoupleId())
+                .coupleName(newCouple.getCoupleName())
+                .couplePhoto(newCouple.getCouplePhoto())
+                .coupleStartDate(newCouple.getCoupleStartDate())
+                .coupleMatchingStatus(newCouple.getCoupleMatchingStatus())
+                .coupleStatus(newCouple.getCoupleStatus())
+                .memberId1(newCouple.getMemberId1())
+                .memberId2(newCouple.getMemberId2())
+                .build();
+
+        return coupleListDTO;
     }
 
     // 회원 번호를 기반으로 커플인지 검증하는 메서드입니다.
     private boolean CheckCoupleStatus(Long userId) {
+        log.info("회원 번호 기반 커플 검증 메서드 시작");
         CoupleList coupleList = coupleRepository.findActiveCoupleByMemberId(userId).orElse(null);
 
         return coupleList != null;
     }
 
-    // 사용된 QR코드로 마킹하는 메서드입니다.
+    // 사용된 코드로 마킹하는 메서드입니다.
     private void markMatchingCodeAsUsed(String matchingCode) {
         String key = CODE_PREFIX + matchingCode;
-
+        log.info("사용된 매칭코드 마킹 메서드 시작");
         redisTemplate.execute(new SessionCallback<Object>() {
            @Override
            public Object execute(RedisOperations operations) throws DataAccessException {
                operations.multi();
+               log.info("사용된 매칭코드 마킹을 위한 redis transaction 시작");
 
                MatchingCode foundedCode = (MatchingCode) operations.opsForValue().get(key);
                Long remainingTTL = operations.getExpire(key, TimeUnit.MILLISECONDS);
+               log.info("redis에 저장된 코드의 남은 TTL: {}", remainingTTL);
 
                if (remainingTTL > 0) {
                    foundedCode.setMatchingStatus(MatchingStatus.USED);
                    operations.opsForValue().set(key, foundedCode, remainingTTL, TimeUnit.MILLISECONDS);
                }
 
+               log.info("사용된 매칭코드 마킹을 위한 redis transaction 종료");
                return operations.exec();
            }
         });

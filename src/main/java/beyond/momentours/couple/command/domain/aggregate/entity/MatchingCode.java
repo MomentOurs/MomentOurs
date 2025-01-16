@@ -11,7 +11,7 @@ import java.util.UUID;
 @Setter
 public class MatchingCode {
     private String id;
-    private Long userId;
+    private Long memberId;
     private LocalDateTime createdAt;
     private MatchingStatus matchingStatus;
 
