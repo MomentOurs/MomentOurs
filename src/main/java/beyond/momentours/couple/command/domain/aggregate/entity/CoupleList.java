@@ -1,6 +1,6 @@
 package beyond.momentours.couple.command.domain.aggregate.entity;
 
-import beyond.momentours.couple.command.domain.vo.CoupleProfileRequestVO;
+import beyond.momentours.couple.command.domain.vo.request.CoupleProfileRequestVO;
 import jakarta.persistence.*;
 import lombok.*;
 

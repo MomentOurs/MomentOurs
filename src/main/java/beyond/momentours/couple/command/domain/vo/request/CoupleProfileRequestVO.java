@@ -1,4 +1,4 @@
-package beyond.momentours.couple.command.domain.vo;
+package beyond.momentours.couple.command.domain.vo.request;
 
 import lombok.*;
 
