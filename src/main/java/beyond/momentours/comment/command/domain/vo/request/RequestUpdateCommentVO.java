@@ -9,6 +9,6 @@ import lombok.*;
 @Builder
 @ToString
 public class RequestUpdateCommentVO {
-    @JsonProperty("comment_type")
+    @JsonProperty("comment_content")
     private String commentContent;
 }

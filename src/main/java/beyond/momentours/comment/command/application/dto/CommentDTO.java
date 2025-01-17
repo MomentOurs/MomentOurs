@@ -19,6 +19,6 @@ public class CommentDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Long memberId;
-    private Long quesAnsId;
+    private Long quesId;
     private Long coupleLogId;
 }

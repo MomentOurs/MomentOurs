@@ -100,12 +100,12 @@ public class CommentServiceImpl implements CommentService {
             case COUPLE_LOG:
                 log.info("COUPLE_LOG 타입의 댓글 처리");
                 commentDTO.setCoupleLogId(commentDTO.getCoupleLogId());
-                commentDTO.setQuesAnsId(null);
+                commentDTO.setQuesId(null);
                 break;
 
-            case QUESTION_ANSWER:
-                log.info("QUESTION_ANSWER 타입의 댓글 처리");
-                commentDTO.setQuesAnsId(commentDTO.getQuesAnsId());
+            case QUESTION:
+                log.info("QUESTION 타입의 댓글 처리");
+                commentDTO.setQuesId(commentDTO.getQuesId());
                 commentDTO.setCoupleLogId(null);
                 break;
 
@@ -119,13 +119,16 @@ public class CommentServiceImpl implements CommentService {
     private void validateCommentTypeStatus(CommentDTO commentDTO) {
         switch (commentDTO.getCommentType()) {
 //            case COUPLE_LOG:
-//                CoupleLog coupleLog = coupleLogRepository.findById(commentDTO.getCoupleLogId()).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_COUPLE_LOG));
-//                if (!coupleLog.isStatus()) throw new CommonException(ErrorCode.NOT_FOUND_COUPLE_LOG);
+//                CoupleLog coupleLog = coupleLogRepository.findById(commentDTO.getCoupleLogId())
+//                        .orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_COUPLE_LOG));
 //                break;
-
-//            case QUESTION_ANSWER:
-//                QuesAns quesAns = quesAnsRepository.findById(commentDTO.getQuesAnsId()).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_QUES_ANS));
-//                if (!quesAns.isStatus()) throw new CommonException(ErrorCode.NOT_FOUND_QUES_ANSWER);
+//
+//            case QUESTION:
+//                RandomQuestion randomQuestion = randomQuestionRepository.findById(commentDTO.getQuesId())
+//                        .orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_RANDOM_QUESTION));
+//                if (!"All".equals(randomQuestion.getAnsStatus())) {
+//                    throw new CommonException(ErrorCode.INVALID_RANDOM_QUESTION_STATUS);
+//                }
 //                break;
 
             default:
