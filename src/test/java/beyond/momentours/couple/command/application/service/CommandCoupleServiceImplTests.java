@@ -1,5 +1,6 @@
 package beyond.momentours.couple.command.application.service;
 
+import beyond.momentours.couple.command.application.dto.CoupleListDTO;
 import beyond.momentours.couple.command.application.dto.CoupleProfileDTO;
 import beyond.momentours.couple.command.application.mapper.CoupleConverter;
 import beyond.momentours.couple.command.domain.aggregate.entity.CoupleList;
@@ -48,7 +49,7 @@ class CommandCoupleServiceImplTests {
                 "기존 이름",
                 "기존 사진",
                 LocalDateTime.of(2024, 12, 12, 0, 0),
-                false,
+                true,
                 CoupleMatchingStatus.PROFILE_COMPLETED,
                 1L,
                 2L
@@ -74,5 +75,49 @@ class CommandCoupleServiceImplTests {
 
         verify(converter, times(1)).fromEntityToProfileDTO(testCouple);
         assertEquals(expectedDTO, result);
+    }
+
+    @Test
+    @DisplayName("커플 삭제 테스트")
+    void deleteCouple() {
+        // given
+        Long coupleId = 1L;
+
+        CoupleList testCouple = new CoupleList(
+                1L,
+                "기존 이름",
+                "기존 사진",
+                LocalDateTime.of(2024, 12, 12, 0, 0),
+                true,
+                CoupleMatchingStatus.PROFILE_COMPLETED,
+                1L,
+                2L
+        );
+
+        when(coupleRepository.findCoupleListByCoupleId(coupleId))
+                .thenReturn(Optional.of(testCouple));
+
+        CoupleListDTO expectedDTO = new CoupleListDTO();
+        expectedDTO.setCoupleId(1L);
+        expectedDTO.setCoupleName("기존 이름");
+        expectedDTO.setCouplePhoto("기존 사진");
+        expectedDTO.setCoupleStartDate(LocalDateTime.of(2024, 12, 12, 0, 0));
+        expectedDTO.setCoupleStatus(false);
+        expectedDTO.setCoupleMatchingStatus(CoupleMatchingStatus.PROFILE_COMPLETED);
+        expectedDTO.setMemberId1(1L);
+        expectedDTO.setMemberId2(2L);
+
+        when(converter.fromEntityToCoupleDTO(any(CoupleList.class)))
+                .thenReturn(expectedDTO);
+
+        // when
+        CoupleListDTO deletedCouple = coupleService.deleteCouple(coupleId);
+
+        // then
+        verify(coupleRepository, times(1))
+                .findCoupleListByCoupleId(coupleId);
+
+        assertEquals(deletedCouple.getCoupleStatus(), false);
+        assertEquals(expectedDTO, deletedCouple);
     }
 }

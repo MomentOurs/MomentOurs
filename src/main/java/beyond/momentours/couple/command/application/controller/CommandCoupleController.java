@@ -57,4 +57,11 @@ public class CommandCoupleController {
         CoupleProfileResponseVO responseVO = coupleConverter.fromDtoToCoupleVO(profileDTO);
         return ResponseDTO.ok(responseVO);
     }
+
+    // 커플 삭제하는 메서드
+    @PostMapping("/soft-delete/{coupleId}")
+    public ResponseDTO<?> deleteCouple(@PathVariable Long coupleId) {
+        CoupleListDTO coupleDTO = commandCoupleService.deleteCouple(coupleId);
+        return ResponseDTO.ok("성공적으로 삭제되었습니다.");
+    }
 }

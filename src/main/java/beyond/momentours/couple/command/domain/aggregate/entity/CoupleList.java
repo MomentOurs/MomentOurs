@@ -45,7 +45,7 @@ public class CoupleList {
         this.memberId1 = memberId1;
         this.memberId2 = memberId2;
         this.coupleMatchingStatus = CoupleMatchingStatus.AUTHENTICATED;
-        this.coupleStatus = Boolean.FALSE;
+        this.coupleStatus = Boolean.TRUE;
         this.coupleStartDate = LocalDateTime.now();
         this.coupleName = memberName1 +" " +memberName2;
     }
@@ -60,5 +60,9 @@ public class CoupleList {
         if (requestVO.getCoupleStartDate() != null) {
             this.coupleStartDate = requestVO.getCoupleStartDate();
         }
+    }
+
+    public void delete() {
+        this.coupleStatus = Boolean.FALSE;
     }
 }
