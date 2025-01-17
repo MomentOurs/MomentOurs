@@ -37,6 +37,34 @@ public class CommentServiceImpl implements CommentService {
         return commentConverter.fromEntityToDTO(savedComment);
     }
 
+    @Override
+    public CommentDTO updateComment(CommentDTO commentDTO) {
+//        Long memberId = getLoggedInMemberId(); // 로그인한 사용자의 ID 가져오기
+        Long memberId = 0L;
+        commentDTO.setMemberId(memberId);
+
+        Comment existingComment = commentRepository.findById(commentDTO.getCommentId()).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_COMMENT));
+        log.info("기존 Comment 데이터: {}", existingComment);
+
+        if (!existingComment.getMemberId().equals(memberId)) {
+            log.error("수정 권한 없음: 요청한 사용자 ID: {}, 댓글 작성자 ID: {}", memberId, existingComment.getMemberId());
+            throw new CommonException(ErrorCode.ACCESS_DENIED);
+        }
+
+        updateCommentContent(commentDTO, existingComment);
+        log.info("수정 후 Comment 데이터: {}", existingComment);
+
+        commentRepository.save(existingComment);
+
+        return commentConverter.fromEntityToDTO(existingComment);
+    }
+
+    private void updateCommentContent(CommentDTO commentDTO, Comment existingComment) {
+        if (commentDTO.getCommentContent() != null) {
+            existingComment.updateContent(commentDTO.getCommentContent());
+        }
+    }
+
     private CommentDTO setCommentTypeFields(CommentDTO commentDTO) {
         switch (commentDTO.getCommentType()) {
             case COUPLE_LOG:
