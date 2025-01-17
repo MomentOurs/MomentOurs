@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Setter
 @Entity
 @ToString
 @Table(name = "tb_couple_list")
@@ -40,4 +39,13 @@ public class CoupleList {
 
     @Column(name = "member_id2")
     private Long memberId2;
+
+    public void create(Long memberId1, Long memberId2, String memberName1, String memberName2) {
+        this.memberId1 = memberId1;
+        this.memberId2 = memberId2;
+        this.coupleMatchingStatus = CoupleMatchingStatus.AUTHENTICATED;
+        this.coupleStatus = Boolean.FALSE;
+        this.coupleStartDate = LocalDateTime.now();
+        this.coupleName = memberName1 +" " +memberName2;
+    }
 }

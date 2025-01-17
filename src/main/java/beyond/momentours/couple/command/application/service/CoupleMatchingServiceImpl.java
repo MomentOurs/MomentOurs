@@ -5,7 +5,6 @@ import beyond.momentours.common.exception.ErrorCode;
 import beyond.momentours.couple.command.application.dto.CoupleListDTO;
 import beyond.momentours.couple.command.application.dto.MatchingCodeDTO;
 import beyond.momentours.couple.command.domain.aggregate.entity.CoupleList;
-import beyond.momentours.couple.command.domain.aggregate.entity.CoupleMatchingStatus;
 import beyond.momentours.couple.command.domain.aggregate.entity.MatchingCode;
 import beyond.momentours.couple.command.domain.aggregate.entity.MatchingStatus;
 import beyond.momentours.couple.command.domain.repository.CoupleRepository;
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -63,7 +61,7 @@ public class CoupleMatchingServiceImpl implements CoupleMatchingService {
         // 2-2. 매칭 코드로 조회 가능하도록
         redisTemplate.opsForValue().set(CODE_PREFIX + matchingCode.getId(), matchingCode, MATCHING_CODE_TTL);
 
-        // 3. QR코드로 변환
+        // 3. 코드DTO로 변환
         return MatchingCodeDTO.builder()
                 .id(matchingCode.getId())
                 .memberId(matchingCode.getMemberId())
@@ -136,12 +134,7 @@ public class CoupleMatchingServiceImpl implements CoupleMatchingService {
         // 회원 서비스에서 회원번호 기반 이름 닉네임 조회
 
         CoupleList newCouple = new CoupleList();
-        newCouple.setCoupleName("회원 서비스에서 양쪽 회원 이름을 조회해서 붙여넣을 예정");
-        newCouple.setMemberId1(memberId1);
-        newCouple.setMemberId2(memberId2);
-        newCouple.setCoupleMatchingStatus(CoupleMatchingStatus.AUTHENTICATED);
-        newCouple.setCoupleStatus(false);
-        newCouple.setCoupleStartDate(LocalDateTime.now());
+        newCouple.create(memberId1, memberId2, "1번 회원 이름", "2번회원 이름");
         log.info("생성된 커플 정보 newCouple: {}", newCouple);
         coupleRepository.save(newCouple);
 
@@ -185,7 +178,7 @@ public class CoupleMatchingServiceImpl implements CoupleMatchingService {
                log.info("redis에 저장된 코드의 남은 TTL: {}", remainingTTL);
 
                if (remainingTTL > 0) {
-                   foundedCode.setMatchingStatus(MatchingStatus.USED);
+                   foundedCode.markAsUsed();
                    operations.opsForValue().set(key, foundedCode, remainingTTL, TimeUnit.MILLISECONDS);
                }
                else {

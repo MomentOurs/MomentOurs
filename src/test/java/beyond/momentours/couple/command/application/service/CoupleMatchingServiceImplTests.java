@@ -110,8 +110,7 @@ class CoupleMatchingServiceImplTests {
 
         MatchingCode validCode = MatchingCode.create(originalMemberId);
         CoupleList testCouple = new CoupleList();
-        testCouple.setMemberId1(originalMemberId);
-        testCouple.setMemberId2(requestMemberId );
+        testCouple.create(requestMemberId, originalMemberId, "", "");
 
         // redis transaction을 모의하기 위한 설정
         // validateAndGetMatchingCode 통과한 결과

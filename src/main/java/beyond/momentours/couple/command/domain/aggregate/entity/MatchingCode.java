@@ -1,5 +1,7 @@
 package beyond.momentours.couple.command.domain.aggregate.entity;
 
+import beyond.momentours.common.exception.CommonException;
+import beyond.momentours.common.exception.ErrorCode;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -8,7 +10,6 @@ import java.util.UUID;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Setter
 public class MatchingCode {
     private String id;
     private Long memberId;
@@ -23,5 +24,11 @@ public class MatchingCode {
                 LocalDateTime.now(),
                 MatchingStatus.PENDING
         );
+    }
+
+    public void markAsUsed() {
+        if(this.matchingStatus == MatchingStatus.PENDING)
+            this.matchingStatus = MatchingStatus.USED;
+        else throw new CommonException(ErrorCode.USED_CODE_REQUEST);
     }
 }
