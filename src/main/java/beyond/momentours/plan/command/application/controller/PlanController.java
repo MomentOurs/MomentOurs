@@ -6,7 +6,7 @@ import beyond.momentours.plan.command.application.mapper.PlanConverter;
 import beyond.momentours.plan.command.application.service.PlanService;
 import beyond.momentours.plan.command.domain.vo.request.RequestUpdatePlanVO;
 import beyond.momentours.plan.command.domain.vo.request.RequestCreatePlanVO;
-import beyond.momentours.plan.command.domain.vo.response.ResponseEditPlanVO;
+import beyond.momentours.plan.command.domain.vo.response.ResponseUpdatePlanVO;
 import beyond.momentours.plan.command.domain.vo.response.ResponseCreatePlanVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +49,7 @@ public class PlanController {
         try {
             PlanDTO planDTO = planConverter.fromUpdateVOToDTO(request);
             PlanDTO updatedPlan = planService.updatePlan(planDTO);
-            ResponseEditPlanVO response = planConverter.fromDTOToUpdateVO(updatedPlan);
+            ResponseUpdatePlanVO response = planConverter.fromDTOToUpdateVO(updatedPlan);
 
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (CommonException e) {
