@@ -59,6 +59,27 @@ public class CommentServiceImpl implements CommentService {
         return commentConverter.fromEntityToDTO(existingComment);
     }
 
+    @Override
+    public CommentDTO deleteComment(Long commentId) {
+        Comment existingComment = commentRepository.findById(commentId).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_COMMENT));
+        log.info("삭제 요청된 Comment 데이터: {}", existingComment);
+
+//        Long memberId = getLoggedInMemberId(); // 로그인한 사용자의 ID 가져오기
+        Long memberId = 0L;
+
+        if (!existingComment.getMemberId().equals(memberId)) {
+            log.error("삭제 권한 없음: 요청한 사용자 ID: {}, 댓글 작성자 ID: {}", memberId, existingComment.getMemberId());
+            throw new CommonException(ErrorCode.ACCESS_DENIED);
+        }
+
+        existingComment.updateStatus(false);
+        log.info("상태 변경 후 Comment : {}", existingComment);
+
+        commentRepository.save(existingComment);
+
+        return commentConverter.fromEntityToDTO(existingComment);
+    }
+
     private void updateCommentContent(CommentDTO commentDTO, Comment existingComment) {
         if (commentDTO.getCommentContent() != null) {
             existingComment.updateContent(commentDTO.getCommentContent());
