@@ -25,8 +25,17 @@ public class QueryCoupleServiceImpl implements QueryCoupleService {
     }
 
     @Override
-    public CoupleListDTO getCoupleById(Long coupleId) {
+    public CoupleListDTO getCoupleByCoupleId(Long coupleId) {
         CoupleList existingCouple = coupleMapper.getCoupleByCoupleId(coupleId);
+        if (existingCouple == null) {
+            throw new CommonException(ErrorCode.NOT_FOUND_COUPLE);
+        }
+        return converter.fromEntityToCoupleDTO(existingCouple);
+    }
+
+    @Override
+    public CoupleListDTO getCoupleByMemberId(Long memberId) {
+        CoupleList existingCouple = coupleMapper.getCoupleByMemberId(memberId);
         if (existingCouple == null) {
             throw new CommonException(ErrorCode.NOT_FOUND_COUPLE);
         }

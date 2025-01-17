@@ -29,4 +29,19 @@
         WHERE c.couple_id = #{coupleId}
         AND c.couple_status = 1
     </select>
+
+    <select id="getCoupleByMemberId" resultMap="coupleResultMap" parameterType="long">
+        SELECT
+            c.couple_id,
+            c.couple_name,
+            c.couple_photo,
+            c.couple_start_date,
+            c.couple_status,
+            c.couple_matching_status,
+            c.member_id1,
+            c.member_id2
+        FROM tb_couple_list c
+        WHERE c.couple_status = 1
+        AND (member_id1 = #{memberId} OR member_id2 = #{memberId})
+    </select>
 </mapper>

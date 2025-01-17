@@ -26,8 +26,13 @@ public class QueryCoupleController {
 
     @GetMapping("/{coupleId}")
     public ResponseDTO<?> getCoupleById(@PathVariable("coupleId") Long coupleId) {
-        CoupleListDTO coupleListDTO = coupleService.getCoupleById(coupleId);
-        CoupleListResponseVO responseVO = converter.fromDtoToCoupleVO(coupleListDTO);
-        return ResponseDTO.ok(responseVO);
+        CoupleListDTO coupleListDTO = coupleService.getCoupleByCoupleId(coupleId);
+        return ResponseDTO.ok(converter.fromDtoToCoupleVO(coupleListDTO));
+    }
+
+    @GetMapping("/{memberId}")
+    public ResponseDTO<?> getCoupleByMemberId(@PathVariable("memberId") Long memberId) {
+        CoupleListDTO coupleListDTO = coupleService.getCoupleByMemberId(memberId);
+        return ResponseDTO.ok(converter.fromDtoToCoupleVO(coupleListDTO));
     }
 }

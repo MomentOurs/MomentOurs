@@ -30,7 +30,7 @@ class QueryCoupleServiceImplTests {
     private QueryCoupleServiceImpl coupleService;
 
     @Test
-    @DisplayName("특정 커플번호로 활성상태인 커플 조회 테스트")
+    @DisplayName("특정 커플번호로 활성 상태인 커플 조회 테스트")
     void getActivatedCoupleById() {
         // given
         Long coupleId = 1L;
@@ -45,7 +45,6 @@ class QueryCoupleServiceImplTests {
                 1L,
                 2L
         );
-
         when(coupleMapper.getCoupleByCoupleId(coupleId)).thenReturn(testCouple);
 
         CoupleListDTO expectedDTO = CoupleListDTO.builder()
@@ -61,7 +60,7 @@ class QueryCoupleServiceImplTests {
         when(converter.fromEntityToCoupleDTO(any(CoupleList.class))).thenReturn(expectedDTO);
 
         // when
-        CoupleListDTO result = coupleService.getCoupleById(coupleId);
+        CoupleListDTO result = coupleService.getCoupleByCoupleId(coupleId);
 
         // then
         verify(coupleMapper, times(1)).getCoupleByCoupleId(coupleId);
@@ -69,6 +68,48 @@ class QueryCoupleServiceImplTests {
         assertNotNull(result);
         assertEquals(result, expectedDTO);
         assertEquals(result.getCoupleId(), coupleId);
+        assertEquals(result.getCoupleStatus(), true);
+    }
+
+    @Test
+    @DisplayName("회원 번호로 활성 상태인 특정 커플 조회")
+    void getActivatedCoupleByMemberId() {
+        // given
+        Long memberId = 1L;
+        LocalDateTime startDate = LocalDateTime.of(2024, 12, 12, 0, 0);
+        CoupleList testCouple = new CoupleList(
+                1L,
+                "테스트 커플 이름",
+                "test_photo.png",
+                startDate,
+                true,
+                CoupleMatchingStatus.PROFILE_COMPLETED,
+                1L,
+                2L
+        );
+        when(coupleMapper.getCoupleByMemberId(memberId)).thenReturn(testCouple);
+
+        CoupleListDTO expectedDTO = CoupleListDTO.builder()
+                .coupleId(1L)
+                .coupleName("테스트 커플 이름")
+                .couplePhoto("test_photo.png")
+                .coupleStartDate(startDate)
+                .coupleStatus(true)
+                .coupleMatchingStatus(CoupleMatchingStatus.PROFILE_COMPLETED)
+                .memberId1(memberId)
+                .memberId2(2L)
+                .build();
+        when(converter.fromEntityToCoupleDTO(any(CoupleList.class))).thenReturn(expectedDTO);
+
+        // when
+        CoupleListDTO result = coupleService.getCoupleByMemberId(memberId);
+
+        // then
+        verify(coupleMapper, times(1)).getCoupleByMemberId(memberId);
+        verify(converter, times(1)).fromEntityToCoupleDTO(any(CoupleList.class));
+        assertNotNull(result);
+        assertEquals(result, expectedDTO);
+        assertEquals(result.getMemberId1(), memberId);
         assertEquals(result.getCoupleStatus(), true);
     }
 }
