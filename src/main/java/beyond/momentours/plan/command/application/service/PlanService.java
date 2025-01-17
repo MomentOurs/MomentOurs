@@ -7,17 +7,17 @@ import java.util.List;
 
 public interface PlanService {
     @Transactional
-    PlanDTO registerPlan(PlanDTO planDTO);
+    PlanDTO createPlan(PlanDTO planDTO);
 
     @Transactional
-    PlanDTO editPlan(PlanDTO planDTO);
+    PlanDTO updatePlan(PlanDTO planDTO);
 
     @Transactional
     PlanDTO deletePlan(Long planId);
 
-    List<PlanDTO> getSchedules(int year, int month);
+    List<PlanDTO> getPlans(int year, int month);
 
-    List<PlanDTO> getSchedulesByDate(int year, int month, int day);
+    List<PlanDTO> getPlansByDate(int year, int month, int day);
 
     PlanDTO getPlanById(Long planId);
 }
