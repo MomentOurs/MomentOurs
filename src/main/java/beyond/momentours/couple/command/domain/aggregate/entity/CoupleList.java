@@ -1,5 +1,6 @@
 package beyond.momentours.couple.command.domain.aggregate.entity;
 
+import beyond.momentours.couple.command.domain.vo.CoupleProfileRequestVO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -47,5 +48,17 @@ public class CoupleList {
         this.coupleStatus = Boolean.FALSE;
         this.coupleStartDate = LocalDateTime.now();
         this.coupleName = memberName1 +" " +memberName2;
+    }
+
+    public void update(CoupleProfileRequestVO requestVO) {
+        if (requestVO.getCoupleName() != null) {
+            this.coupleName = requestVO.getCoupleName();
+        }
+        if (requestVO.getCouplePhoto() != null) {
+            this.couplePhoto = requestVO.getCouplePhoto();
+        }
+        if (requestVO.getCoupleStartDate() != null) {
+            this.coupleStartDate = requestVO.getCoupleStartDate();
+        }
     }
 }
