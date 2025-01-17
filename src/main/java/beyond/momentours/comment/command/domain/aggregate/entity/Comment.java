@@ -39,8 +39,8 @@ public class Comment {
     @Column(name = "member_id", nullable = false)
     private Long memberId;
 
-    @Column(name = "moment_id")
-    private Long momentId;
+    @Column(name = "ques_ans_id")
+    private Long questAnsId;
 
     @Column(name = "couple_log_id")
     private Long coupleLogId;

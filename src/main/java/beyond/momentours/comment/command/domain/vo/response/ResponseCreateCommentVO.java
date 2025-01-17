@@ -17,8 +17,8 @@ public class ResponseCreateCommentVO {
     @JsonProperty("comment_type")
     private CommentType commentType;
 
-    @JsonProperty("moment_id")
-    private Long momentId;
+    @JsonProperty("ques_ans_id")
+    private Long quesAnsId;
 
     @JsonProperty("couple_log_id")
     private Long coupleLogId;

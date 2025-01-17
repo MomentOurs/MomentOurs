@@ -14,7 +14,7 @@ public class CommentConverter {
         return CommentDTO.builder()
                 .commentContent(request.getCommentContent())
                 .commentType(request.getCommentType())
-                .momentId(request.getMomentId())
+                .quesAnsId(request.getQuesAnsId())
                 .coupleLogId(request.getCoupleLogId())
                 .build();
     }
@@ -23,7 +23,7 @@ public class CommentConverter {
         return ResponseCreateCommentVO.builder()
                 .commentContent(saveCommentDTO.getCommentContent())
                 .commentType(saveCommentDTO.getCommentType())
-                .momentId(saveCommentDTO.getMomentId())
+                .quesAnsId(saveCommentDTO.getQuesAnsId())
                 .coupleLogId(saveCommentDTO.getCoupleLogId())
                 .build();
     }
@@ -33,7 +33,7 @@ public class CommentConverter {
                 .commentContent(commentDTO.getCommentContent())
                 .commentType(commentDTO.getCommentType())
                 .memberId(commentDTO.getMemberId())
-                .momentId(commentDTO.getMomentId())
+                .questAnsId(commentDTO.getQuesAnsId())
                 .coupleLogId(commentDTO.getCoupleLogId())
                 .build();
     }
@@ -47,7 +47,7 @@ public class CommentConverter {
                 .createdAt(savedComment.getCreatedAt())
                 .updatedAt(savedComment.getUpdatedAt())
                 .memberId(savedComment.getMemberId())
-                .momentId(savedComment.getMomentId())
+                .quesAnsId(savedComment.getQuestAnsId())
                 .coupleLogId(savedComment.getCoupleLogId())
                 .build();
     }

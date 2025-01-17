@@ -12,7 +12,7 @@
         <result property="createdAt" column="created_at"/>
         <result property="updatedAt" column="updated_at"/>
         <result property="memberId" column="member_id"/>
-        <result property="momentId" column="moment_id"/>
+        <result property="quesAnsId" column="ques_ans_id"/>
         <result property="coupleLogId" column="couple_log_id"/>
     </resultMap>
 

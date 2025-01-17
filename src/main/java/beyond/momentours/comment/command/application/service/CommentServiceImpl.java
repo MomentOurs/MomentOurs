@@ -91,12 +91,12 @@ public class CommentServiceImpl implements CommentService {
             case COUPLE_LOG:
                 log.info("COUPLE_LOG 타입의 댓글 처리");
                 commentDTO.setCoupleLogId(commentDTO.getCoupleLogId());
-                commentDTO.setMomentId(null);
+                commentDTO.setQuesAnsId(null);
                 break;
 
-            case MOMENT:
-                log.info("MOMENT 타입의 댓글 처리");
-                commentDTO.setMomentId(commentDTO.getMomentId());
+            case QUESTION_ANSWER:
+                log.info("QUESTION_ANSWER 타입의 댓글 처리");
+                commentDTO.setQuesAnsId(commentDTO.getQuesAnsId());
                 commentDTO.setCoupleLogId(null);
                 break;
 
