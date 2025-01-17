@@ -54,4 +54,9 @@ public class Comment {
         this.commentContent = commentContent;
         this.updatedAt = LocalDateTime.now();
     }
+
+    public void updateStatus(boolean status) {
+        this.commentStatus = status;
+        this.updatedAt = LocalDateTime.now();
+    }
 }
