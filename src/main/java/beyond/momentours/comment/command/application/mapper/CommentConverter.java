@@ -3,7 +3,9 @@ package beyond.momentours.comment.command.application.mapper;
 import beyond.momentours.comment.command.application.dto.CommentDTO;
 import beyond.momentours.comment.command.domain.aggregate.entity.Comment;
 import beyond.momentours.comment.command.domain.vo.request.RequestCreateCommentVO;
+import beyond.momentours.comment.command.domain.vo.request.RequestUpdateCommentVO;
 import beyond.momentours.comment.command.domain.vo.response.ResponseCreateCommentVO;
+import beyond.momentours.comment.command.domain.vo.response.ResponseUpdateCommentVO;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -47,6 +49,20 @@ public class CommentConverter {
                 .memberId(savedComment.getMemberId())
                 .momentId(savedComment.getMomentId())
                 .coupleLogId(savedComment.getCoupleLogId())
+                .build();
+    }
+
+    public CommentDTO fromUpdateVOToDTO(RequestUpdateCommentVO vo) {
+        return CommentDTO.builder()
+                .commentContent(vo.getCommentContent())
+                .build();
+    }
+
+    public ResponseUpdateCommentVO fromDTOToUpdateVO(CommentDTO dto) {
+        return ResponseUpdateCommentVO.builder()
+                .commentId(dto.getCommentId())
+                .commentContent(dto.getCommentContent())
+                .updatedAt(dto.getUpdatedAt())
                 .build();
     }
 }
