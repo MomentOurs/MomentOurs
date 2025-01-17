@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="beyond.momentours.couple.query.repository.CoupleMapper">
+    <resultMap id="coupleResultMap" type="beyond.momentours.couple.command.domain.aggregate.entity.CoupleList">
+        <id property="coupleId" column="couple_id"/>
+        <result property="coupleName" column="couple_name"/>
+        <result property="couplePhoto" column="couple_photo"/>
+        <result property="coupleStartDate" column="couple_start_date"/>
+        <result property="coupleStatus" column="couple_status"/>
+        <result property="coupleMatchingStatus" column="couple_matching_status"/>
+        <result property="memberId1" column="member_id1"/>
+        <result property="memberId2" column="member_id2"/>
+    </resultMap>
+
+    <select id="getCoupleByCoupleId" resultMap="coupleResultMap" parameterType="long">
+        SELECT
+            c.couple_id,
+            c.couple_name,
+            c.couple_photo,
+            c.couple_start_date,
+            c.couple_status,
+            c.couple_matching_status,
+            c.member_id1,
+            c.member_id2
+        FROM tb_couple_list c
+        WHERE c.couple_id = #{coupleId}
+        AND c.couple_status = 1
+    </select>
+</mapper>
