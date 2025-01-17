@@ -61,4 +61,21 @@ public class CommentController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("예상치 못한 오류가 발생했습니다");
         }
     }
+
+    @PatchMapping("/{commentId}/soft-delete")
+    public ResponseEntity<?> deleteComment(@PathVariable Long commentId) {
+        log.info("삭제 요청된 댓글 ID : {}", commentId);
+        try {
+            CommentDTO deletedComment = commentService.deleteComment(commentId);
+            log.info("삭제된 commentId : {}, 해당 댓글의 상태 : {}", deletedComment.getCommentId(), deletedComment.getCommentStatus());
+            return ResponseEntity.status(HttpStatus.OK).body("댓글이 성공적으로 삭제되었습니다.");
+        } catch (CommonException e) {
+            log.error("댓글 삭제 오류: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            log.error("예상치 못한 오류", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("예상치 못한 오류가 발생했습니다");
+        }
+    }
+
 }
