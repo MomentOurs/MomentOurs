@@ -4,6 +4,8 @@ import beyond.momentours.common.exception.CommonException;
 import beyond.momentours.common.exception.ErrorCode;
 import beyond.momentours.couple.command.application.dto.CoupleListDTO;
 import beyond.momentours.couple.command.application.dto.MatchingCodeDTO;
+import beyond.momentours.couple.command.application.mapper.CodeConverter;
+import beyond.momentours.couple.command.application.mapper.CoupleConverter;
 import beyond.momentours.couple.command.domain.aggregate.entity.CoupleList;
 import beyond.momentours.couple.command.domain.aggregate.entity.MatchingCode;
 import beyond.momentours.couple.command.domain.aggregate.entity.MatchingStatus;
@@ -26,14 +28,21 @@ import java.util.concurrent.TimeUnit;
 public class CoupleMatchingServiceImpl implements CoupleMatchingService {
     private final RedisTemplate<String, MatchingCode> redisTemplate;
     private final CoupleRepository coupleRepository;
+    private final CodeConverter codeConverter;
+    private final CoupleConverter coupleConverter;
     private static final String KEY_PREFIX = "matching_user:";
     private static final String CODE_PREFIX = "matching_code:";
     private static final Duration MATCHING_CODE_TTL = Duration.ofHours(6);
 
     @Autowired
-    public CoupleMatchingServiceImpl(RedisTemplate<String, MatchingCode> redisTemplate, CoupleRepository coupleRepository) {
+    public CoupleMatchingServiceImpl(RedisTemplate<String, MatchingCode> redisTemplate,
+                                     CoupleRepository coupleRepository,
+                                     CodeConverter codeConverter,
+                                     CoupleConverter coupleConverter) {
         this.redisTemplate = redisTemplate;
         this.coupleRepository = coupleRepository;
+        this.codeConverter = codeConverter;
+        this.coupleConverter = coupleConverter;
     }
 
     @Override
@@ -44,12 +53,7 @@ public class CoupleMatchingServiceImpl implements CoupleMatchingService {
 
         // 만약 있다면 그대로 반환
         if (existingCode != null) {
-            return MatchingCodeDTO.builder()
-                    .id(existingCode.getId())
-                    .memberId(existingCode.getMemberId())
-                    .createdAt(existingCode.getCreatedAt())
-                    .matchingStatus(existingCode.getMatchingStatus())
-                    .build();
+            return codeConverter.fromCodeToDto(existingCode);
         }
 
         // 1. 없으면 새로운 MatchingCode 생성
@@ -62,12 +66,7 @@ public class CoupleMatchingServiceImpl implements CoupleMatchingService {
         redisTemplate.opsForValue().set(CODE_PREFIX + matchingCode.getId(), matchingCode, MATCHING_CODE_TTL);
 
         // 3. 코드DTO로 변환
-        return MatchingCodeDTO.builder()
-                .id(matchingCode.getId())
-                .memberId(matchingCode.getMemberId())
-                .createdAt(matchingCode.getCreatedAt())
-                .matchingStatus(matchingCode.getMatchingStatus())
-                .build();
+        return codeConverter.fromCodeToDto(matchingCode);
     }
 
     @Override
@@ -138,16 +137,7 @@ public class CoupleMatchingServiceImpl implements CoupleMatchingService {
         log.info("생성된 커플 정보 newCouple: {}", newCouple);
         coupleRepository.save(newCouple);
 
-        return CoupleListDTO.builder()
-                .coupleId(newCouple.getCoupleId())
-                .coupleName(newCouple.getCoupleName())
-                .couplePhoto(newCouple.getCouplePhoto())
-                .coupleStartDate(newCouple.getCoupleStartDate())
-                .coupleMatchingStatus(newCouple.getCoupleMatchingStatus())
-                .coupleStatus(newCouple.getCoupleStatus())
-                .memberId1(newCouple.getMemberId1())
-                .memberId2(newCouple.getMemberId2())
-                .build();
+        return coupleConverter.fromEntityToCoupleDTO(newCouple);
     }
 
     // 회원 번호를 기반으로 커플인지 검증하는 메서드입니다.
