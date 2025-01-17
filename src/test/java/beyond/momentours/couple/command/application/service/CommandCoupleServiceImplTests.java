@@ -55,7 +55,7 @@ class CommandCoupleServiceImplTests {
                 2L
         );
 
-        when(coupleRepository.findCoupleListByCoupleId(requestVO.getCoupleId()))
+        when(coupleRepository.findCoupleListByCoupleIdAndCoupleStatusIsTrue(requestVO.getCoupleId()))
                 .thenReturn(Optional.of(testCouple));
 
         CoupleProfileDTO expectedDTO = new CoupleProfileDTO();
@@ -67,7 +67,7 @@ class CommandCoupleServiceImplTests {
 
         // then
         verify(coupleRepository, times(1))
-                .findCoupleListByCoupleId(requestVO.getCoupleId());
+                .findCoupleListByCoupleIdAndCoupleStatusIsTrue(requestVO.getCoupleId());
 
         assertEquals(testCouple.getCoupleName(), requestVO.getCoupleName());
         assertEquals(testCouple.getCouplePhoto(), requestVO.getCouplePhoto());
@@ -94,7 +94,7 @@ class CommandCoupleServiceImplTests {
                 2L
         );
 
-        when(coupleRepository.findCoupleListByCoupleId(coupleId))
+        when(coupleRepository.findCoupleListByCoupleIdAndCoupleStatusIsTrue(coupleId))
                 .thenReturn(Optional.of(testCouple));
 
         CoupleListDTO expectedDTO = new CoupleListDTO();
@@ -115,8 +115,9 @@ class CommandCoupleServiceImplTests {
 
         // then
         verify(coupleRepository, times(1))
-                .findCoupleListByCoupleId(coupleId);
+                .findCoupleListByCoupleIdAndCoupleStatusIsTrue(coupleId);
 
+        assertEquals(testCouple.getCoupleStatus(), false);
         assertEquals(deletedCouple.getCoupleStatus(), false);
         assertEquals(expectedDTO, deletedCouple);
     }

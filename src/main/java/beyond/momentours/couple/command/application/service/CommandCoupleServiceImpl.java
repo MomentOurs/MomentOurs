@@ -30,7 +30,7 @@ public class CommandCoupleServiceImpl implements CommandCoupleService {
     @Override
     public CoupleProfileDTO updateProfile(CoupleProfileRequestVO requestVO) {
         log.info("couple profile 수정 메서드 시작, requestVO: {}", requestVO);
-        CoupleList existingCouple = coupleRepository.findCoupleListByCoupleId(requestVO.getCoupleId())
+        CoupleList existingCouple = coupleRepository.findCoupleListByCoupleIdAndCoupleStatusIsTrue(requestVO.getCoupleId())
                 .orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_COUPLE));
         existingCouple.update(requestVO);
         coupleRepository.save(existingCouple);
@@ -41,7 +41,7 @@ public class CommandCoupleServiceImpl implements CommandCoupleService {
     @Override
     public CoupleListDTO deleteCouple(Long coupleId) {
         log.info("deleteCouple 메서드 시작, coupleId: {}", coupleId);
-        CoupleList existingCouple = coupleRepository.findCoupleListByCoupleId(coupleId)
+        CoupleList existingCouple = coupleRepository.findCoupleListByCoupleIdAndCoupleStatusIsTrue(coupleId)
                 .orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_COUPLE));
         existingCouple.delete();
         coupleRepository.save(existingCouple);
