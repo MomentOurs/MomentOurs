@@ -27,8 +27,8 @@ public class Comment {
     @Column(name = "comment_type", nullable = false)
     private CommentType commentType;
 
-    @Column(name = "comment_status", nullable = false)
-    private Boolean commentStatus;
+    @Column(name = "comment_status", nullable = false, columnDefinition = "BOOLEAN DEFAULT true")
+    private Boolean commentStatus = true;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
@@ -45,15 +45,13 @@ public class Comment {
     @Column(name = "couple_log_id")
     private Long coupleLogId;
 
-    @PrePersist
-    public void prePersist() {
-        if (commentStatus == null) {
-            commentStatus = true;
-        }
-    }
-
     public void create(Comment comment) {
         comment.createdAt = LocalDateTime.now();
         comment.updatedAt = LocalDateTime.now();
+    }
+
+    public void updateContent(String commentContent) {
+        this.commentContent = commentContent;
+        this.updatedAt = LocalDateTime.now();
     }
 }
