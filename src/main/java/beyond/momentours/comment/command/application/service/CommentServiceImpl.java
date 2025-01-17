@@ -23,12 +23,14 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentDTO createComment(CommentDTO commentDTO) {
         CommentDTO commentDTOInfo = setCommentTypeFields(commentDTO);
-//        Long memberId = getLoggedInMemberId(); // getLoggedInMemberId 는 로그인한 유저의 memberId를 토큰에서 가져온다는 가정으로 써둔 메서드
+
+//        Long memberId = getLoggedInMemberId(); // 로그인한 사용자의 ID 가져오기
         Long memberId = 0L;
         commentDTO.setMemberId(memberId);
 
-        Comment comment = commentConverter.fromDTOToEntity(commentDTOInfo);
+        validateCommentTypeStatus(commentDTO); // 해당 댓글 출처의 상태 검증 로직
 
+        Comment comment = commentConverter.fromDTOToEntity(commentDTOInfo);
         log.info("저장할 댓글 데이터: {}", comment);
 
         comment.create(comment);
@@ -43,13 +45,16 @@ public class CommentServiceImpl implements CommentService {
         Long memberId = 0L;
         commentDTO.setMemberId(memberId);
 
-        Comment existingComment = commentRepository.findById(commentDTO.getCommentId()).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_COMMENT));
+        Comment existingComment = commentRepository.findById(commentDTO.getCommentId())
+                .orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_COMMENT));
         log.info("기존 Comment 데이터: {}", existingComment);
 
         if (!existingComment.getMemberId().equals(memberId)) {
             log.error("수정 권한 없음: 요청한 사용자 ID: {}, 댓글 작성자 ID: {}", memberId, existingComment.getMemberId());
             throw new CommonException(ErrorCode.ACCESS_DENIED);
         }
+
+        validateCommentTypeStatus(commentDTO);
 
         updateCommentContent(commentDTO, existingComment);
         log.info("수정 후 Comment 데이터: {}", existingComment);
@@ -58,6 +63,7 @@ public class CommentServiceImpl implements CommentService {
 
         return commentConverter.fromEntityToDTO(existingComment);
     }
+
 
     @Override
     public CommentDTO deleteComment(Long commentId) {
@@ -71,6 +77,9 @@ public class CommentServiceImpl implements CommentService {
             log.error("삭제 권한 없음: 요청한 사용자 ID: {}, 댓글 작성자 ID: {}", memberId, existingComment.getMemberId());
             throw new CommonException(ErrorCode.ACCESS_DENIED);
         }
+
+        CommentDTO commentDTO = commentConverter.fromEntityToDTO(existingComment);
+        validateCommentTypeStatus(commentDTO);
 
         existingComment.updateStatus(false);
         log.info("상태 변경 후 Comment : {}", existingComment);
@@ -105,5 +114,22 @@ public class CommentServiceImpl implements CommentService {
         }
 
         return commentDTO;
+    }
+
+    private void validateCommentTypeStatus(CommentDTO commentDTO) {
+        switch (commentDTO.getCommentType()) {
+//            case COUPLE_LOG:
+//                CoupleLog coupleLog = coupleLogRepository.findById(commentDTO.getCoupleLogId()).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_COUPLE_LOG));
+//                if (!coupleLog.isStatus()) throw new CommonException(ErrorCode.NOT_FOUND_COUPLE_LOG);
+//                break;
+
+//            case QUESTION_ANSWER:
+//                QuesAns quesAns = quesAnsRepository.findById(commentDTO.getQuesAnsId()).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_QUES_ANS));
+//                if (!quesAns.isStatus()) throw new CommonException(ErrorCode.NOT_FOUND_QUES_ANSWER);
+//                break;
+
+            default:
+                throw new CommonException(ErrorCode.INVALID_COMMENT_TYPE);
+        }
     }
 }
