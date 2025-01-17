@@ -27,15 +27,7 @@ public class CommandCoupleServiceImpl implements CommandCoupleService {
         log.info("couple profile 수정 메서드 시작, requestVO: {}", requestVO);
         CoupleList existingCouple = coupleRepository.findCoupleListByCoupleId(requestVO.getCoupleId())
                 .orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_COUPLE));
-        if (requestVO.getCoupleName() != null) {
-            existingCouple.setCoupleName(requestVO.getCoupleName());
-        }
-        if (requestVO.getCouplePhoto() != null) {
-            existingCouple.setCouplePhoto(requestVO.getCouplePhoto());
-        }
-        if (requestVO.getCoupleStartDate() != null) {
-            existingCouple.setCoupleStartDate(requestVO.getCoupleStartDate());
-        }
+        existingCouple.update(requestVO);
         log.info("수정된 커플 객체 정보: {}", existingCouple);
         return CoupleProfileDTO.builder()
                 .coupleId(existingCouple.getCoupleId())
