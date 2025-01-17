@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ResponseEditPlanVO {
+public class ResponseUpdatePlanVO {
     @JsonProperty("plan_id")
     private Long planId;
 

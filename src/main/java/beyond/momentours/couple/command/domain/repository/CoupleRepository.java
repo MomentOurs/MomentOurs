@@ -14,5 +14,5 @@ public interface CoupleRepository extends JpaRepository<CoupleList, Long> {
             "WHERE (c.memberId1 = :memberId OR c.memberId2 = :memberId) " +
             "AND c.coupleStatus = true")
     Optional<CoupleList> findActiveCoupleByMemberId(@Param("memberId") Long memberId);
-    Optional<CoupleList> findCoupleListByCoupleId(Long coupleId);
+    Optional<CoupleList> findCoupleListByCoupleIdAndCoupleStatusIsTrue(Long coupleId);
 }

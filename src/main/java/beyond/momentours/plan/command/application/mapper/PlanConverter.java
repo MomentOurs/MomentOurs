@@ -4,7 +4,7 @@ import beyond.momentours.plan.command.application.dto.PlanDTO;
 import beyond.momentours.plan.command.domain.aggregate.entity.Plan;
 import beyond.momentours.plan.command.domain.vo.request.RequestUpdatePlanVO;
 import beyond.momentours.plan.command.domain.vo.request.RequestCreatePlanVO;
-import beyond.momentours.plan.command.domain.vo.response.ResponseEditPlanVO;
+import beyond.momentours.plan.command.domain.vo.response.ResponseUpdatePlanVO;
 import beyond.momentours.plan.command.domain.vo.response.ResponseCreatePlanVO;
 import org.springframework.stereotype.Component;
 
@@ -73,8 +73,9 @@ public class PlanConverter {
                 .build();
     }
 
-    public ResponseEditPlanVO fromDTOToUpdateVO(PlanDTO editedPlan) {
-        return ResponseEditPlanVO.builder()
+    public ResponseUpdatePlanVO fromDTOToUpdateVO(PlanDTO editedPlan) {
+        return ResponseUpdatePlanVO.builder()
+                .planId(editedPlan.getPlanId())
                 .planTitle(editedPlan.getPlanTitle())
                 .planContent(editedPlan.getPlanContent())
                 .planStartDate(editedPlan.getPlanStartDate())

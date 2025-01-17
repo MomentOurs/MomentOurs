@@ -1,4 +1,4 @@
-package beyond.momentours.couple.command.domain.vo;
+package beyond.momentours.couple.command.domain.vo.response;
 
 import beyond.momentours.couple.command.domain.aggregate.entity.CoupleMatchingStatus;
 import lombok.*;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-public class CoupleListVO {
+public class CoupleListResponseVO {
     private Long coupleId;
     private String coupleName;
     private String couplePhoto;
