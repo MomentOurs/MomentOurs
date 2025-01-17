@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 @ToString
-public class RequestEditPlanVO {
+public class RequestUpdatePlanVO {
     @JsonProperty("plan_id")
     private Long planId;
 

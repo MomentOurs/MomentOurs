@@ -4,10 +4,10 @@ import beyond.momentours.common.exception.CommonException;
 import beyond.momentours.plan.command.application.dto.PlanDTO;
 import beyond.momentours.plan.command.application.mapper.PlanConverter;
 import beyond.momentours.plan.command.application.service.PlanService;
-import beyond.momentours.plan.command.domain.vo.request.RequestEditPlanVO;
-import beyond.momentours.plan.command.domain.vo.request.RequestRegisterPlanVO;
+import beyond.momentours.plan.command.domain.vo.request.RequestUpdatePlanVO;
+import beyond.momentours.plan.command.domain.vo.request.RequestCreatePlanVO;
 import beyond.momentours.plan.command.domain.vo.response.ResponseEditPlanVO;
-import beyond.momentours.plan.command.domain.vo.response.ResponseRegisterPlanVO;
+import beyond.momentours.plan.command.domain.vo.response.ResponseCreatePlanVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -25,13 +25,13 @@ public class PlanController {
     private final PlanService planService;
     private final PlanConverter planConverter;
 
-    @PostMapping("/register")
-    public ResponseEntity<?> registerPlan(@RequestBody RequestRegisterPlanVO request) {
+    @PostMapping
+    public ResponseEntity<?> createPlan(@RequestBody RequestCreatePlanVO request) {
         log.info("등록 요청된 request 데이터 : {}", request);
         try {
-            PlanDTO planDTO = planConverter.fromRegisterVOToDTO(request);
-            PlanDTO savePlanDTO = planService.registerPlan(planDTO);
-            ResponseRegisterPlanVO response = planConverter.fromDTOToRegisterVO(savePlanDTO);
+            PlanDTO planDTO = planConverter.fromCreateVOToDTO(request);
+            PlanDTO savePlanDTO = planService.createPlan(planDTO);
+            ResponseCreatePlanVO response = planConverter.fromDTOToCreateVO(savePlanDTO);
 
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (CommonException e) {
@@ -43,13 +43,13 @@ public class PlanController {
         }
     }
 
-    @PatchMapping("/edit")
-    public ResponseEntity<?> editPlan(@RequestBody RequestEditPlanVO request) {
+    @PatchMapping
+    public ResponseEntity<?> updatePlan(@RequestBody RequestUpdatePlanVO request) {
         log.info("수정 요청된 request 데이터 : {}", request);
         try {
-            PlanDTO planDTO = planConverter.fromEditVOToDTO(request);
-            PlanDTO editedPlan = planService.editPlan(planDTO);
-            ResponseEditPlanVO response = planConverter.fromDTOToEditVO(editedPlan);
+            PlanDTO planDTO = planConverter.fromUpdateVOToDTO(request);
+            PlanDTO updatedPlan = planService.updatePlan(planDTO);
+            ResponseEditPlanVO response = planConverter.fromDTOToUpdateVO(updatedPlan);
 
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (CommonException e) {
@@ -61,11 +61,12 @@ public class PlanController {
         }
     }
 
-    @PatchMapping("/delete")
+    @PatchMapping("/{planId}/soft-delete")
     public ResponseEntity<?> deletePlan(@PathVariable Long planId) {
         log.info("삭제 요청한 일정 ID : {}", planId);
         try {
             PlanDTO deletedPlan = planService.deletePlan(planId);
+            log.info("삭제된 planId : {}, 해당 일정의 상태 : {}", deletedPlan.getPlanId(), deletedPlan.getPlanStatus());
             return ResponseEntity.status(HttpStatus.OK).body("성공적으로 삭제되었습니다.");
         } catch (CommonException e) {
             log.error("일정 삭제 오류: {}", e.getMessage());
@@ -77,13 +78,13 @@ public class PlanController {
     }
 
     @GetMapping("/schedules")
-    public ResponseEntity<?> getSchedules(@RequestParam int year, @RequestParam int month) {
-        log.info("스케줄 요청 year: {}, month: {}", year, month);
+    public ResponseEntity<?> getPlans(@RequestParam int year, @RequestParam int month) {
+        log.info("스케줄 월별 조회 요청 year: {}, month: {}", year, month);
         try {
-            List<PlanDTO> schedules = planService.getSchedules(year, month);
-            return ResponseEntity.status(HttpStatus.OK).body(schedules);
+            List<PlanDTO> plans = planService.getPlans(year, month);
+            return ResponseEntity.status(HttpStatus.OK).body(plans);
         } catch (CommonException e) {
-            log.error("스케줄 조회 오류: {}", e.getMessage());
+            log.error("스케줄 월별 조회 오류: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
             log.error("예상치 못한 오류", e);
@@ -91,4 +92,33 @@ public class PlanController {
         }
     }
 
+    @GetMapping("/schedules/date")
+    public ResponseEntity<?> getPlansByDate(@RequestParam int year, @RequestParam int month, @RequestParam int day) {
+        log.info("특정 날짜 일정 요청 year: {}, month: {}, day: {}", year, month, day);
+        try {
+            List<PlanDTO> plansByDate = planService.getPlansByDate(year, month, day);
+            return ResponseEntity.status(HttpStatus.OK).body(plansByDate);
+        } catch (CommonException e) {
+            log.error("스케줄 특정 날짜 조회 오류: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            log.error("예상치 못한 오류", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("예상치 못한 오류가 발생했습니다");
+        }
+    }
+
+    @GetMapping("/{planId}")
+    public ResponseEntity<?> getPlanById(@PathVariable Long planId) {
+        log.info("조회 요청된 planId: {}", planId);
+        try {
+            PlanDTO plan = planService.getPlanById(planId);
+            return ResponseEntity.status(HttpStatus.OK).body(plan);
+        } catch (CommonException e) {
+            log.error("스케줄 조회 오류: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            log.error("예상치 못한 오류", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("예상치 못한 오류가 발생했습니다");
+        }
+    }
 }

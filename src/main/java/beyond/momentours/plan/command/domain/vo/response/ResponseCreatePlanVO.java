@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ResponseRegisterPlanVO {
+public class ResponseCreatePlanVO {
     @JsonProperty("plan_title")
     private String planTitle;
 

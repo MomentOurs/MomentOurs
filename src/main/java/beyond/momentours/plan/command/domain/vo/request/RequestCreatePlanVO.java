@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 @ToString
-public class RequestRegisterPlanVO {
+public class RequestCreatePlanVO {
     @JsonProperty("plan_title")
     private String planTitle;
 

@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,7 +24,7 @@ public class PlanServiceImpl implements PlanService {
     private final PlanMapper planDAO;
 
     @Override
-    public PlanDTO registerPlan(PlanDTO planDTO) {
+    public PlanDTO createPlan(PlanDTO planDTO) {
         // 로그인 사용자 ID를 토큰에서 가져오기
 //        Long memberId = getLoggedInMemberId(); // getLoggedInMemberId 는 로그인한 유저의 memberId를 토큰에서 가져온다는 가정으로 써둔 메서드
         Long memberId = 0L;
@@ -52,7 +51,7 @@ public class PlanServiceImpl implements PlanService {
     }
 
     @Override
-    public PlanDTO editPlan(PlanDTO planDTO) {
+    public PlanDTO updatePlan(PlanDTO planDTO) {
 //        Long memberId = getLoggedInMemberId(); // 로그인한 사용자의 ID 가져오기
         Long memberId = 0L;
         planDTO.setMemberId(memberId);
@@ -101,7 +100,7 @@ public class PlanServiceImpl implements PlanService {
     }
 
     @Override
-    public List<PlanDTO> getSchedules(int year, int month) {
+    public List<PlanDTO> getPlans(int year, int month) {
         LocalDateTime planStartDate = LocalDateTime.of(year, month, 1, 0, 0, 0);
         LocalDateTime planEndDate = planStartDate.withDayOfMonth(planStartDate.toLocalDate().lengthOfMonth())
                 .withHour(23)
@@ -120,6 +119,31 @@ public class PlanServiceImpl implements PlanService {
         return plans.stream()
                 .map(planConverter::fromEntityToDTO)
                 .toList();
+    }
+
+    @Override
+    public List<PlanDTO> getPlansByDate(int year, int month, int day) {
+        LocalDateTime selectedDateStart = LocalDateTime.of(year, month, day, 0, 0, 0);
+        LocalDateTime selectedDateEnd = LocalDateTime.of(year, month, day, 23, 59, 59);
+
+        log.info("특정 날짜 일정 조회 - 시작: {}, 종료: {}", selectedDateStart, selectedDateEnd);
+
+//        Long memberId = getLoggedInMemberId(); // 로그인한 사용자의 ID 가져오기
+        Long memberId = 0L;
+        Long coupleId = planDAO.findByCoupleId(memberId);
+
+        List<Plan> plans = planDAO.findByDate(coupleId, selectedDateStart, selectedDateEnd);
+
+        return plans.stream()
+                .map(planConverter::fromEntityToDTO)
+                .toList();
+    }
+
+    @Override
+    public PlanDTO getPlanById(Long planId) {
+        Plan plan = planRepository.findById(planId).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_PLAN));
+
+        return planConverter.fromEntityToDTO(plan);
     }
 
     private void updatePlan(PlanDTO planDTO, Plan existingPlan) {
