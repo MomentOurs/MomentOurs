@@ -32,4 +32,4 @@ application-test.yml
 /nbdist/
 /.nb-gradle/
 
-*.env
+.env*

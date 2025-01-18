@@ -5,15 +5,16 @@ spring:
     password: ${DB_PASSWORD}
     driver-class-name: org.mariadb.jdbc.Driver
 
+  jpa:
+    show-sql: true
+    database: mysql
+    properties:
+      hibernate:
+        format_sql: true
+    generate-ddl: false
+
 jwt:
   secret-key: ${JWT_SECRET_KEY}
-
-logging:
-  level:
-    beyond.momentours: DEBUG
-    org.springframework.security: TRACE
-    org.mybatis: DEBUG
-    java.sql: DEBUG
 
 mybatis:
   mapper-locations: classpath:/beyond/momentours/mapper/**/*.xml

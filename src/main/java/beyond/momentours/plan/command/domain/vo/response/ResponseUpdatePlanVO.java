@@ -11,7 +11,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ResponseRegisterPlanVO {
+public class ResponseUpdatePlanVO {
+    @JsonProperty("plan_id")
+    private Long planId;
+
     @JsonProperty("plan_title")
     private String planTitle;
 
@@ -27,18 +30,6 @@ public class ResponseRegisterPlanVO {
     @JsonProperty("plan_reminder_datetime")
     private LocalDateTime planReminderDatetime;
 
-    @JsonProperty("created_at")
-    private LocalDateTime createdAt;
-
     @JsonProperty("updated_at")
     private LocalDateTime updatedAt;
-
-    @JsonProperty("member_id")
-    private Long memberId;
-
-    @JsonProperty("couple_id")
-    private Long coupleId;
-
-    @JsonProperty("course_id")
-    private Long courseId;
 }
