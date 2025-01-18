@@ -1,6 +1,8 @@
 package beyond.momentours.member.command.application.service;
 
 
+import beyond.momentours.common.exception.CommonException;
+import beyond.momentours.common.exception.ErrorCode;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
 import beyond.momentours.member.command.application.dto.MemberDTO;
 import beyond.momentours.member.command.application.mapper.MemberConverter;
@@ -42,15 +44,14 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    @Transactional
-    public UserDetails loadUserByUsername(String memberEmail) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String memberEmail) {
 
         //DB에서 조회
         Member member = memberRepository.findByMemberEmail(memberEmail);
 
         // 사용자 데이터가 없으면 예외 발생
         if (member == null) {
-            throw new UsernameNotFoundException("User not found with username: " + memberEmail);
+            throw new CommonException(ErrorCode.NOT_FOUND_MEMBER);
         }
 
         // 사용자 데이터를 기반으로 CustomUserDetails 생성

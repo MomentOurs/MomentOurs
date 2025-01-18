@@ -1,5 +1,6 @@
 package beyond.momentours.security;
 
+import beyond.momentours.member.command.application.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,11 +26,13 @@ public class SecurityConfig {
     //AuthenticationManager가 인자로 받을 AuthenticationConfiguraion 객체 생성자 주입
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
+    private final JwtAuthenticationProvider jwtAuthenticationProvider;
 
     @Autowired
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil) {
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, JwtAuthenticationProvider jwtAuthenticationProvider) {
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtUtil = jwtUtil;
+        this.jwtAuthenticationProvider = jwtAuthenticationProvider;
     }
 
     //AuthenticationManager Bean 등록
@@ -61,6 +64,7 @@ public class SecurityConfig {
 //                        .requestMatchers("/**").permitAll()
                         .requestMatchers("/", "api/member/signup", "/**").permitAll()
                         .requestMatchers("/api/member/login").permitAll()
+                                .requestMatchers("/api/member").authenticated()
 
 //                        .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().authenticated()
@@ -69,7 +73,7 @@ public class SecurityConfig {
                 // 세션 설정
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.addFilterAt(new AuthenticationFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
-        http.addFilterBefore(new JWTFilter(jwtUtil), AuthenticationFilter.class);
+        http.addFilterBefore(new JWTFilter(jwtUtil, jwtAuthenticationProvider), AuthenticationFilter.class);
 
         return http.build();
     }

@@ -1,17 +1,28 @@
 package beyond.momentours.member.command.application.dto;
 
 import beyond.momentours.member.command.domain.aggregate.entity.Member;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 
+// security의 loadUserByUsername의 리턴 값을 바꿔주기 위한(토큰 생성을 위해) 커스텀 user
+@Getter
+@Setter
+@AllArgsConstructor
+@ToString
 public class CustomUserDetails implements UserDetails {
 
     private final Member member;
+    private LocalDateTime expiration;
 
     public CustomUserDetails(Member member) {
+        if (member == null) {
+            throw new IllegalArgumentException("Member cannot be null");
+        }
         this.member = member;
     }
 
@@ -38,7 +49,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return member.getMemberName();
+        return member.getMemberEmail();
     }
 
     @Override

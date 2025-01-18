@@ -1,24 +1,28 @@
 package beyond.momentours.security;
 
+import beyond.momentours.common.exception.CommonException;
+import beyond.momentours.common.exception.ErrorCode;
+import beyond.momentours.member.command.application.dto.CustomUserDetails;
+import beyond.momentours.member.command.application.dto.JwtTokenDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -40,7 +44,6 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         try {
             // 요청 본문을 읽음
             requestBody = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
-            System.out.println("Request Body: " + requestBody); // 요청 데이터 출력
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -57,10 +60,6 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         } catch (Exception e) {
             throw new AuthenticationServiceException("Invalid request body format");
         }
-
-        // 디버깅 출력
-        System.out.println("Extracted Username: " + username);
-        System.out.println("Extracted Password: " + password);
 
         // username 또는 password가 없을 경우 예외 처리
         if (username == null || password == null) {
@@ -79,33 +78,42 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
 
-        //유저 정보
-        String username = authentication.getName();
+        if (!(authentication.getPrincipal() instanceof CustomUserDetails userDetails)) {
+            throw new CommonException(ErrorCode.INVALID_AUTHENTICATION_OBJECT);
+        }
+
+        String memberEmail = userDetails.getUsername();
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
 
-        //토큰 생성
-        String access = jwtUtil.createJwt("access", username, role, 600000L);
-        String refresh = jwtUtil.createJwt("refresh", username, role, 86400000L);
+        String token = jwtUtil.generateToken(memberEmail, role, null, authentication);
 
-        //응답 설정
-        response.setHeader("access", access);
-        response.addCookie(createCookie("refresh", refresh));
-        response.setContentType("application/json;charset=UTF-8");      // JSON 형태로 응답
-        response.setStatus(HttpStatus.OK.value());
+        Date expirationDate = jwtUtil.getExpirationDateFromToken(token);
+        ZonedDateTime kstExpiration = ZonedDateTime.ofInstant(expirationDate.toInstant(), ZoneId.of("Asia/Seoul"));
 
-        // JSON 데이터 작성
-        String jsonResponse = String.format(
-                "{\"accessToken\":\"%s\", \"refreshToken\":\"%s\"}",
-                access,
-                refresh
-        );
+        int[] expArray = new int[] {
+                kstExpiration.getYear(),
+                kstExpiration.getMonthValue(),
+                kstExpiration.getDayOfMonth(),
+                kstExpiration.getHour(),
+                kstExpiration.getMinute(),
+                kstExpiration.getSecond()
+        };
 
-        // 응답 전송
-        response.getWriter().write(jsonResponse);
+        String refreshToken = jwtUtil.generateRefreshToken(memberEmail);
+
+        Map<String, Object> responseData = new HashMap<>();
+        responseData.put("accessToken", token);
+        responseData.put("refreshToken", refreshToken);
+        responseData.put("expiration", expArray);
+        responseData.put("memberEmail", memberEmail);
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(new ObjectMapper().writeValueAsString(responseData));
 
     }
 
