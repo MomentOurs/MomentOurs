@@ -39,8 +39,8 @@ public class Comment {
     @Column(name = "member_id", nullable = false)
     private Long memberId;
 
-    @Column(name = "moment_id")
-    private Long momentId;
+    @Column(name = "ques_id")
+    private Long quesId;
 
     @Column(name = "couple_log_id")
     private Long coupleLogId;
@@ -52,6 +52,11 @@ public class Comment {
 
     public void updateContent(String commentContent) {
         this.commentContent = commentContent;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void updateStatus(boolean status) {
+        this.commentStatus = status;
         this.updatedAt = LocalDateTime.now();
     }
 }
