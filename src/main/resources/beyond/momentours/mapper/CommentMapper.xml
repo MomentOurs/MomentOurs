@@ -16,4 +16,19 @@
         <result property="coupleLogId" column="couple_log_id"/>
     </resultMap>
 
+    <select id="findCommentById" resultMap="commentResultMap">
+        SELECT
+               comment_id,
+               comment_content,
+               comment_type,
+               comment_status,
+               created_at,
+               updated_at,
+               member_id,
+               ques_ans_id,
+               couple_log_id
+          FROM tb_comment
+         WHERE comment_id = #{commentId}
+    </select>
+
 </mapper>
