@@ -42,6 +42,8 @@ public class ReplyServiceImpl implements ReplyService {
 
     @Override
     public ReplyDTO updateReply(ReplyDTO replyDTO) {
+        validateCommentId(replyDTO.getCommentId());
+
 //        Long memberId = getLoggedInMemberId(); // 로그인한 사용자의 ID 가져오기
         Long memberId = 0L;
 
@@ -71,6 +73,8 @@ public class ReplyServiceImpl implements ReplyService {
     public ReplyDTO deleteReply(Long replyId) {
         Reply existingReply = replyRepository.findById(replyId).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_REPLY));
         log.info("삭제 요청된 Reply 데이터: {}", existingReply);
+
+        validateCommentId(existingReply.getCommentId());
 
 //        Long memberId = getLoggedInMemberId(); // 로그인한 사용자의 ID 가져오기
         Long memberId = 0L;
