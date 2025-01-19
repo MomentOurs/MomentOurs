@@ -16,13 +16,4 @@ public class ResponseLoginMemberVO {
     @JsonProperty("member_password")
     private String memberPassword;
 
-//    @JsonProperty("access_token")
-//    private String accessToken;
-//
-//    @JsonProperty("refresh_token")
-//    private String refreshToken;
-
-//    @JsonProperty("member_role")
-//    private String memberRole;
-
 }

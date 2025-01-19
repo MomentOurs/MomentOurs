@@ -9,4 +9,5 @@ public interface MemberService extends UserDetailsService {
 
     UserDetails loadUserByUsername(String memberId);
 
+    MemberDTO updateProfile(MemberDTO requestMemberDTO);
 }

@@ -2,7 +2,7 @@ package beyond.momentours.member.query.controller;
 
 import beyond.momentours.common.ResponseDTO;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
-import beyond.momentours.member.query.service.MemberService;
+import beyond.momentours.member.query.service.MemberQueryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/member")
 public class MemberController {
 
-    private final MemberService memberService;
+    private final MemberQueryService memberQueryService;
 
     @Autowired
-    public MemberController(MemberService memberService) {
-        this.memberService = memberService;
+    public MemberController(MemberQueryService memberQueryService) {
+        this.memberQueryService = memberQueryService;
     }
 
     // 확인용으로 만들었습니다. 나중에 삭제할게요!
@@ -32,7 +32,7 @@ public class MemberController {
         log.debug("회원 이메일: " + user.getUsername());  // email을 사용
 
         String memberEmail = user.getUsername();
-        Long memId = memberService.findByMemberId(memberEmail);
+        Long memId = memberQueryService.findByMemberId(memberEmail);
 
         return ResponseDTO.ok(memId);
     }

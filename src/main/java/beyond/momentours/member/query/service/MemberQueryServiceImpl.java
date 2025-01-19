@@ -7,12 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("queryMemberService")
-public class MemberServiceImpl implements MemberService {
+public class MemberQueryServiceImpl implements MemberQueryService {
 
     private final MemberMapper memberMapper;
 
     @Autowired
-    public MemberServiceImpl(MemberMapper memberMapper) {
+    public MemberQueryServiceImpl(MemberMapper memberMapper) {
         this.memberMapper = memberMapper;
     }
 

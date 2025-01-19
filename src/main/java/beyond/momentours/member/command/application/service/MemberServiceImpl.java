@@ -8,10 +8,10 @@ import beyond.momentours.member.command.application.dto.MemberDTO;
 import beyond.momentours.member.command.application.mapper.MemberConverter;
 import beyond.momentours.member.command.domain.aggregate.entity.Member;
 import beyond.momentours.member.command.domain.repository.MemberRepository;
+import beyond.momentours.member.query.service.MemberQueryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,12 +23,14 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
     private final MemberConverter memberConverter;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final MemberQueryService memberQueryService;
 
     @Autowired
-    public MemberServiceImpl(MemberRepository memberRepository, MemberConverter memberConverter, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public MemberServiceImpl(MemberRepository memberRepository, MemberConverter memberConverter, BCryptPasswordEncoder bCryptPasswordEncoder, MemberQueryService memberQueryService) {
         this.memberRepository = memberRepository;
         this.memberConverter = memberConverter;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.memberQueryService = memberQueryService;
     }
 
     @Override
@@ -56,6 +58,21 @@ public class MemberServiceImpl implements MemberService {
 
         // 사용자 데이터를 기반으로 CustomUserDetails 생성
         return new CustomUserDetails(member);
+    }
+
+    @Override
+    @Transactional
+    public MemberDTO updateProfile(MemberDTO requestMemberDTO) {
+
+        Long memberId = memberQueryService.findByMemberId(requestMemberDTO.getMemberEmail());
+
+        Member member = memberConverter.fromProfileDTOToEntity(requestMemberDTO);
+
+        memberRepository.save(member);
+
+        MemberDTO reponseMemberDTO = memberConverter.fromEntityTOProfileUpdateDTO(member);
+
+        return reponseMemberDTO;
     }
 
 }

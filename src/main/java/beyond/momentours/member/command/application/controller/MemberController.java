@@ -1,13 +1,17 @@
 package beyond.momentours.member.command.application.controller;
 
 import beyond.momentours.common.ResponseDTO;
+import beyond.momentours.member.command.application.dto.CustomUserDetails;
 import beyond.momentours.member.command.application.dto.MemberDTO;
 import beyond.momentours.member.command.application.mapper.MemberConverter;
 import beyond.momentours.member.command.application.service.MemberService;
 import beyond.momentours.member.command.domain.vo.reponse.ResponseSignupMemberVO;
+import beyond.momentours.member.command.domain.vo.reponse.ResponseUpdateProfileMemberVO;
 import beyond.momentours.member.command.domain.vo.request.RequestSignupMemberVO;
+import beyond.momentours.member.command.domain.vo.request.RequestUpdateProfileMemberVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -25,11 +29,22 @@ public class MemberController {
     }
 
     @PostMapping("signup")
-    public ResponseDTO<?> signup(@RequestBody RequestSignupMemberVO requestSignupMemberVO) {
+    public ResponseDTO<?> createSignup(@RequestBody RequestSignupMemberVO requestSignupMemberVO) {
 
         MemberDTO requestMemberDTO = memberConverter.fromSignupVOToDTO(requestSignupMemberVO);
         MemberDTO responseMemberDTO = memberService.signup(requestMemberDTO);
         ResponseSignupMemberVO response = memberConverter.fromDTOToSignupVO(responseMemberDTO);
+
+        return ResponseDTO.ok(response);
+    }
+
+    @PatchMapping("profile")
+    public ResponseDTO<?> updateProfile(@RequestBody RequestUpdateProfileMemberVO requestUpdateProfileMemberVO,
+                                        @AuthenticationPrincipal CustomUserDetails member) {
+        String memberEmail = member.getUsername();
+        MemberDTO requestMemberDTO = memberConverter.fromProfileVOToDTO(requestUpdateProfileMemberVO, memberEmail);
+        MemberDTO responseMemberDTO = memberService.updateProfile(requestMemberDTO);
+        ResponseUpdateProfileMemberVO response = memberConverter.fromDTOToUpdateProfile(responseMemberDTO);
 
         return ResponseDTO.ok(response);
     }
