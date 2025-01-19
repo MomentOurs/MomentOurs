@@ -3,7 +3,9 @@ package beyond.momentours.reply.command.application.mapper;
 import beyond.momentours.reply.command.application.dto.ReplyDTO;
 import beyond.momentours.reply.command.domain.aggregate.entity.Reply;
 import beyond.momentours.reply.command.domain.vo.request.RequestCreateReplyVO;
+import beyond.momentours.reply.command.domain.vo.request.RequestUpdateReplyVO;
 import beyond.momentours.reply.command.domain.vo.response.ResponseCreateReplyVO;
+import beyond.momentours.reply.command.domain.vo.response.ResponseUpdateReplyVO;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -39,6 +41,20 @@ public class ReplyConvertor {
                 .updatedAt(savedReply.getUpdatedAt())
                 .commentId(savedReply.getCommentId())
                 .memberId(savedReply.getMemberId())
+                .build();
+    }
+
+    public ReplyDTO fromUpdateVOToDTO(RequestUpdateReplyVO request) {
+        return ReplyDTO.builder()
+                .replyContent(request.getReplyContent())
+                .build();
+    }
+
+    public ResponseUpdateReplyVO fromDTOToUpdateVO(ReplyDTO updatedReply) {
+        return ResponseUpdateReplyVO.builder()
+                .replyId(updatedReply.getReplyId())
+                .replyContent(updatedReply.getReplyContent())
+                .updatedAt(updatedReply.getUpdatedAt())
                 .build();
     }
 }
