@@ -6,4 +6,6 @@ public interface CommentService {
     CommentDTO createComment(CommentDTO commentDTO);
 
     CommentDTO updateComment(CommentDTO commentDTO);
+
+    CommentDTO deleteComment(Long commentId);
 }

@@ -1,4 +1,4 @@
-package beyond.momentours.comment.command.domain.vo.response;
+package beyond.momentours.reply.command.domain.vo.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -11,12 +11,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ResponseUpdateCommentVO {
-    @JsonProperty("comment_id")
-    private Long commentId;
+public class ResponseUpdateReplyVO {
 
-    @JsonProperty("comment_content")
-    private String commentContent;
+    @JsonProperty("reply_id")
+    private Long replyId;
+
+    @JsonProperty("reply_content")
+    private String replyContent;
 
     @JsonProperty("updated_at")
     private LocalDateTime updatedAt;
