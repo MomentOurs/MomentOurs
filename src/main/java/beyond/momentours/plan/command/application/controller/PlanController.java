@@ -61,7 +61,7 @@ public class PlanController {
         }
     }
 
-    @PatchMapping("/{planId}/soft-delete")
+    @PatchMapping("/deactivate/{planId}")
     public ResponseEntity<?> deletePlan(@PathVariable Long planId) {
         log.info("삭제 요청한 일정 ID : {}", planId);
         try {

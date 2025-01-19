@@ -62,7 +62,7 @@ public class CommentController {
         }
     }
 
-    @PatchMapping("/{commentId}/soft-delete")
+    @PatchMapping("/deactivate/{commentId}")
     public ResponseEntity<?> deleteComment(@PathVariable Long commentId) {
         log.info("삭제 요청된 댓글 ID : {}", commentId);
         try {
