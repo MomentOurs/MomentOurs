@@ -12,3 +12,9 @@ spring:
       hibernate:
         format_sql: true
     generate-ddl: false
+
+jwt:
+  secret-key: ${JWT_SECRET_KEY}
+
+mybatis:
+  mapper-locations: classpath:/beyond/momentours/mapper/**/*.xml
