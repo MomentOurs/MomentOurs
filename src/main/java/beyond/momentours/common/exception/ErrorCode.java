@@ -22,6 +22,7 @@ public enum ErrorCode {
     USED_CODE_REQUEST(40010, HttpStatus.BAD_REQUEST, "사용된 QR코드입니다."),
     ALREADY_COUPLE_STATUS(40011, HttpStatus.BAD_REQUEST, "이미 커플인 회원입니다."),
     INVALID_RANDOM_QUESTION_STATUS(40012, HttpStatus.BAD_REQUEST, "답변이 완료된 상태가 아닙니다."),
+    INACTIVE_REPLY(40013, HttpStatus.BAD_REQUEST, "해당 대댓글은 삭제돼 있습니다."),
 
     // 401: 인증 실패 (Unauthorized)
     INVALID_HEADER_VALUE(40100, HttpStatus.UNAUTHORIZED, "올바르지 않은 헤더값입니다."), // 헤더 값이 잘못되었거나 누락된 경우
@@ -58,6 +59,7 @@ public enum ErrorCode {
     NOT_FOUND_QUES_ANSWER(40411, HttpStatus.NOT_FOUND, "답변이 존재하지 않습니다."),
     NOT_FOUND_PLAN(40412, HttpStatus.NOT_FOUND, "일정이 존재하지 않습니다."),
     NOT_FOUND_CODE(40413, HttpStatus.NOT_FOUND, "매칭코드가 존재하지 않습니다"),
+    NOT_FOUND_REPLY(40414, HttpStatus.NOT_FOUND, "해당 대댓글이 존재하지 않습니다"),
 
     // 429: 요청 과다 (Too Many Requests)
     TOO_MANY_REQUESTS(42900, HttpStatus.TOO_MANY_REQUESTS, "요청 횟수가 너무 많습니다. 잠시 후 다시 시도해 주세요."),
