@@ -7,6 +7,7 @@ import beyond.momentours.member.command.application.mapper.MemberConverter;
 import beyond.momentours.member.command.application.service.MemberService;
 import beyond.momentours.member.command.domain.vo.reponse.ResponseSignupMemberVO;
 import beyond.momentours.member.command.domain.vo.reponse.ResponseUpdateProfileMemberVO;
+import beyond.momentours.member.command.domain.vo.request.RequestSendEmailVO;
 import beyond.momentours.member.command.domain.vo.request.RequestSignupMemberVO;
 import beyond.momentours.member.command.domain.vo.request.RequestUpdateProfileMemberVO;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,7 @@ public class MemberController {
         this.memberConverter = memberConverter;
     }
 
+    /* 회원가입 */
     @PostMapping("signup")
     public ResponseDTO<?> createSignup(@RequestBody RequestSignupMemberVO requestSignupMemberVO) {
 
@@ -38,7 +40,8 @@ public class MemberController {
         return ResponseDTO.ok(response);
     }
 
-    @PatchMapping("profile")
+    /* 회원 정보 수정 */
+    @PatchMapping("mypage")
     public ResponseDTO<?> updateProfile(@RequestBody RequestUpdateProfileMemberVO requestUpdateProfileMemberVO,
                                         @AuthenticationPrincipal CustomUserDetails member) {
         String memberEmail = member.getUsername();
@@ -47,6 +50,16 @@ public class MemberController {
         ResponseUpdateProfileMemberVO response = memberConverter.fromDTOToUpdateProfile(responseMemberDTO);
 
         return ResponseDTO.ok(response);
+    }
+
+    /* 이메일 인증코드 발송 */
+    @PostMapping("email/send")
+    public ResponseDTO<?> sendEmail(@RequestBody RequestSendEmailVO requestSendEmailVO) {
+        MemberDTO requestMemberDTO = MemberDTO.builder()
+                .memberEmail(requestSendEmailVO.getMemberEmail())
+                .build();
+        String authCode = memberService.checkEmail(requestMemberDTO);
+        return ResponseDTO.ok(authCode);
     }
 
 }

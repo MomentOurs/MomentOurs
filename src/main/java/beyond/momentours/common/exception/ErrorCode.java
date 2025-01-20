@@ -24,6 +24,7 @@ public enum ErrorCode {
     INVALID_RANDOM_QUESTION_STATUS(40012, HttpStatus.BAD_REQUEST, "답변이 완료된 상태가 아닙니다."),
     INACTIVE_REPLY(40013, HttpStatus.BAD_REQUEST, "해당 대댓글은 삭제돼 있습니다."),
     EMPTY_REQUEST_INPUTSTREAM(40015, HttpStatus.BAD_REQUEST, "요청 본문이 비어 있습니다. 필수 데이터를 포함해야 합니다."),
+    MAIL_SEND_FAIL(40116, HttpStatus.BAD_REQUEST, "이메일 인증코드 발송에 실패하였습니다."),
 
     // 401: 인증 실패 (Unauthorized)
     INVALID_HEADER_VALUE(40100, HttpStatus.UNAUTHORIZED, "올바르지 않은 헤더값입니다."), // 헤더 값이 잘못되었거나 누락된 경우

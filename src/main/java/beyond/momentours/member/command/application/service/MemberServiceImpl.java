@@ -24,13 +24,15 @@ public class MemberServiceImpl implements MemberService {
     private final MemberConverter memberConverter;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final MemberQueryService memberQueryService;
+    private final MailService mailService;
 
     @Autowired
-    public MemberServiceImpl(MemberRepository memberRepository, MemberConverter memberConverter, BCryptPasswordEncoder bCryptPasswordEncoder, MemberQueryService memberQueryService) {
+    public MemberServiceImpl(MemberRepository memberRepository, MemberConverter memberConverter, BCryptPasswordEncoder bCryptPasswordEncoder, MemberQueryService memberQueryService, MailService mailService) {
         this.memberRepository = memberRepository;
         this.memberConverter = memberConverter;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.memberQueryService = memberQueryService;
+        this.mailService = mailService;
     }
 
     @Override
@@ -73,6 +75,23 @@ public class MemberServiceImpl implements MemberService {
         MemberDTO reponseMemberDTO = memberConverter.fromEntityTOProfileUpdateDTO(member);
 
         return reponseMemberDTO;
+    }
+
+    @Override
+    public String checkEmail(MemberDTO requestMemberDTO) {
+        Member member = memberRepository.findByMemberEmail(requestMemberDTO.getMemberEmail());
+
+        if (member== null) {
+            throw new CommonException(ErrorCode.NOT_FOUND_MEMBER);
+        }
+
+        String authCode = mailService.sendMail(requestMemberDTO.getMemberEmail());
+
+        if (authCode==null) {
+            throw new CommonException(ErrorCode.MAIL_SEND_FAIL);
+        }
+
+        return authCode;
     }
 
 }
