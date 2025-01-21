@@ -15,4 +15,6 @@ public interface MemberService extends UserDetailsService {
     String checkEmail(MemberDTO requestMemberDTO);
 
     boolean verifyEmail(EmailDTO emailDTO);
+
+    void updatePassword(MemberDTO memberDTO);
 }

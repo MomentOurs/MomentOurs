@@ -115,4 +115,12 @@ public class MemberServiceImpl implements MemberService {
         return isValid;
     }
 
+    @Override
+    @Transactional
+    public void updatePassword(MemberDTO memberDTO) {
+        memberDTO.encodedPwd(bCryptPasswordEncoder.encode(memberDTO.getMemberPassword()));
+        Member member = memberConverter.fromPasswordDTOToMember(memberDTO);
+        memberRepository.updatePasswordByEmail(member.getMemberEmail(), member.getMemberPassword());
+    }
+
 }

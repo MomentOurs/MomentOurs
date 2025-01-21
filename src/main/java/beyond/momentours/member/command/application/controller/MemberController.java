@@ -8,10 +8,7 @@ import beyond.momentours.member.command.application.mapper.MemberConverter;
 import beyond.momentours.member.command.application.service.MemberService;
 import beyond.momentours.member.command.domain.vo.reponse.ResponseSignupMemberVO;
 import beyond.momentours.member.command.domain.vo.reponse.ResponseUpdateProfileMemberVO;
-import beyond.momentours.member.command.domain.vo.request.RequestSendEmailVO;
-import beyond.momentours.member.command.domain.vo.request.RequestSignupMemberVO;
-import beyond.momentours.member.command.domain.vo.request.RequestUpdateProfileMemberVO;
-import beyond.momentours.member.command.domain.vo.request.RequestVerifyEmailVO;
+import beyond.momentours.member.command.domain.vo.request.*;
 import jakarta.validation.constraints.Email;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,4 +71,11 @@ public class MemberController {
         return ResponseDTO.ok("이메일 인증이 완료되었습니다.");
     }
 
+    /* 비밀번호 찾기&수정 */
+    @PutMapping("password")
+    public ResponseDTO<?> updatePassword(@RequestBody RequestUpdatePassword requestUpdatePassword) {
+        MemberDTO memberDTO = memberConverter.fromPasswordVoTODTO(requestUpdatePassword);
+        memberService.updatePassword(memberDTO);
+        return ResponseDTO.ok("비밀번호가 수정되었습니다.");
+    }
 }

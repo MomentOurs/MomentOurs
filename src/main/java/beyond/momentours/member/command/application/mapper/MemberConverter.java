@@ -7,8 +7,10 @@ import beyond.momentours.member.command.domain.aggregate.entity.MemberRole;
 import beyond.momentours.member.command.domain.vo.reponse.ResponseSignupMemberVO;
 import beyond.momentours.member.command.domain.vo.reponse.ResponseUpdateProfileMemberVO;
 import beyond.momentours.member.command.domain.vo.request.RequestSignupMemberVO;
+import beyond.momentours.member.command.domain.vo.request.RequestUpdatePassword;
 import beyond.momentours.member.command.domain.vo.request.RequestUpdateProfileMemberVO;
 import beyond.momentours.member.command.domain.vo.request.RequestVerifyEmailVO;
+import beyond.momentours.member.query.vo.request.RequestIdVO;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -131,6 +133,20 @@ public class MemberConverter {
         return EmailDTO.builder()
                .memberEmail(requestVerifyEmailVO.getMemberEmail())
                 .code(requestVerifyEmailVO.getCode())
+               .build();
+    }
+
+    public MemberDTO fromPasswordVoTODTO(RequestUpdatePassword requestUpdatePassword) {
+        return MemberDTO.builder()
+               .memberEmail(requestUpdatePassword.getMemberEmail())
+               .memberPassword(requestUpdatePassword.getMemberPassword())
+               .build();
+    }
+
+    public Member fromPasswordDTOToMember(MemberDTO memberDTO) {
+        return Member.builder()
+               .memberEmail(memberDTO.getMemberEmail())
+               .memberPassword(memberDTO.getMemberPassword())
                .build();
     }
 }
