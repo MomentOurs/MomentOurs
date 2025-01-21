@@ -3,6 +3,7 @@ package beyond.momentours.member.command.application.service;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -15,9 +16,13 @@ import java.util.Random;
 public class MailServiceImpl implements MailService {
 
     private static String number;
-    @Value("${EMAIL_USERNAME}")
-    private static String senderEmail;
-    private JavaMailSender javaMailSender;
+    private final JavaMailSender javaMailSender;
+    private static String senderEmail ="noreply.momentours@gmail.com";
+
+    @Autowired
+    public MailServiceImpl(JavaMailSender javaMailSender) {
+        this.javaMailSender = javaMailSender;
+    }
 
     public static void createNumber() {
         Random random = new Random();
@@ -58,7 +63,7 @@ public class MailServiceImpl implements MailService {
 
             String body = "<html><body style='background-color: #000000 !important; margin: 0 auto; max-width: 600px; word-break: break-all; padding-top: 50px; color: #ffffff;'>";
             body += "<h1 style='padding-top: 50px; font-size: 30px;'>이메일 주소 인증</h1>";
-            body += "<p style='padding-top: 20px; font-size: 18px; opacity: 0.6; line-height: 30px; font-weight: 400;'>안녕하세요? Challengers 관리자 입니다.<br />";
+            body += "<p style='padding-top: 20px; font-size: 18px; opacity: 0.6; line-height: 30px; font-weight: 400;'>안녕하세요? Momentours 관리자 입니다.<br />";
             body += "Momentours 서비스 사용을 위해 고객님께서 입력하신 이메일 주소의 인증이 필요합니다.<br />";
             body += "하단의 인증 번호로 이메일 인증을 완료하시면, 정상적으로 Momentours 서비스를 이용하실 수 있습니다.<br />";
             body += "항상 최선의 노력을 다하는 Momentours 되겠습니다.<br />";
