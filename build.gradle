@@ -33,8 +33,10 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.4'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.4'
+    testImplementation 'org.springframework.amqp:spring-rabbit-test'
     compileOnly 'org.projectlombok:lombok'
     compileOnly 'com.github.spotbugs:spotbugs-annotations:4.8.6'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -43,14 +45,24 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
+    // JSON 처리를 위한 의존성 (메시지 직렬화/역직렬화에 사용)
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'  // LocalDateTime 등의 처리를 위해
     // 모델 매퍼 추가
     implementation 'org.modelmapper:modelmapper:3.1.1'
+    // STOMP 메시징을 위한 의존성
+    implementation 'org.webjars:stomp-websocket:2.3.4'
+    // Sock JS를 위한 의존성(웹소켓을 지원하지 않는 브라우저를 위한 풀백)
+    implementation 'org.webjars:sockjs-client:1.5.1'
 
     // .env file
     implementation 'io.github.cdimascio:dotenv-java:3.0.0'
     implementation 'me.paulschwarz:spring-dotenv:3.0.0'
     // 커플 인증을 위한 QR를 TTL로 보관하기 위한 redis 의존성 추가
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    // 커플 로그 통신 queue를 위한 rabbitMQ 의존성 추가
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
+
 
     // JWT 토큰 라이브러리
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
