@@ -1,5 +1,6 @@
 package beyond.momentours.member.command.application.mapper;
 
+import beyond.momentours.member.command.application.dto.EmailDTO;
 import beyond.momentours.member.command.application.dto.MemberDTO;
 import beyond.momentours.member.command.domain.aggregate.entity.Member;
 import beyond.momentours.member.command.domain.aggregate.entity.MemberRole;
@@ -7,6 +8,7 @@ import beyond.momentours.member.command.domain.vo.reponse.ResponseSignupMemberVO
 import beyond.momentours.member.command.domain.vo.reponse.ResponseUpdateProfileMemberVO;
 import beyond.momentours.member.command.domain.vo.request.RequestSignupMemberVO;
 import beyond.momentours.member.command.domain.vo.request.RequestUpdateProfileMemberVO;
+import beyond.momentours.member.command.domain.vo.request.RequestVerifyEmailVO;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -122,6 +124,13 @@ public class MemberConverter {
                .memberMbti(member.getMemberMbti())
                 .memberRole(member.getMemberRole())
                 .updatedAt(member.getUpdatedAt())
+               .build();
+    }
+
+    public EmailDTO fromVerifyVoTODTO(RequestVerifyEmailVO requestVerifyEmailVO) {
+        return EmailDTO.builder()
+               .memberEmail(requestVerifyEmailVO.getMemberEmail())
+                .code(requestVerifyEmailVO.getCode())
                .build();
     }
 }

@@ -2,6 +2,7 @@ package beyond.momentours.member.command.application.controller;
 
 import beyond.momentours.common.ResponseDTO;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
+import beyond.momentours.member.command.application.dto.EmailDTO;
 import beyond.momentours.member.command.application.dto.MemberDTO;
 import beyond.momentours.member.command.application.mapper.MemberConverter;
 import beyond.momentours.member.command.application.service.MemberService;
@@ -10,6 +11,8 @@ import beyond.momentours.member.command.domain.vo.reponse.ResponseUpdateProfileM
 import beyond.momentours.member.command.domain.vo.request.RequestSendEmailVO;
 import beyond.momentours.member.command.domain.vo.request.RequestSignupMemberVO;
 import beyond.momentours.member.command.domain.vo.request.RequestUpdateProfileMemberVO;
+import beyond.momentours.member.command.domain.vo.request.RequestVerifyEmailVO;
+import jakarta.validation.constraints.Email;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -58,10 +61,17 @@ public class MemberController {
         MemberDTO requestMemberDTO = MemberDTO.builder()
                 .memberEmail(requestSendEmailVO.getMemberEmail())
                 .build();
-        String authCode = memberService.checkEmail(requestMemberDTO);
-        return ResponseDTO.ok(authCode);
+        memberService.checkEmail(requestMemberDTO);
+        return ResponseDTO.ok("인증 번호가 발송되었습니다.");
     }
 
+    /* 이메일 인증코드 검증 */
+    @PostMapping("email/verify")
+    public ResponseDTO<?> verifyEmail(@RequestBody RequestVerifyEmailVO requestVerifyEmailVO) {
+        EmailDTO emailDTO = memberConverter.fromVerifyVoTODTO(requestVerifyEmailVO);
+        memberService.verifyEmail(emailDTO);
 
+        return ResponseDTO.ok("이메일 인증이 완료되었습니다.");
+    }
 
 }

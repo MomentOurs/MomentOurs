@@ -1,14 +1,17 @@
 package beyond.momentours.member.command.application.service;
 
 
+import beyond.momentours.common.ResponseDTO;
 import beyond.momentours.common.exception.CommonException;
 import beyond.momentours.common.exception.ErrorCode;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
+import beyond.momentours.member.command.application.dto.EmailDTO;
 import beyond.momentours.member.command.application.dto.MemberDTO;
 import beyond.momentours.member.command.application.mapper.MemberConverter;
 import beyond.momentours.member.command.domain.aggregate.entity.Member;
 import beyond.momentours.member.command.domain.repository.MemberRepository;
 import beyond.momentours.member.query.service.MemberQueryService;
+import beyond.momentours.util.RedisEmailAuthentication;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,14 +28,16 @@ public class MemberServiceImpl implements MemberService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final MemberQueryService memberQueryService;
     private final MailService mailService;
+    private final RedisEmailAuthentication redisEmailAuthentication;
 
     @Autowired
-    public MemberServiceImpl(MemberRepository memberRepository, MemberConverter memberConverter, BCryptPasswordEncoder bCryptPasswordEncoder, MemberQueryService memberQueryService, MailService mailService) {
+    public MemberServiceImpl(MemberRepository memberRepository, MemberConverter memberConverter, BCryptPasswordEncoder bCryptPasswordEncoder, MemberQueryService memberQueryService, MailService mailService, RedisEmailAuthentication redisEmailAuthentication) {
         this.memberRepository = memberRepository;
         this.memberConverter = memberConverter;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.memberQueryService = memberQueryService;
         this.mailService = mailService;
+        this.redisEmailAuthentication = redisEmailAuthentication;
     }
 
     @Override
@@ -92,6 +97,22 @@ public class MemberServiceImpl implements MemberService {
         }
 
         return authCode;
+    }
+
+    @Override
+    public boolean verifyEmail(EmailDTO emailDTO) {
+        // 인증 번호 만료 여부 확인
+        if (redisEmailAuthentication.isAuthenticationExpired(emailDTO.getMemberEmail())) {
+            redisEmailAuthentication.deleteEmailAuthenticationHistory(emailDTO.getMemberEmail()); // 만료된 인증 번호 삭제
+            throw new CommonException(ErrorCode.EMAIL_AUTH_CODE_EXPIRED);
+        }
+
+        boolean isValid = redisEmailAuthentication.verifyEmailAuthentication(emailDTO.getMemberEmail(), emailDTO.getCode());
+
+        if (!isValid) {
+            throw new CommonException(ErrorCode.EMAIL_AUTH_CODE_INVALID);
+        }
+        return isValid;
     }
 
 }

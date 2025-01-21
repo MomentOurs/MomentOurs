@@ -33,6 +33,14 @@ spring:
           timeout: 20000
           writetimeout: 20000
 
+
+logging:
+  level:
+    beyond.momentours: DEBUG
+    org.springframework.security: TRACE
+    org.mybatis: DEBUG
+    java.sql: DEBUG
+
 jwt:
   secret-key: ${JWT_SECRET_KEY}
 

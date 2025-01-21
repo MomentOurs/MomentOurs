@@ -1,5 +1,6 @@
 package beyond.momentours.member.command.application.service;
 
+import beyond.momentours.util.RedisEmailAuthentication;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
@@ -15,13 +16,18 @@ import java.util.Random;
 @Service("queryMailService")
 public class MailServiceImpl implements MailService {
 
-    private static String number;
+    private static String code;
     private final JavaMailSender javaMailSender;
-    private static String senderEmail ="noreply.momentours@gmail.com";
+    private final RedisEmailAuthentication redisEmailAuthentication;
+//    private static String senderEmail ="noreply.momentours@gmail.com";
+
+    @Value("${EMAIL_USERNAME}")
+    private String senderEmail;
 
     @Autowired
-    public MailServiceImpl(JavaMailSender javaMailSender) {
+    public MailServiceImpl(JavaMailSender javaMailSender, RedisEmailAuthentication redisEmailAuthentication) {
         this.javaMailSender = javaMailSender;
+        this.redisEmailAuthentication = redisEmailAuthentication;
     }
 
     public static void createNumber() {
@@ -48,12 +54,14 @@ public class MailServiceImpl implements MailService {
                     break;
             }
         }
-        number = key.toString();
+        code = key.toString();
     }
 
     public MimeMessage createMessage(String email) {
         createNumber();
-        log.info("Number : {}", number);
+        log.info("Number : {}", code);
+        // Redis 내부에 생성한 인증코드 저장 만료시간 5분 설정
+        redisEmailAuthentication.setEmailAuthenticationExpire(email, code, 5L);
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         try {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
@@ -68,7 +76,7 @@ public class MailServiceImpl implements MailService {
             body += "하단의 인증 번호로 이메일 인증을 완료하시면, 정상적으로 Momentours 서비스를 이용하실 수 있습니다.<br />";
             body += "항상 최선의 노력을 다하는 Momentours 되겠습니다.<br />";
             body += "감사합니다.</p>";
-            body += "<div class='code-box' style='margin-top: 50px; padding-top: 20px; color: #000000; padding-bottom: 20px; font-size: 25px; text-align: center; background-color: #f4f4f4; border-radius: 10px;'>" + number + "</div>";
+            body += "<div class='code-box' style='margin-top: 50px; padding-top: 20px; color: #000000; padding-bottom: 20px; font-size: 25px; text-align: center; background-color: #f4f4f4; border-radius: 10px;'>" + code + "</div>";
             body += "</body></html>";
             messageHelper.setText(body, true);
         } catch (MessagingException e) {
@@ -83,6 +91,6 @@ public class MailServiceImpl implements MailService {
         log.info("[Mail 전송 시작]");
         javaMailSender.send(mimeMessage);
         log.info("[Mail 전송 완료]");
-        return number;
+        return code;
     }
 }

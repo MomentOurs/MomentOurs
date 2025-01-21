@@ -8,7 +8,10 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @ToString
-public class RequestSendEmailVO {
+public class RequestVerifyEmailVO {
     @JsonProperty("member_email")
     private String memberEmail;
+
+    @JsonProperty("code")
+    private String code;
 }
