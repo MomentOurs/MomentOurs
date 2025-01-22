@@ -27,4 +27,11 @@
         AND member_status = 1;
     </select>
 
+    <select id="findByMemberEmail" resultType="string" parameterType="string">
+        SELECT member_email
+        FROM tb_member
+        WHERE member_email = #{memberEmail}
+        AND member_status = 1;
+    </select>
+
 </mapper>

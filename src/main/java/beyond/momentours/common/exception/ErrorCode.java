@@ -24,6 +24,7 @@ public enum ErrorCode {
     INVALID_RANDOM_QUESTION_STATUS(40012, HttpStatus.BAD_REQUEST, "답변이 완료된 상태가 아닙니다."),
     INACTIVE_REPLY(40013, HttpStatus.BAD_REQUEST, "해당 대댓글은 삭제돼 있습니다."),
     EMPTY_REQUEST_INPUTSTREAM(40015, HttpStatus.BAD_REQUEST, "요청 본문이 비어 있습니다. 필수 데이터를 포함해야 합니다."),
+    MAIL_SEND_FAIL(40116, HttpStatus.BAD_REQUEST, "이메일 인증코드 발송에 실패하였습니다."),
 
     // 401: 인증 실패 (Unauthorized)
     INVALID_HEADER_VALUE(40100, HttpStatus.UNAUTHORIZED, "올바르지 않은 헤더값입니다."), // 헤더 값이 잘못되었거나 누락된 경우
@@ -42,6 +43,8 @@ public enum ErrorCode {
     INVALID_PASSWORD(40113, HttpStatus.UNAUTHORIZED, "비밀번호를 잘못 입력하셨습니다."), // 비밀번호가 잘못된 경우
     EXPIRED_CODE(40114, HttpStatus.UNAUTHORIZED, "만료된 코드입니다."), // redis TTL이 만료된 경우(음수)
     INVALID_AUTHENTICATION_OBJECT(40116, HttpStatus.UNAUTHORIZED, "Authentication 객체가 CustomUserDetails 타입이 아닙니다."),
+    EMAIL_AUTH_CODE_EXPIRED(40117, HttpStatus.UNAUTHORIZED, "인증 번호가 만료되었습니다. 다시 요청해주세요."),
+    EMAIL_AUTH_CODE_INVALID(40118, HttpStatus.UNAUTHORIZED, "인증 번호가 올바르지 않습니다. 다시 요청해주세요."),
 
     // 403: 권한 부족 (Forbidden)
     FORBIDDEN_ROLE(40300, HttpStatus.FORBIDDEN, "요청한 리소스에 대한 권한이 없습니다."), // 사용자가 요청한 리소스에 대한 권한이 없는 경우

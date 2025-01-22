@@ -13,16 +13,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ResponseSignupMemberVO {
+public class ResponseUpdateProfileMemberVO {
 
     @JsonProperty("member_email")
     private String memberEmail;
 
     @JsonProperty("member_password")
     private String memberPassword;
-
-    @JsonProperty("member_name")
-    private String memberName;
 
     @JsonProperty("member_nickname")
     private String memberNickname;
@@ -38,9 +35,6 @@ public class ResponseSignupMemberVO {
 
     @JsonProperty("member_mbti")
     private String memberMbti;
-
-    @JsonProperty("created_at")
-    private LocalDateTime createdAt;
 
     @JsonProperty("updated_at")
     private LocalDateTime updatedAt;

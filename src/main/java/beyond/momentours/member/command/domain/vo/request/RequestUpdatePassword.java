@@ -1,4 +1,4 @@
-package beyond.momentours.member.command.domain.vo.reponse;
+package beyond.momentours.member.command.domain.vo.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -8,12 +8,10 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @ToString
-public class ResponseLoginMemberVO {
-
+public class RequestUpdatePassword {
     @JsonProperty("member_email")
     private String memberEmail;
 
     @JsonProperty("member_password")
     private String memberPassword;
-
 }
