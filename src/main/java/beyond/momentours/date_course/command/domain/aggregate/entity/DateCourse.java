@@ -30,8 +30,8 @@ public class DateCourse {
     @Column(name = "course_memo")
     private String courseMemo;
 
-    @Column(name = "course_disclosure", nullable = false, columnDefinition = "BOOLEAN DEFAULT true")
-    private Boolean courseDisclosure = true;
+    @Column(name = "course_disclosure", nullable = false)
+    private Boolean courseDisclosure;
 
     @Column(name = "course_like")
     private Long courseLike;
