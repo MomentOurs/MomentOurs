@@ -1,10 +1,7 @@
 package beyond.momentours.couplelog.command.domain.aggregate.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -13,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Entity
 @Table(name = "tb_couple_log")
-@ToString
+@Builder
 public class CoupleLog {
 
     @Id
@@ -38,4 +35,19 @@ public class CoupleLog {
 
     @Column(name = "member_id")
     private Long memberId; // 마지막 수정자 Pk
+
+    public void create(String textContent, Long coupleId, Long memberId) {
+        this.coupleLogContent = textContent;
+        this.coupleId = coupleId;
+        this.memberId = memberId;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+        this.coupleLogStatus = true;
+    }
+
+    public void updateContent (String content, Long memberId) {
+        this.coupleLogContent = content;
+        this.memberId = memberId;
+        this.updatedAt = LocalDateTime.now();
+    }
 }
