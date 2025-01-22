@@ -4,6 +4,7 @@ import beyond.momentours.common.exception.CommonException;
 import beyond.momentours.common.exception.ErrorCode;
 import beyond.momentours.couple.command.application.dto.CoupleListDTO;
 import beyond.momentours.couple.query.service.QueryCoupleService;
+import beyond.momentours.couplelog.command.application.dto.CoupleLogDTO;
 import beyond.momentours.couplelog.command.domain.aggregate.entity.CoupleLog;
 import beyond.momentours.couplelog.command.domain.repository.CoupleLogRepository;
 import beyond.momentours.couplelog.command.domain.vo.request.CoupleLogRequestVO;
@@ -50,5 +51,10 @@ public class CommandCoupleLogServiceImpl implements CommandCoupleLogService {
         log.info("새로 생긴 커플로그 엔티티 정보: {}", newCoupleLog);
 
         coupleLogRepository.save(newCoupleLog);
+    }
+
+    @Override
+    public CoupleLogDTO updateCoupleLog(Long couplelogId, Long memberId, CoupleLogRequestVO requestVO) {
+        return null;
     }
 }
