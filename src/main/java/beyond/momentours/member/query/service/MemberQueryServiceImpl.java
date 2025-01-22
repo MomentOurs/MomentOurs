@@ -2,11 +2,13 @@ package beyond.momentours.member.query.service;
 
 import beyond.momentours.common.exception.CommonException;
 import beyond.momentours.common.exception.ErrorCode;
-import beyond.momentours.member.command.application.dto.MemberDTO;
+import beyond.momentours.member.query.dto.MemberDTO;
 import beyond.momentours.member.query.repository.MemberMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service("queryMemberService")
 public class MemberQueryServiceImpl implements MemberQueryService {
 
@@ -35,5 +37,16 @@ public class MemberQueryServiceImpl implements MemberQueryService {
         if (memberEmail == null)
             throw new CommonException(ErrorCode.NOT_FOUND_MEMBER);
         return memberEmail;
+    }
+
+    @Override
+    public MemberDTO findMemberEmailByMypage(String email) {
+        log.debug("findMemberEmailByMypage: {}", email);
+        MemberDTO member = memberMapper.findMemberEmailByMypage(email);
+        if (member == null)
+            throw new CommonException(ErrorCode.NOT_FOUND_MEMBER);
+        log.debug("22222: {}", member.getMemberEmail());
+
+        return member;
     }
 }
