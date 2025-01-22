@@ -6,14 +6,12 @@ import beyond.momentours.couple.command.application.dto.CoupleListDTO;
 import beyond.momentours.couple.query.service.QueryCoupleService;
 import beyond.momentours.couplelog.command.domain.aggregate.entity.CoupleLog;
 import beyond.momentours.couplelog.command.domain.repository.CoupleLogRepository;
-import beyond.momentours.couplelog.command.domain.vo.request.RequestCoupleLogVO;
+import beyond.momentours.couplelog.command.domain.vo.request.CoupleLogRequestVO;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 
 @Service
 @Slf4j
@@ -30,7 +28,7 @@ public class CommandCoupleLogServiceImpl implements CommandCoupleLogService {
     }
 
     @Override
-    public void createNewCoupleLog(RequestCoupleLogVO requestVO, CustomUserDetails user) {
+    public void createNewCoupleLog(CoupleLogRequestVO requestVO, CustomUserDetails user) {
         log.info("새로운 커플로그를 작성하는 Service method 시작(createNewCoupleLog)");
         // memberId가 커플 번호와 일치하는지 확인
         Long memberId = user.getMember().getMemberId();
@@ -43,7 +41,7 @@ public class CommandCoupleLogServiceImpl implements CommandCoupleLogService {
         }
         if (existingCouple.getCoupleId() != coupleId) {
             log.error("requestVO에 등록된 coupleId가 조회된 커플 Id와 일치하지 않을 때 발생하는 에러(coupleId): {}", coupleId);
-            throw new CommonException(ErrorCode.NOT_FOUND_COUPLE);
+            throw new CommonException(ErrorCode.FORBIDDEN_ROLE);
         }
 
         CoupleLog newCoupleLog = new CoupleLog();

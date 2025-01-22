@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 @Builder
-public class RequestCoupleLogVO {
+public class CoupleLogRequestVO {
     private Long coupleId;
     private String textContent;
 }

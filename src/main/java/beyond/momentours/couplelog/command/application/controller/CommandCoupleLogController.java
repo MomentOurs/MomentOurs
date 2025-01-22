@@ -4,7 +4,7 @@ import beyond.momentours.common.ResponseDTO;
 import beyond.momentours.couplelog.command.application.service.CommandCoupleLogService;
 import beyond.momentours.couplelog.command.application.service.CursorTrackingService;
 import beyond.momentours.couplelog.command.application.service.WebSocketService;
-import beyond.momentours.couplelog.command.domain.vo.request.RequestCoupleLogVO;
+import beyond.momentours.couplelog.command.domain.vo.request.CoupleLogRequestVO;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class CommandCoupleLogController {
 
     @PostMapping("/new-couple-log")
     public ResponseDTO<?> createNewCoupleLog(@AuthenticationPrincipal CustomUserDetails user,
-                                             @RequestBody RequestCoupleLogVO requestVO) {
+                                             @RequestBody CoupleLogRequestVO requestVO) {
         log.info("새로운 커플로그 요청 controller 도착: {}", requestVO);
         coupleLogService.createNewCoupleLog(requestVO, user);
         return ResponseDTO.ok("새로운 커플로그 생성 성공");
@@ -51,7 +51,7 @@ public class CommandCoupleLogController {
     @PatchMapping("/{couplelogId}")
     public ResponseDTO<?> updateCoupleLog(@PathVariable Long couplelogId,
                                           @AuthenticationPrincipal CustomUserDetails user,
-                                          @RequestBody RequestCoupleLogVO requestCoupleLogVO) {
+                                          @RequestBody CoupleLogRequestVO requestCoupleLogVO) {
         return null;
     }
 }
