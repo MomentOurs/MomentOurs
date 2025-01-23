@@ -4,6 +4,7 @@ package beyond.momentours.announcement.query.controller;
 import beyond.momentours.announcement.query.dto.AnnouncementDTO;
 import beyond.momentours.announcement.query.service.AnnouncementService;
 import beyond.momentours.common.ResponseDTO;
+import beyond.momentours.member.command.application.dto.CustomUserDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -51,5 +52,17 @@ public class AnnouncementController {
     }
 
 
+    // 5. 로그인한 사용자의 공지사항 조회
+    @GetMapping("/my")
+    public ResponseDTO<List<AnnouncementDTO>> getMyAnnouncements(CustomUserDetails user) {
+        // 로그인된 사용자의 memberId
+        Long memberId = user.getMember().getMemberId();
+
+        log.info("Logged-in user's memberId: {}", memberId);
+
+        // 사용자가 작성한 공지사항 조회
+        List<AnnouncementDTO> response = announcementService.findAnnouncementByMemberId(memberId);
+        return ResponseDTO.ok(response);
+    }
 
 }
