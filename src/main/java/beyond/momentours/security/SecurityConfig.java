@@ -1,5 +1,6 @@
 package beyond.momentours.security;
 
+import beyond.momentours.member.command.application.service.LoginHistoryService;
 import beyond.momentours.member.command.application.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -27,12 +28,14 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
+    private final LoginHistoryService loginHistoryService;
 
     @Autowired
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, JwtAuthenticationProvider jwtAuthenticationProvider) {
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, JwtAuthenticationProvider jwtAuthenticationProvider, LoginHistoryService loginHistoryService) {
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtUtil = jwtUtil;
         this.jwtAuthenticationProvider = jwtAuthenticationProvider;
+        this.loginHistoryService = loginHistoryService;
     }
 
     //AuthenticationManager Bean 등록
@@ -72,7 +75,7 @@ public class SecurityConfig {
 
                 // 세션 설정
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        http.addFilterAt(new AuthenticationFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAt(new AuthenticationFilter(authenticationManager(authenticationConfiguration), jwtUtil, loginHistoryService), UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(new JWTFilter(jwtUtil, jwtAuthenticationProvider), AuthenticationFilter.class);
 
         return http.build();

@@ -45,6 +45,7 @@ public enum ErrorCode {
     INVALID_AUTHENTICATION_OBJECT(40116, HttpStatus.UNAUTHORIZED, "Authentication 객체가 CustomUserDetails 타입이 아닙니다."),
     EMAIL_AUTH_CODE_EXPIRED(40117, HttpStatus.UNAUTHORIZED, "인증 번호가 만료되었습니다. 다시 요청해주세요."),
     EMAIL_AUTH_CODE_INVALID(40118, HttpStatus.UNAUTHORIZED, "인증 번호가 올바르지 않습니다. 다시 요청해주세요."),
+    LOGIN_HISTORY_FAILURE(40119, HttpStatus.UNAUTHORIZED, "로그인 이력 저장에 실패했습니다."), // 로그인 이력 기록 실패
 
     // 403: 권한 부족 (Forbidden)
     FORBIDDEN_ROLE(40300, HttpStatus.FORBIDDEN, "요청한 리소스에 대한 권한이 없습니다."), // 사용자가 요청한 리소스에 대한 권한이 없는 경우
