@@ -42,7 +42,7 @@ public class LocationServiceImpl implements LocationService {
     private Location createLocation(String locationName, BigDecimal latitude, BigDecimal longitude) {
         ZonedDateTime nowKST = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
 
-        Location newLocation = Location.builder()
+        return Location.builder()
                 .locationName(locationName)
                 .latitude(latitude)
                 .longitude(longitude)
@@ -50,6 +50,5 @@ public class LocationServiceImpl implements LocationService {
                 .createdAt(nowKST.toLocalDateTime())
                 .updatedAt(nowKST.toLocalDateTime())
                 .build();
-        return newLocation;
     }
 }
