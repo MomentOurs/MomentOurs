@@ -11,5 +11,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Data
-public class InquiryRequestDTO {
+public class InquiryAnswerCreateOrUpdateDTO {
+
+    @JsonProperty("inquiry_answer_content")
+    private String inquiryAnswerContent;
+
+
 }

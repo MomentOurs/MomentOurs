@@ -21,11 +21,14 @@ public class InquiryDTO {
     @JsonProperty("inquiry_title")
     private String inquiryTitle;
 
+    @JsonProperty("inquiry_content")
+    private String inquiryContent;
+
     @JsonProperty("inquiry_answer_status")
-    private String inquiryAnswerStatus;
+    private Boolean inquiryAnswerStatus;
 
     @JsonProperty("inquiry_status")
-    private String inquiryStatus;
+    private Boolean inquiryStatus;
 
     @JsonProperty("created_at")
     private LocalDateTime createdAt;

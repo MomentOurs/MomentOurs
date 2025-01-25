@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -35,12 +36,15 @@ public class Inquiry {
     private Boolean inquiryStatus;
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    private LocalDateTime inquiryCreatedAt;
 
     @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    private LocalDateTime inquiryUpdatedAt;
 
     @Column(name = "member_id")
-    private Long memberId;
+    private Long inquiryMemberId;
 
+    // OneToOne 관계 설정
+    @OneToOne(mappedBy = "inquiry", fetch = FetchType.LAZY) // InquiryAnswer에서 이걸 참조하는 필드명
+    private InquiryAnswer inquiryAnswer;
 }
