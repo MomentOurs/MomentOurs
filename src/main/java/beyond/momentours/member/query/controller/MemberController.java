@@ -39,8 +39,7 @@ public class MemberController {
     /* 회원정보 조회 */
     @GetMapping("/mypage")
     public ResponseDTO<?> getMypage(@AuthenticationPrincipal CustomUserDetails user) {
-        String email = user.getUsername();
-        MemberDTO memberDTO = memberQueryService.findMemberEmailByMypage(email);
+        MemberDTO memberDTO = memberQueryService.findMemberEmailByMypage(user);
         ResponseMypageVO response = memberQueryConverter.fromDtoToMypageVO(memberDTO);
         return ResponseDTO.ok(response);
     }

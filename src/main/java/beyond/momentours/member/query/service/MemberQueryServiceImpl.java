@@ -2,6 +2,7 @@ package beyond.momentours.member.query.service;
 
 import beyond.momentours.common.exception.CommonException;
 import beyond.momentours.common.exception.ErrorCode;
+import beyond.momentours.member.command.application.dto.CustomUserDetails;
 import beyond.momentours.member.query.dto.MemberDTO;
 import beyond.momentours.member.query.repository.MemberMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -40,12 +41,10 @@ public class MemberQueryServiceImpl implements MemberQueryService {
     }
 
     @Override
-    public MemberDTO findMemberEmailByMypage(String email) {
-        log.debug("findMemberEmailByMypage: {}", email);
-        MemberDTO member = memberMapper.findMemberEmailByMypage(email);
+    public MemberDTO findMemberEmailByMypage(CustomUserDetails user) {
+        MemberDTO member = memberMapper.findMemberEmailByMypage(user.getMemberId());
         if (member == null)
             throw new CommonException(ErrorCode.NOT_FOUND_MEMBER);
-        log.debug("22222: {}", member.getMemberEmail());
 
         return member;
     }

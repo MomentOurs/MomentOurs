@@ -1,6 +1,7 @@
 package beyond.momentours.member.query.service;
 
 
+import beyond.momentours.member.command.application.dto.CustomUserDetails;
 import beyond.momentours.member.query.dto.MemberDTO;
 
 public interface MemberQueryService {
@@ -8,5 +9,5 @@ public interface MemberQueryService {
 
     String findByMemberEmail(MemberDTO memberDTO);
 
-    MemberDTO findMemberEmailByMypage(String email);
+    MemberDTO findMemberEmailByMypage(CustomUserDetails user);
 }

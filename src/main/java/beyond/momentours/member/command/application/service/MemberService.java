@@ -1,5 +1,6 @@
 package beyond.momentours.member.command.application.service;
 
+import beyond.momentours.member.command.application.dto.CustomUserDetails;
 import beyond.momentours.member.command.application.dto.EmailDTO;
 import beyond.momentours.member.command.application.dto.MemberDTO;
 import beyond.momentours.member.command.domain.aggregate.entity.Member;
@@ -10,7 +11,7 @@ public interface MemberService extends UserDetailsService {
 
     UserDetails loadUserByUsername(String memberId);
 
-    MemberDTO updateProfile(MemberDTO requestMemberDTO);
+    MemberDTO updateProfile(MemberDTO requestMemberDTO, CustomUserDetails user);
 
     String checkEmail(MemberDTO requestMemberDTO);
 

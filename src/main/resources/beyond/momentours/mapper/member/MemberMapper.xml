@@ -34,7 +34,7 @@
         AND member_status = 1;
     </select>
 
-    <select id="findMemberEmailByMypage" resultMap="memberResultMap" parameterType="string">
+    <select id="findMemberEmailByMypage" resultMap="memberResultMap" parameterType="Long">
         SELECT
         member_email,
         member_nickname,
@@ -44,7 +44,7 @@
         member_gender,
         member_mbti
         FROM tb_member
-        WHERE member_email = #{memberEmail}
+        WHERE member_id = #{memberId}
         AND member_status = 1;
     </select>
 

@@ -10,5 +10,5 @@ public interface MemberMapper {
 
     String findByMemberEmail(String memberEmail);
 
-    MemberDTO findMemberEmailByMypage(String email);
+    MemberDTO findMemberEmailByMypage(Long memberId);
 }

@@ -43,10 +43,9 @@ public class MemberController {
     /* 회원 정보 수정 */
     @PatchMapping("mypage")
     public ResponseDTO<?> updateProfile(@RequestBody RequestUpdateProfileMemberVO requestUpdateProfileMemberVO,
-                                        @AuthenticationPrincipal CustomUserDetails member) {
-        String memberEmail = member.getUsername();
-        MemberDTO requestMemberDTO = memberConverter.fromProfileVOToDTO(requestUpdateProfileMemberVO, memberEmail);
-        MemberDTO responseMemberDTO = memberService.updateProfile(requestMemberDTO);
+                                        @AuthenticationPrincipal CustomUserDetails user) {
+        MemberDTO requestMemberDTO = memberConverter.fromProfileVOToDTO(requestUpdateProfileMemberVO);
+        MemberDTO responseMemberDTO = memberService.updateProfile(requestMemberDTO, user);
         ResponseUpdateProfileMemberVO response = memberConverter.fromDTOToUpdateProfile(responseMemberDTO);
 
         return ResponseDTO.ok(response);
