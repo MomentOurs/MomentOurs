@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="beyond.momentours.inquiry.query.repository.InquiryMapper">
+    <!-- inquiry-->
+    <resultMap id="InquiryResultMap" type="beyond.momentours.inquiry.command.domain.aggregate.entity.Inquiry">
+        <id property="inquiryId" column="inquiry_id"/>
+        <result property="inquiryTitle" column="inquiry_title"/>
+        <result property="inquiryContent" column="inquiry_content"/>
+        <result property="inquiryAnswerStatus" column="inquiry_answer_status"/>
+        <result property="inquiryStatus" column="inquiry_status"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="memberId" column="member_id"/>
+    </resultMap>
+
+    <!-- inquiry_answer-->
+    <resultMap id="InquiryAnswerResultMap" type="beyond.momentours.inquiry.command.domain.aggregate.entity.InquiryAnswer">
+        <id property="inquiryAnswerId" column="inquiry_answer_id"/>
+        <result property="inquiryAnswerContent" column="inquiry_answer_content"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="member_id" column="memberId"/>
+        <result property="inquiry_id" column="inquiryId"/>
+    </resultMap>
+
+
+    <!-- 1. 모든 문의 조회 -> 문의에 대한 답변 함께 조회 -->
+    <select id="selectAllInquiry" resultMap="beyond.momentours.inquiry.query.dto.InquiryDTO">
+        SELECT
+            i.inquiry_id,
+            i.inquiry_title,
+            i.inquiry_content,
+            i.inquiry_answer_status,
+            i.inquiry_status,
+            i.created_at AS inquiry_created_at,
+            i.updated_at AS inquiry_updated_at,
+            i.member_id AS inquiry_member_id,
+            ia.inquiry_answer_id,
+            ia.inquiry_answer_content ,
+            ia.created_at  AS answer_created_at,
+            ia.updated_at AS answer_updated_at,
+            ia.member_id AS answer_member_id
+        FROM inquiry i
+        LEFT OUTER JOIN inquiry_answer ia
+            ON i.inquiry_id = ia.inquiry_id
+        WHERE i.inquiry_status = false;
+
+    </select>
+
+    <!-- 2. 문의 id로 문의 조회 -> 문의에 대한 답변 함께 조회 -->
+    <select id="selectInquiryById" resultMap="beyond.momentours.inquiry.query.dto.InquiryAndInquiryAnswerDTO">
+        SELECT
+            i.inquiry_id,
+            i.inquiry_title,
+            i.inquiry_content,
+            i.inquiry_answer_status,
+            i.inquiry_status,
+            i.created_at AS inquiry_created_at,
+            i.updated_at AS inquiry_updated_at,
+            i.member_id AS inquiry_member_id,
+            ia.inquiry_answer_id,
+            ia.inquiry_answer_content ,
+            ia.created_at  AS answer_created_at,
+            ia.updated_at AS answer_updated_at,
+            ia.member_id AS answer_member_id
+        FROM inquiry i
+        LEFT OUTER JOIN inquiry_answer ia
+            ON i.inquiry_id = ia.inquiry_id
+        WHERE i.inquiry_status = false AND i.inquiry_id = #{inquiryId};
+
+    </select>
+
+    <!-- 3. 답변 여부로 문의 조회 -> 답변 true 들을 조회 -->
+    <select id="selectInquiryAnswerStatusIsTrue" resultMap="beyond.momentours.inquiry.query.dto.InquiryAndInquiryAnswerDTO">
+        SELECT
+            i.inquiry_id,
+            i.inquiry_title,
+            i.inquiry_content,
+            i.inquiry_answer_status,
+            i.inquiry_status,
+            i.created_at AS inquiry_created_at,
+            i.updated_at AS inquiry_updated_at,
+            i.member_id AS inquiry_member_id,
+            ia.inquiry_answer_id,
+            ia.inquiry_answer_content ,
+            ia.created_at  AS answer_created_at,
+            ia.updated_at AS answer_updated_at,
+            ia.member_id AS answer_member_id
+        FROM inquiry i
+        LEFT OUTER JOIN inquiry_answer ia
+            ON i.inquiry_id = ia.inquiry_id
+        WHERE i.inquiry_status = false AND i.inquiry_answer_status = true;
+
+    </select>
+
+    <!-- 4. 답변 여부로 문의 조회 -> 답변 false 들을 조회 -->
+    <select id="selectInquiryAnswerStatusIsFalse" resultMap="beyond.momentours.inquiry.query.dto.InquiryAndInquiryAnswerDTO">
+        SELECT
+            i.inquiry_id,
+            i.inquiry_title,
+            i.inquiry_content,
+            i.inquiry_answer_status,
+            i.inquiry_status,
+            i.created_at AS inquiry_created_at,
+            i.updated_at AS inquiry_updated_at,
+            i.member_id AS inquiry_member_id,
+            ia.inquiry_answer_id,
+            ia.inquiry_answer_content ,
+            ia.created_at  AS answer_created_at,
+            ia.updated_at AS answer_updated_at,
+            ia.member_id AS answer_member_id
+        FROM inquiry i
+        LEFT OUTER JOIN inquiry_answer ia
+            ON i.inquiry_id = ia.inquiry_id
+        WHERE i.inquiry_status = false AND i.inquiry_answer_status = false;
+
+    </select>
+
+    <!-- 5. 작성자 id로 문의 조회 -->
+    <select id="selectInquiryAnswerByMemberId" resultMap="beyond.momentours.inquiry.query.dto.InquiryAndInquiryAnswerDTO">
+        SELECT
+            i.inquiry_id,
+            i.inquiry_title,
+            i.inquiry_content,
+            i.inquiry_answer_status,
+            i.inquiry_status,
+            i.created_at AS inquiry_created_at,
+            i.updated_at AS inquiry_updated_at,
+            i.member_id AS inquiry_member_id,
+            ia.inquiry_answer_id,
+            ia.inquiry_answer_content ,
+            ia.created_at  AS answer_created_at,
+            ia.updated_at AS answer_updated_at,
+            ia.member_id AS answer_member_id
+        FROM inquiry i
+        LEFT OUTER JOIN inquiry_answer ia
+            ON i.inquiry_id = ia.inquiry_id
+        WHERE i.inquiry_status = false AND i.member_id = #{memberId};
+
+    </select>
+
+    <!-- 6. 답변 작성자 id로 문의 조회 -->
+    <select id="selectInquiryAnswerByAnswerMemberId" resultMap="beyond.momentours.inquiry.query.dto.InquiryAndInquiryAnswerDTO">
+        SELECT
+            i.inquiry_id,
+            i.inquiry_title,
+            i.inquiry_content,
+            i.inquiry_answer_status,
+            i.inquiry_status,
+            i.created_at AS inquiry_created_at,
+            i.updated_at AS inquiry_updated_at,
+            i.member_id AS inquiry_member_id,
+            ia.inquiry_answer_id,
+            ia.inquiry_answer_content,
+            ia.created_at  AS answer_created_at,
+            ia.updated_at AS answer_updated_at,
+            ia.member_id AS answer_member_id
+        FROM inquiry i
+        LEFT OUTER JOIN inquiry_answer ia
+            ON i.inquiry_id = ia.inquiry_id
+        WHERE i.inquiry_status = false AND ia.member_id = #{memberId};
+
+    </select>
+
+
+    <!-- 7. 키워드로 문의 조회 : 제목 + 내용: 할건지 말건지 보류-->
+    <select id="selectInquiryAnswerByKeyword" resultMap="beyond.momentours.inquiry.query.dto.InquiryAndInquiryAnswerDTO">
+        SELECT
+            i.inquiry_id,
+            i.inquiry_title,
+            i.inquiry_content,
+            i.inquiry_answer_status,
+            i.inquiry_status,
+            i.created_at AS inquiry_created_at,
+            i.updated_at AS inquiry_updated_at,
+            i.member_id AS inquiry_member_id,
+            ia.inquiry_answer_id,
+            ia.inquiry_answer_content,
+            ia.created_at  AS answer_created_at,
+            ia.updated_at AS answer_updated_at,
+            ia.member_id AS answer_member_id
+        FROM inquiry i
+        LEFT OUTER JOIN inquiry_answer ia
+            ON i.inquiry_id = ia.inquiry_id
+        WHERE
+            i.inquiry_status = false
+            AND
+            (
+            i.inquiry_title LIKE CONCAT('%',#{keyword},'%')
+            OR
+            i.inquiry_content LIKE CONCAT('%',#{keyword},'%')
+            );
+
+    </select>
+
+
+
+</mapper>

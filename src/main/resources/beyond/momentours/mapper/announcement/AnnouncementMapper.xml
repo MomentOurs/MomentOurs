@@ -28,8 +28,8 @@
         FROM
             tb_announcement ta
         INNER JOIN tb_member tm
-        ON
-            ta.member_id = tm.member_id ;
+            ON ta.member_id = tm.member_id
+        WHERE ta.announcement_status = false;
     </select>
 
     <!-- 2. id로 공지사항 조회 -->
@@ -48,6 +48,8 @@
         ON
             ta.member_id = tm.member_id
         WHERE
+            ta.announcement_status = false
+            AND
             ta.announcement_id = #{announcementId};
     </select>
 
@@ -67,9 +69,13 @@
         ON
             ta.member_id = tm.member_id
         WHERE
+            ta.announcement_status = false
+            AND
+            (
             ta.announcement_title LIKE CONCAT('%',#{keyword},'%')
             OR
-            ta.announcement_content LIKE CONCAT('%',#{keyword},'%');
+            ta.announcement_content LIKE CONCAT('%',#{keyword},'%')
+            );
 
     </select>
 
@@ -92,6 +98,8 @@
             ta.member_id = tm.member_id
         WHERE
             ta.member_id = #{memberId}
+            AND
+            ta.announcement_status = false
     </select>
 
 </mapper>

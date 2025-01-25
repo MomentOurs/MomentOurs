@@ -28,7 +28,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     @Transactional
     public AnnouncementResponseDTO createAnnouncement(CreateAnnouncementRequestDTO requestDTO, Long memberId){
 
-        // 공지사항 엔티티 생성
+        // 공지사항 엔터티 생성, 도메인 객체 구성
         Announcement announcement = new Announcement();
         announcement.setAnnouncementTitle(requestDTO.getAnnouncementTitle());
         announcement.setAnnouncementContent(requestDTO.getAnnouncementContent());
