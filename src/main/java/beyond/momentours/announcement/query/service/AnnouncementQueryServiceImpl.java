@@ -1,19 +1,19 @@
 package beyond.momentours.announcement.query.service;
 
 import beyond.momentours.announcement.query.dto.AnnouncementDTO;
-import beyond.momentours.announcement.query.respository.AnnouncementMapper;
+import beyond.momentours.announcement.query.repository.AnnouncementMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class AnnouncementServiceImpl implements AnnouncementService {
+public class AnnouncementQueryServiceImpl implements AnnouncementQueryService {
 
     private final AnnouncementMapper announcementMapper;
 
     @Autowired
-    public AnnouncementServiceImpl(AnnouncementMapper announcementMapper) {
+    public AnnouncementQueryServiceImpl(AnnouncementMapper announcementMapper) {
         this.announcementMapper = announcementMapper;
     }
 

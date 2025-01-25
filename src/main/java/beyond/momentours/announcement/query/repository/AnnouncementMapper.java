@@ -1,4 +1,4 @@
-package beyond.momentours.announcement.query.respository;
+package beyond.momentours.announcement.query.repository;
 
 import beyond.momentours.announcement.query.dto.AnnouncementDTO;
 import org.apache.ibatis.annotations.Mapper;
@@ -7,7 +7,6 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 @Mapper
-
 public interface AnnouncementMapper {
 
     // 1. 모두 조회

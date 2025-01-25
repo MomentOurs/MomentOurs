@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="beyond.momentours.announcement.query.respository.AnnouncementQueryRepository">
+<mapper namespace="beyond.momentours.announcement.query.repository.AnnouncementMapper">
     <resultMap id="announcementResultMap" type="beyond.momentours.announcement.command.domain.aggregate.entity.Announcement">
         <id property="announcementId" column="announcement_id"/>
         <result property="announcementTitle" column="announcement_title"/>

@@ -3,7 +3,7 @@ import beyond.momentours.announcement.query.dto.AnnouncementDTO;
 
 import java.util.List;
 
-public interface AnnouncementService {
+public interface AnnouncementQueryService {
 
     // 1. 모든 공지사항 조회
     List<AnnouncementDTO> findAllAnnouncements();

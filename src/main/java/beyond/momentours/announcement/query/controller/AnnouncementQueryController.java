@@ -2,7 +2,7 @@ package beyond.momentours.announcement.query.controller;
 
 
 import beyond.momentours.announcement.query.dto.AnnouncementDTO;
-import beyond.momentours.announcement.query.service.AnnouncementService;
+import beyond.momentours.announcement.query.service.AnnouncementQueryService;
 import beyond.momentours.common.ResponseDTO;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
 import lombok.extern.slf4j.Slf4j;
@@ -14,12 +14,12 @@ import java.util.List;
 @Slf4j
 @RestController("queryAnnouncementController")
 @RequestMapping("api/announcement")
-public class AnnouncementController {
+public class AnnouncementQueryController {
 
-    private final AnnouncementService announcementService;
+    private final AnnouncementQueryService announcementService;
 
     @Autowired
-    public AnnouncementController (AnnouncementService announcementService) {
+    public AnnouncementQueryController(AnnouncementQueryService announcementService) {
         this.announcementService = announcementService;
     }
 
