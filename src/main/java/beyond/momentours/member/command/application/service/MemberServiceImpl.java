@@ -69,9 +69,11 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public MemberDTO updateProfile(MemberDTO requestMemberDTO) {
+    public MemberDTO updateProfile(MemberDTO requestMemberDTO, CustomUserDetails user) {
 
-        Long memberId = memberQueryService.findByMemberId(requestMemberDTO.getMemberEmail());
+        requestMemberDTO = MemberDTO.builder()
+                .memberId(user.getMemberId())
+                .build();
 
         Member member = memberConverter.fromProfileDTOToEntity(requestMemberDTO);
 

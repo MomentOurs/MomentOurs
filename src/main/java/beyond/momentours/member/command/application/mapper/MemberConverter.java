@@ -76,9 +76,8 @@ public class MemberConverter {
                 .build();
     }
 
-    public MemberDTO fromProfileVOToDTO(RequestUpdateProfileMemberVO updateProfile, String memberEmail) {
+    public MemberDTO fromProfileVOToDTO(RequestUpdateProfileMemberVO updateProfile) {
         return MemberDTO.builder()
-                .memberEmail(memberEmail)
                 .memberPassword(updateProfile.getMemberPassword())
                .memberNickname(updateProfile.getMemberNickname())
                .memberPhone(updateProfile.getMemberPhone())

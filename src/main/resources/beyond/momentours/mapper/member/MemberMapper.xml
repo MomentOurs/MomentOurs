@@ -34,4 +34,18 @@
         AND member_status = 1;
     </select>
 
+    <select id="findMemberEmailByMypage" resultMap="memberResultMap" parameterType="Long">
+        SELECT
+        member_email,
+        member_nickname,
+        member_name,
+        member_phone,
+        member_birth,
+        member_gender,
+        member_mbti
+        FROM tb_member
+        WHERE member_id = #{memberId}
+        AND member_status = 1;
+    </select>
+
 </mapper>

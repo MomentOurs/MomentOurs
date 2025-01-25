@@ -4,6 +4,7 @@ import beyond.momentours.common.exception.CommonException;
 import beyond.momentours.common.exception.ErrorCode;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
 import beyond.momentours.member.command.application.dto.JwtTokenDTO;
+import beyond.momentours.member.command.application.service.LoginHistoryService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
@@ -29,10 +30,12 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
+    private final LoginHistoryService loginHistoryService;
 
-    public AuthenticationFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil) {
+    public AuthenticationFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil, LoginHistoryService loginHistoryService) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
+        this.loginHistoryService = loginHistoryService;
         setFilterProcessesUrl("/api/member/login");
     }
 
@@ -110,6 +113,13 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         responseData.put("refreshToken", refreshToken);
         responseData.put("expiration", expArray);
         responseData.put("memberEmail", memberEmail);
+
+        Long memberId = userDetails.getMemberId();
+        try {
+            loginHistoryService.recordLogin(memberId, request.getRemoteAddr());
+        } catch (Exception e) {
+            throw new CommonException(ErrorCode.LOGIN_HISTORY_FAILURE);
+        }
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
