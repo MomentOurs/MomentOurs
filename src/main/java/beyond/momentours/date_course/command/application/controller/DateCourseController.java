@@ -34,7 +34,7 @@ public class DateCourseController {
             DateCourseDTO saveDateCourseDTO = dateCourseService.createDateCourse(dateCourseDTO, user);
             ResponseCreateDateCourseVO response = dateCourseConverter.fromDTOToCreateVO(saveDateCourseDTO);
 
-            return ResponseEntity.status(HttpStatus.OK).body(response);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (CommonException e) {
             log.error("데이트 코스 등록 오류: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
