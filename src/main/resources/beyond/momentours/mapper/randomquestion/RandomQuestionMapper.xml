@@ -19,7 +19,28 @@
              , created_at
              , couple_id
           FROM TB_RANDOM_QUESTION
-         WHERE couple_id = ( SELECT couple_id FROM TB_COUPLE_LIST WHERE member_id1 = #{memberId} OR member_id2 = #{memberId} )
+         WHERE couple_id = (
+        SELECT couple_id
+          FROM TB_COUPLE_LIST
+         WHERE member_id1 = #{memberId}
+            OR member_id2 = #{memberId}
+        )
+    </select>
+
+    <select id="getRandomQuestionByQuesId" resultMap="randomQuestionResultMap">
+        SELECT ques_id
+             , ques_content
+             , ans_status
+             , created_at
+             , couple_id
+          FROM TB_RANDOM_QUESTION
+         WHERE couple_id = (
+        SELECT couple_id
+          FROM TB_COUPLE_LIST
+         WHERE member_id1 = #{memberId}
+            OR member_id2 = #{memberId}
+        )
+           AND ques_id = #{quesId}
     </select>
 
 </mapper>
