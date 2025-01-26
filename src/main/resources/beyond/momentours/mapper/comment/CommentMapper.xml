@@ -12,8 +12,23 @@
         <result property="createdAt" column="created_at"/>
         <result property="updatedAt" column="updated_at"/>
         <result property="memberId" column="member_id"/>
-        <result property="momentId" column="moment_id"/>
+        <result property="quesAnsId" column="ques_ans_id"/>
         <result property="coupleLogId" column="couple_log_id"/>
     </resultMap>
+
+    <select id="findCommentById" resultMap="commentResultMap">
+        SELECT
+               comment_id,
+               comment_content,
+               comment_type,
+               comment_status,
+               created_at,
+               updated_at,
+               member_id,
+               ques_ans_id,
+               couple_log_id
+          FROM tb_comment
+         WHERE comment_id = #{commentId}
+    </select>
 
 </mapper>

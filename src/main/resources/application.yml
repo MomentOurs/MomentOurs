@@ -12,3 +12,37 @@ spring:
       hibernate:
         format_sql: true
     generate-ddl: false
+
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+
+  mail:
+    host: smtp.gmail.com
+    port: 465
+    username: ${EMAIL_USERNAME}
+    password: ${EMAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+          connectiontimeout: 20000
+          timeout: 20000
+          writetimeout: 20000
+
+
+logging:
+  level:
+    beyond.momentours: DEBUG
+    org.springframework.security: TRACE
+    org.mybatis: DEBUG
+    java.sql: DEBUG
+
+jwt:
+  secret-key: ${JWT_SECRET_KEY}
+
+mybatis:
+  mapper-locations: classpath:/beyond/momentours/mapper/**/*.xml

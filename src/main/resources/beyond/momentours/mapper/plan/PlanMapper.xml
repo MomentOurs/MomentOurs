@@ -47,7 +47,7 @@
          WHERE couple_id = #{coupleId}
            AND plan_start_date &lt;= #{selectedDateEnd}
            AND plan_end_date >= #{selectedDateStart}
-           AND plan_end_date <= #{planEndDate}
+           AND plan_end_date &lt;= #{planEndDate}
            AND plan_status = 1;
     </select>
 

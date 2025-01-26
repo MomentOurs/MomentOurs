@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public enum CommentType {
 
     COUPLE_LOG("COUPLE_LOG"),
-    MOMENT("MOMENT");
+    QUESTION("QUESTION");
 
     private final String commentType;
 
