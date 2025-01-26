@@ -1,4 +1,22 @@
 package beyond.momentours.inquiry.query.repository;
 
+
+import org.apache.ibatis.annotations.Mapper;
+
+@Mapper
 public interface InquiryMapper {
+
+    // 1. 모든 문의 조회 -> 문의에 대한 답변 함께 조회
+
+    // 2. 문의 id로 문의 조회 -> 문의에 대한 답변 함께 조회
+
+    // 3. 답변 여부로 문의 조회 -> 답변 true 들을 조회
+
+    // 4. 답변 여부로 문의 조회 -> 답변 false 들을 조회
+
+    // 5. 작성자 id로 문의 조회
+
+    // 6. 답변 작성자 id로 문의 조회
+
+    // 7. 키워드로 문의 조회
 }
