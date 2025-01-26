@@ -52,6 +52,13 @@ public class Plan {
     @Column(name = "course_id")
     private Long courseId;
 
+    @PrePersist
+    public void prePersist() {
+        if (planStatus == null) {
+            planStatus = true;
+        }
+    }
+
     public void register(Plan plan) {
         plan.createdAt = LocalDateTime.now();
         plan.updatedAt = LocalDateTime.now();
@@ -103,4 +110,8 @@ public class Plan {
         }
     }
 
+    public void updateStatus(boolean status) {
+        this.planStatus = status;
+        this.updatedAt = LocalDateTime.now();
+    }
 }

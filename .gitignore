@@ -31,3 +31,5 @@ application-test.yml
 /dist/
 /nbdist/
 /.nb-gradle/
+
+.env*

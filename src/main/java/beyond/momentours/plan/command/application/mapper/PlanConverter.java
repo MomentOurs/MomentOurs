@@ -2,15 +2,15 @@ package beyond.momentours.plan.command.application.mapper;
 
 import beyond.momentours.plan.command.application.dto.PlanDTO;
 import beyond.momentours.plan.command.domain.aggregate.entity.Plan;
-import beyond.momentours.plan.command.domain.vo.request.RequestEditPlanVO;
-import beyond.momentours.plan.command.domain.vo.request.RequestRegisterPlanVO;
-import beyond.momentours.plan.command.domain.vo.response.ResponseEditPlanVO;
-import beyond.momentours.plan.command.domain.vo.response.ResponseRegisterPlanVO;
+import beyond.momentours.plan.command.domain.vo.request.RequestUpdatePlanVO;
+import beyond.momentours.plan.command.domain.vo.request.RequestCreatePlanVO;
+import beyond.momentours.plan.command.domain.vo.response.ResponseUpdatePlanVO;
+import beyond.momentours.plan.command.domain.vo.response.ResponseCreatePlanVO;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PlanConverter {
-    public PlanDTO fromRegisterVOToDTO(RequestRegisterPlanVO registerPlanVO) {
+    public PlanDTO fromCreateVOToDTO(RequestCreatePlanVO registerPlanVO) {
         return PlanDTO.builder()
                 .planTitle(registerPlanVO.getPlanTitle())
                 .planContent(registerPlanVO.getPlanContent())
@@ -21,8 +21,8 @@ public class PlanConverter {
                 .build();
     }
 
-    public ResponseRegisterPlanVO fromDTOToRegisterVO(PlanDTO savePlanDTO) {
-        return ResponseRegisterPlanVO.builder()
+    public ResponseCreatePlanVO fromDTOToCreateVO(PlanDTO savePlanDTO) {
+        return ResponseCreatePlanVO.builder()
                 .planTitle(savePlanDTO.getPlanTitle())
                 .planContent(savePlanDTO.getPlanContent())
                 .planStartDate(savePlanDTO.getPlanStartDate())
@@ -62,7 +62,7 @@ public class PlanConverter {
                 .build();
     }
 
-    public PlanDTO fromEditVOToDTO(RequestEditPlanVO editPlanVO) {
+    public PlanDTO fromUpdateVOToDTO(RequestUpdatePlanVO editPlanVO) {
         return PlanDTO.builder()
                 .planTitle(editPlanVO.getPlanTitle())
                 .planContent(editPlanVO.getPlanContent())
@@ -73,8 +73,9 @@ public class PlanConverter {
                 .build();
     }
 
-    public ResponseEditPlanVO fromDTOToEditVO(PlanDTO editedPlan) {
-        return ResponseEditPlanVO.builder()
+    public ResponseUpdatePlanVO fromDTOToUpdateVO(PlanDTO editedPlan) {
+        return ResponseUpdatePlanVO.builder()
+                .planId(editedPlan.getPlanId())
                 .planTitle(editedPlan.getPlanTitle())
                 .planContent(editedPlan.getPlanContent())
                 .planStartDate(editedPlan.getPlanStartDate())
