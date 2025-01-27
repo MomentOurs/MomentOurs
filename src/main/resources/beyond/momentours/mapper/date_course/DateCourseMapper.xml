@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="beyond.momentours.date_course.query.repository.DateCourseMapper">
+    <resultMap id="dateCourseResultMap" type="beyond.momentours.date_course.command.domain.aggregate.entity.DateCourse">
+        <id property="courseId" column="course_id"/>
+        <result property="courseTitle" column="course_title"/>
+        <result property="courseType" column="course_type"/>
+        <result property="courseMemo" column="course_memo"/>
+        <result property="courseDisclosure" column="course_disclosure"/>
+        <result property="courseStartDate" column="course_start_date"/>
+        <result property="courseEndDate" column="course_end_date"/>
+        <result property="courseStatus" column="course_status"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="memberId" column="member_id"/>
+    </resultMap>
+
+    <select id="findActiveById" resultMap="dateCourseResultMap">
+        SELECT course_id, course_title, course_type, course_memo, course_disclosure, course_start_date, course_end_date, course_status, created_at, updated_at, member_id
+          FROM date_course
+         WHERE course_id = #{courseId}
+           AND course_status = true
+    </select>
+
+    <select id="findCoursesWithSorting" resultMap="dateCourseResultMap">
+        SELECT course_id, course_title, course_type, course_memo, course_disclosure, course_start_date, course_end_date, course_status, course_like, course_view, created_at, updated_at, member_id
+          FROM date_course
+         WHERE course_status = true
+           AND course_disclosure = true
+         ORDER BY
+        <choose>
+            <when test="sortBy == 'likes'">course_like DESC</when>
+            <when test="sortBy == 'views'">course_view DESC</when>
+            <otherwise>created_at DESC</otherwise>
+        </choose>
+    </select>
+
+    <update id="incrementViewCountInDB">
+        UPDATE date_course
+           SET course_view = course_view + #{viewCount}
+         WHERE course_id = #{courseId}
+           AND course_status = true
+    </update>
+
+    <select id="findCoursesByMemberId" resultMap="dateCourseResultMap">
+        SELECT course_id, course_title, course_type, course_memo, course_disclosure, course_start_date, course_end_date, course_status, course_like, course_view, created_at, updated_at, member_id
+          FROM date_course
+         WHERE member_id = #{memberId}
+           AND course_status = true
+    </select>
+</mapper>

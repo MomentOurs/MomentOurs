@@ -46,4 +46,24 @@ public class DateCourseLocationServiceImpl implements DateCourseLocationService 
             throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @Transactional
+    @Override
+    public void updateDateCourseLocations(Long courseId, List<DateCourseLocationVO> locations) {
+        dateCourseLocationRepository.deleteByCourseId(courseId);
+
+        for (DateCourseLocationVO locationDTO : locations) {
+            LocationDTO location = locationService.findOrCreateLocation(locationDTO.getLocationName(), locationDTO.getLatitude(), locationDTO.getLongitude());
+
+            DateCourseLocation courseLocation = DateCourseLocation.builder()
+                    .courseId(courseId)
+                    .locationId(location.getLocationId())
+                    .sequence(locationDTO.getSequence())
+                    .courseLocationStatus(true)
+                    .build();
+
+            dateCourseLocationRepository.save(courseLocation);
+        }
+    }
+
 }
