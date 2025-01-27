@@ -5,7 +5,7 @@ import beyond.momentours.member.command.application.dto.CustomUserDetails;
 import beyond.momentours.member.query.dto.MemberDTO;
 
 public interface MemberQueryService {
-    Long findByMemberId(String memberId);
+    Long findByMemberId(Long memberId);
 
     String findByMemberEmail(MemberDTO memberDTO);
 

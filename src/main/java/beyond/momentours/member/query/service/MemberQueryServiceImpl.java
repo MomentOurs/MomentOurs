@@ -21,7 +21,7 @@ public class MemberQueryServiceImpl implements MemberQueryService {
     }
 
     @Override
-    public Long findByMemberId(String memberId) {
+    public Long findByMemberId(Long memberId) {
 
         Long memId = memberMapper.findByMemberId(memberId);
 
