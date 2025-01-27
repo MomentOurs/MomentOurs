@@ -111,4 +111,20 @@ public class DateCourseController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("예상치 못한 오류가 발생했습니다");
         }
     }
+
+    @GetMapping("/my-courses")
+    public ResponseEntity<?> getMyDateCourses(@AuthenticationPrincipal CustomUserDetails user) {
+        log.info("사용자가 등록한 데이트 코스 조회 요청: userId={}", user.getMemberId());
+        try {
+            List<DateCourseDTO> courses = dateCourseService.getCoursesByMemberId(user);
+            List<ResponseDateCourseListVO> response = dateCourseConverter.fromDTOToListVO(courses);
+            return ResponseEntity.ok(response);
+        } catch (CommonException e) {
+            log.error("사용자 데이트 코스 조회 오류: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            log.error("예상치 못한 오류", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("예상치 못한 오류가 발생했습니다");
+        }
+    }
 }
