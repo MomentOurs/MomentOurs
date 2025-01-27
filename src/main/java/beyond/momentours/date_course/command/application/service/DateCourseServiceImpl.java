@@ -13,6 +13,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
 @Slf4j
 @Service("commandDateCourseService")
 @RequiredArgsConstructor
@@ -41,5 +44,32 @@ public class DateCourseServiceImpl implements DateCourseService {
             log.error("데이트 코스 등록 중 오류 발생", e);
             throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @Transactional
+    @Override
+    public DateCourseDTO updateDateCourse(DateCourseDTO dateCourseDTO, CustomUserDetails user) {
+        Long courseId = dateCourseDTO.getCourseId();
+        DateCourse existingCourse = dateCourseRepository.findById(courseId).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_DATE_COURSE));
+
+        update(dateCourseDTO, existingCourse, courseId);
+
+        DateCourse updatedCourse = dateCourseRepository.save(existingCourse);
+        return dateCourseConverter.fromEntityToDTO(updatedCourse);
+    }
+
+    private void update(DateCourseDTO dateCourseDTO, DateCourse existingCourse, Long courseId) {
+        existingCourse.updateCourseTitle(dateCourseDTO.getCourseTitle());
+        existingCourse.updateCourseType(dateCourseDTO.getCourseType());
+        existingCourse.updateCourseMemo(dateCourseDTO.getCourseMemo());
+        existingCourse.updateCourseDisclosure(dateCourseDTO.getCourseDisclosure());
+        existingCourse.updateCourseStartDate(dateCourseDTO.getCourseStartDate());
+        existingCourse.updateCourseEndDate(dateCourseDTO.getCourseEndDate());
+
+        if (dateCourseDTO.getLocations() != null) {
+            dateCourseLocationService.updateDateCourseLocations(courseId, dateCourseDTO.getLocations());
+        }
+
+        existingCourse.updateUpdatedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
     }
 }
