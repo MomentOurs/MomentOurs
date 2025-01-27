@@ -10,6 +10,7 @@ import beyond.momentours.common.exception.ErrorCode;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +23,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     private final AnnouncementRepository announcementRepository;
     private static final Logger log = LoggerFactory.getLogger(AnnouncementServiceImpl.class);
 
-
+    @Autowired
     public AnnouncementServiceImpl(AnnouncementRepository announcementRepository) {
         this.announcementRepository = announcementRepository;
     }
@@ -44,7 +45,6 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         try {
             // 엔터티 객체 저장하기
             Announcement createdAnnouncement = announcementRepository.save(announcement);
-
 
             // 엔티티를 ResponseDTO로 변환하여 반환
             return AnnouncementResponseDTO.fromEntity(createdAnnouncement);
