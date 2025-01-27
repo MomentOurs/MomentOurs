@@ -44,4 +44,11 @@
          WHERE course_id = #{courseId}
            AND course_status = true
     </update>
+
+    <select id="findCoursesByMemberId" resultMap="dateCourseResultMap">
+        SELECT course_id, course_title, course_type, course_memo, course_disclosure, course_start_date, course_end_date, course_status, course_like, course_view, created_at, updated_at, member_id
+          FROM date_course
+         WHERE member_id = #{memberId}
+           AND course_status = true
+    </select>
 </mapper>
