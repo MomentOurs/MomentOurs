@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @ToString
-public class RequestCreateDateCourseVO {
+public class RequestUpdateDateCourseVO {
     private String courseTitle;
     private CourseType courseType;
     private String courseMemo;
