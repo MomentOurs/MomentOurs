@@ -99,6 +99,16 @@ public class DateCourseServiceImpl implements DateCourseService {
         return dateCourseConverter.fromEntityToDTO(dateCourse);
     }
 
+    @Transactional
+    @Override
+    public List<DateCourseDTO> getCoursesByMemberId(CustomUserDetails user) {
+        Long memberId = user.getMemberId();
+        List<DateCourse> courses = dateCourseDAO.findCoursesByMemberId(memberId);
+        return courses.stream()
+                .map(dateCourseConverter::fromEntityToDTO)
+                .collect(Collectors.toList());
+    }
+
     private void update(DateCourseDTO dateCourseDTO, DateCourse existingCourse, Long courseId) {
         existingCourse.updateCourseTitle(dateCourseDTO.getCourseTitle());
         existingCourse.updateCourseType(dateCourseDTO.getCourseType());

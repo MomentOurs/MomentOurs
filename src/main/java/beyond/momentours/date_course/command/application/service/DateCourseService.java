@@ -20,4 +20,7 @@ public interface DateCourseService {
 
     @Transactional
     DateCourseDTO getDateCourse(Long courseId, CustomUserDetails user);
+
+    @Transactional
+    List<DateCourseDTO> getCoursesByMemberId(CustomUserDetails user);
 }
