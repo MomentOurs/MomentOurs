@@ -6,6 +6,7 @@ import beyond.momentours.date_course.command.application.dto.DateCourseDTO;
 import beyond.momentours.date_course.command.application.mapper.DateCourseConverter;
 import beyond.momentours.date_course.command.domain.aggregate.entity.DateCourse;
 import beyond.momentours.date_course.command.domain.repository.DateCourseRepository;
+import beyond.momentours.date_course.query.repository.DateCourseMapper;
 import beyond.momentours.date_course_location.command.application.service.DateCourseLocationService;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
 import jakarta.transaction.Transactional;
@@ -23,6 +24,7 @@ public class DateCourseServiceImpl implements DateCourseService {
 
     private final DateCourseRepository dateCourseRepository;
     private final DateCourseConverter dateCourseConverter;
+    private final DateCourseMapper dateCourseDAO;
     private final DateCourseLocationService dateCourseLocationService;
 
     @Transactional
@@ -50,12 +52,26 @@ public class DateCourseServiceImpl implements DateCourseService {
     @Override
     public DateCourseDTO updateDateCourse(DateCourseDTO dateCourseDTO, CustomUserDetails user) {
         Long courseId = dateCourseDTO.getCourseId();
-        DateCourse existingCourse = dateCourseRepository.findById(courseId).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_DATE_COURSE));
+        DateCourse existingCourse = dateCourseDAO.findActiveById(courseId).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_DATE_COURSE));
 
         update(dateCourseDTO, existingCourse, courseId);
 
         DateCourse updatedCourse = dateCourseRepository.save(existingCourse);
         return dateCourseConverter.fromEntityToDTO(updatedCourse);
+    }
+
+    @Transactional
+    @Override
+    public void deleteDateCourse(Long courseId, CustomUserDetails user) {
+        DateCourse dateCourse = dateCourseDAO.findActiveById(courseId).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_DATE_COURSE));
+
+        if (!dateCourse.getMemberId().equals(user.getMemberId())) throw new CommonException(ErrorCode.UNAUTHORIZED_ACCESS);
+
+        dateCourse.deleteCourse(false);
+        dateCourse.updateUpdatedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
+        dateCourseRepository.save(dateCourse);
+
+        log.info("데이트 코스 Soft Delete 완료: courseId={}, userId={}", courseId, user.getMemberId());
     }
 
     private void update(DateCourseDTO dateCourseDTO, DateCourse existingCourse, Long courseId) {

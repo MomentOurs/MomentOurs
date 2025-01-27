@@ -9,4 +9,7 @@ public interface DateCourseService {
 
     @Transactional
     DateCourseDTO updateDateCourse(DateCourseDTO dateCourseDTO, CustomUserDetails user);
+
+    @Transactional
+    void deleteDateCourse(Long courseId, CustomUserDetails user);
 }
