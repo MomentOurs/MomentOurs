@@ -25,4 +25,23 @@
            AND course_status = true
     </select>
 
+    <select id="findCoursesWithSorting" resultMap="dateCourseResultMap">
+        SELECT course_id, course_title, course_type, course_memo, course_disclosure, course_start_date, course_end_date, course_status, course_like, course_view, created_at, updated_at, member_id
+          FROM date_course
+         WHERE course_status = true
+           AND course_disclosure = true
+         ORDER BY
+        <choose>
+            <when test="sortBy == 'likes'">course_like DESC</when>
+            <when test="sortBy == 'views'">course_view DESC</when>
+            <otherwise>created_at DESC</otherwise>
+        </choose>
+    </select>
+
+    <update id="incrementViewCountInDB">
+        UPDATE date_course
+           SET course_view = course_view + #{viewCount}
+         WHERE course_id = #{courseId}
+           AND course_status = true
+    </update>
 </mapper>
