@@ -61,4 +61,18 @@ public class DateCourseController {
         }
     }
 
+    @PatchMapping("/deactivate/{courseId}")
+    public ResponseEntity<?> deleteDateCourse(@PathVariable Long courseId, @AuthenticationPrincipal CustomUserDetails user) {
+        log.info("데이트 코스 Soft Delete 요청: courseId={}, userId={}", courseId, user.getMemberId());
+        try {
+            dateCourseService.deleteDateCourse(courseId, user);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } catch (CommonException e) {
+            log.error("데이트 코스 Soft Delete 오류: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            log.error("예상치 못한 오류", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("예상치 못한 오류가 발생했습니다");
+        }
+    }
 }

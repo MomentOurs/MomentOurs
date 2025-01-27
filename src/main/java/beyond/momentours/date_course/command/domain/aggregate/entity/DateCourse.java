@@ -106,4 +106,8 @@ public class DateCourse {
             this.updatedAt = updatedAt;
         }
     }
+
+    public void deleteCourse(Boolean courseStatus) {
+        this.courseStatus = courseStatus;
+    }
 }
