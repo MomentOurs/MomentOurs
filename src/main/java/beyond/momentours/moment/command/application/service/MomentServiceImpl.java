@@ -88,4 +88,9 @@ public class MomentServiceImpl implements MomentService {
 
         return responseMomentDTO;
     }
+
+    @Override
+    public ResponseMomentDTO updateMoment(RequestMomentDTO requestMomentDTO, CustomUserDetails user) {
+        return null;
+    }
 }

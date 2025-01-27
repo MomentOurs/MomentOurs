@@ -31,4 +31,12 @@ public class MomentController {
         return ResponseDTO.ok(responseMomentDTO);
     }
 
+    // 추억 수정
+    @PatchMapping
+    public ResponseDTO<?> updateMoment(@RequestBody RequestMomentDTO requestMomentDTO, @AuthenticationPrincipal CustomUserDetails user) {
+        log.info("수정 요청 데이터 : {}", requestMomentDTO);
+        ResponseMomentDTO responseMomentDTO = momentService.updateMoment(requestMomentDTO, user);
+        return ResponseDTO.ok(responseMomentDTO);
+    }
+
 }
