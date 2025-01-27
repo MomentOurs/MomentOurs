@@ -3,7 +3,9 @@ package beyond.momentours.date_course.command.application.mapper;
 import beyond.momentours.date_course.command.application.dto.DateCourseDTO;
 import beyond.momentours.date_course.command.domain.aggregate.entity.DateCourse;
 import beyond.momentours.date_course.command.domain.vo.request.RequestCreateDateCourseVO;
+import beyond.momentours.date_course.command.domain.vo.request.RequestUpdateDateCourseVO;
 import beyond.momentours.date_course.command.domain.vo.response.ResponseCreateDateCourseVO;
+import beyond.momentours.date_course.command.domain.vo.response.ResponseUpdateDateCourseVO;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,6 +15,7 @@ public class DateCourseConverter {
                 .courseTitle(request.getCourseTitle())
                 .courseType(request.getCourseType())
                 .courseMemo(request.getCourseMemo())
+                .courseDisclosure(request.getCourseDisclosure())
                 .courseStartDate(request.getCourseStartDate())
                 .courseEndDate(request.getCourseEndDate())
                 .build();
@@ -63,6 +66,33 @@ public class DateCourseConverter {
                 .createdAt(savedCourse.getCreatedAt())
                 .updatedAt(savedCourse.getUpdatedAt())
                 .memberId(savedCourse.getMemberId())
+                .build();
+    }
+
+    public DateCourseDTO fromUpdateVOToDTO(RequestUpdateDateCourseVO request, Long courseId) {
+        return DateCourseDTO.builder()
+                .courseId(courseId)
+                .courseTitle(request.getCourseTitle())
+                .courseType(request.getCourseType())
+                .courseMemo(request.getCourseMemo())
+                .courseDisclosure(request.getCourseDisclosure())
+                .courseStartDate(request.getCourseStartDate())
+                .courseEndDate(request.getCourseEndDate())
+                .build();
+    }
+
+    public ResponseUpdateDateCourseVO fromDTOToUpdateVO(DateCourseDTO updatedCourseDTO) {
+        return ResponseUpdateDateCourseVO.builder()
+                .courseId(updatedCourseDTO.getCourseId())
+                .courseTitle(updatedCourseDTO.getCourseTitle())
+                .courseType(updatedCourseDTO.getCourseType())
+                .courseMemo(updatedCourseDTO.getCourseMemo())
+                .courseDisclosure(updatedCourseDTO.getCourseDisclosure())
+                .courseStartDate(updatedCourseDTO.getCourseStartDate())
+                .courseEndDate(updatedCourseDTO.getCourseEndDate())
+                .createdAt(updatedCourseDTO.getCreatedAt())
+                .updatedAt(updatedCourseDTO.getUpdatedAt())
+                .memberId(updatedCourseDTO.getMemberId())
                 .build();
     }
 }
