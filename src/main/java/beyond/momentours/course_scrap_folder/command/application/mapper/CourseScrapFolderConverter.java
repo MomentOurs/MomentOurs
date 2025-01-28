@@ -3,6 +3,7 @@ package beyond.momentours.course_scrap_folder.command.application.mapper;
 import beyond.momentours.course_scrap_folder.command.application.dto.CourseScrapFolderDTO;
 import beyond.momentours.course_scrap_folder.command.domain.aggregate.entity.CourseScrapFolder;
 import beyond.momentours.course_scrap_folder.command.domain.vo.request.RequestCreateCourseScrapFolderVO;
+import beyond.momentours.course_scrap_folder.command.domain.vo.response.ResponseCourseScrapFolderVO;
 import beyond.momentours.course_scrap_folder.command.domain.vo.response.ResponseCreateCourseScrapFolderVO;
 import org.springframework.stereotype.Component;
 
@@ -36,6 +37,15 @@ public class CourseScrapFolderConverter {
                 .courseScrapFolderId(folder.getCourseScrapFolderId())
                 .folderName(folder.getFolderName())
                 .memberId(folder.getMemberId())
+                .createdAt(folder.getCreatedAt())
+                .updatedAt(folder.getUpdatedAt())
+                .build();
+    }
+
+    public ResponseCourseScrapFolderVO fromEntityToResponseVO(CourseScrapFolder folder) {
+        return ResponseCourseScrapFolderVO.builder()
+                .folderId(folder.getCourseScrapFolderId())
+                .folderName(folder.getFolderName())
                 .createdAt(folder.getCreatedAt())
                 .updatedAt(folder.getUpdatedAt())
                 .build();
