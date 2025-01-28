@@ -7,6 +7,7 @@ import beyond.momentours.course_scrap_folder.command.application.mapper.CourseSc
 import beyond.momentours.course_scrap_folder.command.domain.aggregate.entity.CourseScrapFolder;
 import beyond.momentours.course_scrap_folder.command.domain.repository.CourseScrapFolderRepository;
 import beyond.momentours.course_scrap_folder.command.domain.vo.response.ResponseCourseScrapFolderVO;
+import beyond.momentours.course_scrap_folder.query.repository.CourseScrapFolderMapper;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ public class CourseScrapFolderServiceImpl implements CourseScrapFolderService {
 
     private final CourseScrapFolderRepository courseScrapFolderRepository;
     private final CourseScrapFolderConverter courseScrapFolderConverter;
+    private final CourseScrapFolderMapper courseScrapFolderDAO;
 
     @Override
     @Transactional
@@ -55,7 +57,7 @@ public class CourseScrapFolderServiceImpl implements CourseScrapFolderService {
 
     @Transactional
     public List<ResponseCourseScrapFolderVO> getFoldersByMemberId(Long memberId) {
-        List<CourseScrapFolder> folders = courseScrapFolderRepository.findByMemberId(memberId);
+        List<CourseScrapFolder> folders = courseScrapFolderDAO.findByMemberId(memberId);
         return folders.stream()
                 .map(courseScrapFolderConverter::fromEntityToResponseVO)
                 .toList();
