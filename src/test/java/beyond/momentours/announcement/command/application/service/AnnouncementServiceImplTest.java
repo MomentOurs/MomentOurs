@@ -93,7 +93,6 @@ class AnnouncementServiceImplTest {
             announcementService.createAnnouncement(createRequestDTO, memberId);
         });
 
-        // 예시: 테스트 코드 수정
         Assertions.assertEquals("서버 내부 오류입니다", exception.getMessage());
 
     }
