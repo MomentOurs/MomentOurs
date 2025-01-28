@@ -5,6 +5,7 @@ import beyond.momentours.course_scrap_folder.command.application.dto.CourseScrap
 import beyond.momentours.course_scrap_folder.command.application.mapper.CourseScrapFolderConverter;
 import beyond.momentours.course_scrap_folder.command.application.service.CourseScrapFolderService;
 import beyond.momentours.course_scrap_folder.command.domain.vo.request.RequestCreateCourseScrapFolderVO;
+import beyond.momentours.course_scrap_folder.command.domain.vo.response.ResponseCourseScrapFolderVO;
 import beyond.momentours.course_scrap_folder.command.domain.vo.response.ResponseCreateCourseScrapFolderVO;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController("commandDateCourseScrapFolderController")
 @RequestMapping("api/course-scrap-folder")
@@ -50,6 +53,18 @@ public class CourseScrapFolderController {
         } catch (Exception e) {
             log.error("폴더 삭제 중 예상치 못한 오류 발생", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("폴더 삭제 중 오류가 발생했습니다.");
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getCourseScrapFolders(@AuthenticationPrincipal CustomUserDetails user) {
+        log.info("사용자가 등록한 즐겨찾기 폴더 조회 요청: userId={}", user.getMemberId());
+        try {
+            List<ResponseCourseScrapFolderVO> folders = courseScrapFolderService.getFoldersByMemberId(user.getMemberId());
+            return ResponseEntity.status(HttpStatus.OK).body(folders);
+        } catch (Exception e) {
+            log.error("즐겨찾기 폴더 조회 중 오류 발생", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("즐겨찾기 폴더 조회 중 오류가 발생했습니다.");
         }
     }
 }
