@@ -6,11 +6,14 @@ import beyond.momentours.course_scrap_folder.command.application.dto.CourseScrap
 import beyond.momentours.course_scrap_folder.command.application.mapper.CourseScrapFolderConverter;
 import beyond.momentours.course_scrap_folder.command.domain.aggregate.entity.CourseScrapFolder;
 import beyond.momentours.course_scrap_folder.command.domain.repository.CourseScrapFolderRepository;
+import beyond.momentours.course_scrap_folder.command.domain.vo.response.ResponseCourseScrapFolderVO;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Slf4j
 @Service("commandDateCourseScrapFolderService")
@@ -48,5 +51,13 @@ public class CourseScrapFolderServiceImpl implements CourseScrapFolderService {
 
         courseScrapFolderRepository.deleteById(folderId);
         log.info("폴더 삭제 완료: folderId={}", folderId);
+    }
+
+    @Transactional
+    public List<ResponseCourseScrapFolderVO> getFoldersByMemberId(Long memberId) {
+        List<CourseScrapFolder> folders = courseScrapFolderRepository.findByMemberId(memberId);
+        return folders.stream()
+                .map(courseScrapFolderConverter::fromEntityToResponseVO)
+                .toList();
     }
 }
