@@ -2,6 +2,7 @@ package beyond.momentours.config;
 
 import beyond.momentours.date_course.query.repository.DateCourseMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -18,7 +19,7 @@ public class SchedulerConfig {
     private final RedisTemplate<String, String> redisTemplate;
     private final DateCourseMapper dateCourseDAO;
 
-    public SchedulerConfig(RedisTemplate<String, String> redisTemplate, DateCourseMapper dateCourseDAO) {
+    public SchedulerConfig(@Qualifier("customStringRedisTemplate") RedisTemplate<String, String> redisTemplate, DateCourseMapper dateCourseDAO) {
         this.redisTemplate = redisTemplate;
         this.dateCourseDAO = dateCourseDAO;
     }
