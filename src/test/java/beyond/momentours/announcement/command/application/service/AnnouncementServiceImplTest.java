@@ -41,16 +41,19 @@ class AnnouncementServiceImplTest {
         MockitoAnnotations.openMocks(this);
         memberId = 1L;
         announcementId = 1L;
+
         createRequestDTO = new CreateAnnouncementRequestDTO("Test Title", "Test Content");
         updateRequestDTO = new UpdateAnnouncementRequestDTO("Updated Title", "Updated Content");
 
-        announcement = new Announcement();
-        announcement.setAnnouncementId(announcementId);
-        announcement.setAnnouncementTitle("Test Title");
-        announcement.setAnnouncementContent("Test Content");
-        announcement.setMemberId(memberId);
-        announcement.setCreatedAt(LocalDateTime.now());
-        announcement.setUpdatedAt(LocalDateTime.now());
+        // 빌더를 이용해 Announcement 객체 생성
+        announcement = Announcement.builder()
+                .announcementId(announcementId)
+                .announcementTitle("Test Title")
+                .announcementContent("Test Content")
+                .memberId(memberId)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
     }
 
     @Test
@@ -67,6 +70,14 @@ class AnnouncementServiceImplTest {
     @Test
     void testUpdateAnnouncement() {
         when(announcementRepository.findById(announcementId)).thenReturn(Optional.of(announcement));
+
+        // 빌더 패턴 사용: toBuilder를 이용해 객체 수정
+        Announcement updatedAnnouncement = announcement.toBuilder()
+                .announcementTitle(updateRequestDTO.getAnnouncementTitle())
+                .announcementContent(updateRequestDTO.getAnnouncementContent())
+                .updatedAt(LocalDateTime.now())
+                .build();
+
         when(announcementRepository.save(any(Announcement.class))).thenReturn(announcement);
 
         AnnouncementResponseDTO responseDTO = announcementService.updateAnnouncement(announcementId, updateRequestDTO, memberId);

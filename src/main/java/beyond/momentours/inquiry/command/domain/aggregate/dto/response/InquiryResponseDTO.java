@@ -3,17 +3,16 @@ package beyond.momentours.inquiry.command.domain.aggregate.dto.response;
 
 import beyond.momentours.inquiry.command.domain.aggregate.entity.InquiryAnswer;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-@Data
+@Getter
+@Setter
+@ToString
 public class InquiryResponseDTO {
 
     @JsonProperty("inquiry_id")
