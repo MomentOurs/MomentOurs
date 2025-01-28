@@ -48,6 +48,9 @@ public class DateCourse {
     @Column(name = "course_end_date", nullable = false)
     private LocalDateTime courseEndDate;
 
+    @Column(name = "course_certification", nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
+    private Boolean courseCertification = false;
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
