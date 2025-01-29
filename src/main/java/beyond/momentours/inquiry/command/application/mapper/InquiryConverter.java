@@ -6,6 +6,7 @@ import beyond.momentours.inquiry.command.domain.aggregate.entity.Inquiry;
 import beyond.momentours.inquiry.command.domain.aggregate.vo.request.InquiryCreateOrUpdateRequestVO;
 import beyond.momentours.inquiry.command.domain.aggregate.vo.response.InquiryAnswerResponseVO;
 import beyond.momentours.inquiry.command.domain.aggregate.vo.response.InquiryResponseVO;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -16,17 +17,21 @@ public class InquiryConverter {
 
 
     // VO -> DTO (요청)
-    public InquiryDTO voToDto(InquiryCreateOrUpdateRequestVO requestVO, Long memberId) {
-        return InquiryDTO.builder()
-                .inquiryTitle(requestVO.getInquiryTitle())
-                .inquiryContent(requestVO.getInquiryContent())
-                .inquiryMemberId(memberId) // 회원 정보 추가
-                .inquiryAnswerStatus(false)
-                .inquiryStatus(true)
-                .inquiryCreatedAt(LocalDateTime.now())
-                .inquiryUpdatedAt(LocalDateTime.now())
-                .build();
+    public InquiryDTO voToDto(InquiryCreateOrUpdateRequestVO requestVO, Long memberId, Long inquiryId) {
+            // inquiryId가 null이 아닌 경우 -> 수정할 때 사용하는 경우
+            return InquiryDTO.builder()
+                    .inquiryTitle(requestVO.getInquiryTitle())
+                    .inquiryContent(requestVO.getInquiryContent())
+                    .inquiryMemberId(memberId)
+                    .inquiryAnswerStatus(false)
+                    .inquiryStatus(true)
+                    .inquiryCreatedAt(LocalDateTime.now())
+                    .inquiryUpdatedAt(LocalDateTime.now())
+                    .inquiryId(inquiryId)
+                    .build();
+
     }
+
 
     // DTO -> VO (응답)
     public InquiryResponseVO dtoToVo(InquiryDTO dto) {

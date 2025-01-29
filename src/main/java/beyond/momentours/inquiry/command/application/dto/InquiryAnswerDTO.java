@@ -17,7 +17,7 @@ public class InquiryAnswerDTO {
     private LocalDateTime answerCreatedAt;
     private LocalDateTime answerUpdatedAt;
     private Long answerMemberId;
-    private Long inquirerId;
+    private Long inquiryId;
 
 
 

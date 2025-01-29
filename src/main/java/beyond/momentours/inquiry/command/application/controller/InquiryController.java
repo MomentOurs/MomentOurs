@@ -6,6 +6,7 @@ import beyond.momentours.common.ResponseDTO;
 import beyond.momentours.inquiry.command.application.dto.InquiryDTO;
 import beyond.momentours.inquiry.command.application.mapper.InquiryConverter;
 import beyond.momentours.inquiry.command.application.service.InquiryCommandService;
+import beyond.momentours.inquiry.command.domain.aggregate.entity.Inquiry;
 import beyond.momentours.inquiry.command.domain.aggregate.vo.request.InquiryCreateOrUpdateRequestVO;
 import beyond.momentours.inquiry.command.domain.aggregate.vo.response.InquiryResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +32,9 @@ public class InquiryController {
             @RequestBody InquiryCreateOrUpdateRequestVO requestVO,
             CustomUserDetails user    // 로그인한 사용자 정보 + 요청 VO
     ) {
-        Long inquiryMemberId = user.getMember().getMemberId(); //로그인 사용자 정보
+        Long memberId = user.getMember().getMemberId(); //로그인 사용자 정보
 
-        InquiryDTO requestDTO = inquiryConverter.voToDto(requestVO, inquiryMemberId);
+        InquiryDTO requestDTO = inquiryConverter.voToDto(requestVO, memberId,null);
         InquiryDTO responseDTO = inquiryCommandService.createInquiry(requestDTO);
         InquiryResponseVO responseVO = inquiryConverter.dtoToVo(responseDTO);
 
@@ -50,7 +51,7 @@ public class InquiryController {
             ){
         Long memberId = user.getMember().getMemberId();
 
-        InquiryDTO requestDTO = inquiryConverter.voToDto(requestVO, memberId);
+        InquiryDTO requestDTO = inquiryConverter.voToDto(requestVO, memberId, inquiryId);
         InquiryDTO responseDTO = inquiryCommandService.updateInquiry(requestDTO);
         InquiryResponseVO responseVO = inquiryConverter.dtoToVo(responseDTO);
 
