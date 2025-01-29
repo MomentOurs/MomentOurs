@@ -1,16 +1,15 @@
-package beyond.momentours.inquiry.command.domain.aggregate.dto.request;
+package beyond.momentours.inquiry.command.domain.aggregate.vo.request;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
-@Builder
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Builder
 @ToString
-public class InquiryCreateOrUpdateRequestDTO {
+public class InquiryCreateOrUpdateRequestVO {
 
     @JsonProperty("inquiry_title")
     private String inquiryTitle;

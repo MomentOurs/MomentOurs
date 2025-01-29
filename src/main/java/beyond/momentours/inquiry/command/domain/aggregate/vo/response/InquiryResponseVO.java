@@ -1,4 +1,4 @@
-package beyond.momentours.inquiry.command.domain.aggregate.dto.response;
+package beyond.momentours.inquiry.command.domain.aggregate.vo.response;
 
 
 import beyond.momentours.inquiry.command.domain.aggregate.entity.InquiryAnswer;
@@ -7,13 +7,12 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Builder
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Builder
 @ToString
-public class InquiryResponseDTO {
+public class InquiryResponseVO {
 
     @JsonProperty("inquiry_id")
     private String inquiryId;

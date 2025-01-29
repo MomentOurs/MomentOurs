@@ -27,7 +27,7 @@ public class InquiryAnswer {
     private LocalDateTime answerCreatedAt;
 
     @Column(name = "updated_at", nullable = false)
-    private LocalDateTime swerUpdatedAt;
+    private LocalDateTime answerUpdatedAt;
 
     @Column(name = "member_id", nullable = false)
     private Long answerMemberId;
