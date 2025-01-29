@@ -1,5 +1,6 @@
 package beyond.momentours.member.command.application.service;
 
+import beyond.momentours.member.command.application.dto.CustomUserDetails;
 import beyond.momentours.member.command.application.dto.JwtTokenDTO;
 import beyond.momentours.member.command.application.dto.oauth.KakaoUserInfo;
 import beyond.momentours.member.command.domain.aggregate.entity.Member;
@@ -7,15 +8,22 @@ import beyond.momentours.member.command.domain.aggregate.entity.MemberRole;
 import beyond.momentours.member.command.domain.repository.MemberRepository;
 import beyond.momentours.security.JWTUtil;
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.Collections;
+
+@Slf4j
 @Service
 public class AuthServiceImpl implements AuthService {
     private final WebClient webClient;
@@ -27,6 +35,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Value("${spring.security.oauth2.client.registration.kakao.client-secret}")
     private String clientSecret;
+
+    @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
+    private String redirectUri;
 
     @Autowired
     public AuthServiceImpl(WebClient webClient, JWTUtil jwtUtil, MemberRepository memberRepository) {
@@ -46,9 +57,19 @@ public class AuthServiceImpl implements AuthService {
         // 3. 회원가입 또는 로그인 처리
         Member member = registerOrLogin(userInfo);
 
-        // 4. JWT 토큰 생성
-        String accessToken = jwtUtil.generateToken(member.getMemberEmail(), "ROLE_USER", null);
+        // 4. JWT 토큰 생성을 위한 Authentication 객체 생성
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                new CustomUserDetails(member),
+                null,
+                Collections.singleton(new SimpleGrantedAuthority("ROLE_MEMBER"))
+        );
+
+        // 5. JWT 토큰 생성
+        String accessToken = jwtUtil.generateToken(member.getMemberEmail(), "ROLE_MEMBER", null, authentication);
         String refreshToken = jwtUtil.generateRefreshToken(member.getMemberEmail());
+
+        log.info("Generated JWT tokens for user: {}", member.getMemberEmail());
+        log.debug("Access Token: {}", accessToken);
 
         return new JwtTokenDTO(accessToken, refreshToken);
     }
@@ -61,7 +82,7 @@ public class AuthServiceImpl implements AuthService {
         params.add("client_id", clientId);
         params.add("client_secret", clientSecret);
         params.add("code", code);
-        params.add("redirect_uri", "your_redirect_uri");
+        params.add("redirect_uri", redirectUri);
 
         return webClient.post()
                 .uri(tokenUri)
@@ -87,14 +108,21 @@ public class AuthServiceImpl implements AuthService {
         Member member = memberRepository.findByMemberEmail(email);
 
         if (member == null) {
-            // 회원가입
+            // 새로운 회원인 경우 회원가입 처리
+            log.info("New user registration with Kakao: {}", email);
             member = Member.builder()
                     .memberEmail(email)
                     .memberName(userInfo.getKakao_account().getProfile().getNickname())
                     .memberRole(MemberRole.ROLE_MEMBER)
-//                    .oauthProvider("KAKAO")
+                    .memberPassword(null)  // 소셜 로그인은 비밀번호 없음
                     .build();
-            memberRepository.save(member);
+
+            member = memberRepository.save(member);
+            log.info("Successfully registered new user: {}", email);
+        } else {
+            // 기존 회원인 경우
+            log.info("Existing user login with Kakao: {}", email);
+
         }
 
         return member;

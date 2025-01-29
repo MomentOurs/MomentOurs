@@ -63,19 +63,26 @@ public class SecurityConfig {
         // http basic 인증 방식 disable
         http.httpBasic(https -> https.disable());
 
+        // 인증 및 권한 설정
         http.authorizeHttpRequests(authz -> authz
-//                        .requestMatchers("/**").permitAll()
-                        .requestMatchers("/", "api/member/signup", "/**").permitAll()
+                        .requestMatchers("/", "/api/member/signup").permitAll()
                         .requestMatchers("/api/member/login").permitAll()
-                                .requestMatchers("/api/oauth/**").permitAll()
-                                .requestMatchers("/api/member").authenticated()
-
-//                        .requestMatchers("/admin").hasRole("ADMIN")
+                        .requestMatchers("/api/oauth/**").permitAll()  // 명확하게 경로 지정
+                        .requestMatchers("/api/member").authenticated()
                         .anyRequest().authenticated()
                 )
 
                 // 세션 설정
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+                // OAuth2 로그인 설정 추가
+                .oauth2Login(oauth2 -> oauth2
+//                        .loginPage("/api/member/login") // 커스텀 로그인 페이지 URL
+                        .defaultSuccessUrl("/api/member/mypage") // 로그인 성공 시 이동할 URL
+                        .failureUrl("/api/member/login?error=true") // 로그인 실패 시 이동할 URL
+                );
+
+        // JWT 관련 필터 추가
         http.addFilterAt(new AuthenticationFilter(authenticationManager(authenticationConfiguration), jwtUtil, loginHistoryService), UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(new JWTFilter(jwtUtil, jwtAuthenticationProvider), AuthenticationFilter.class);
 

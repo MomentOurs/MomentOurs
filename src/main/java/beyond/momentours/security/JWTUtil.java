@@ -112,6 +112,22 @@ public class JWTUtil {
         }
     }
 
+    // kakao를 위한(나중에 바꿔야 함)
+    public String generateToken(String memberEmail, String role, String provider) {
+        ZoneId kst = ZoneId.of("Asia/Seoul");
+        ZonedDateTime now = ZonedDateTime.now(kst);
+        ZonedDateTime expirationDateTime = now.plusHours(3600000 / 1000 * 60 * 60);
+
+        return Jwts.builder()
+                .claim("memberEmail", memberEmail)
+                .claim("role", role)
+                .claim("provider", provider)
+                .setIssuedAt(Date.from(now.toInstant()))
+                .setExpiration(Date.from(expirationDateTime.toInstant()))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
     public String generateToken(String memberEmail, String role, String provider, Authentication authentication) {
         Claims claims = Jwts.claims();
         claims.put("memberEmail", memberEmail);
