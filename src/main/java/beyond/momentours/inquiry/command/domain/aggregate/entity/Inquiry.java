@@ -2,20 +2,18 @@ package beyond.momentours.inquiry.command.domain.aggregate.entity;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@Table(name = "tb_inquiry")
+@Getter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
+@ToString
+@Table(name = "tb_inquiry")
 public class Inquiry {
 
     @Id
@@ -23,28 +21,29 @@ public class Inquiry {
     @Column(name = "inquiry_id")
     private Long inquiryId;
 
-    @Column(name = "inquiry_title")
+    @Column(name = "inquiry_title", nullable = false)
     private String inquiryTitle;
 
-    @Column(name = "inquiry_content")
+    @Column(name = "inquiry_content" , nullable = false)
     private String inquiryContent;
 
-    @Column(name = "inquiry_answer_status")
+    @Column(name = "inquiry_answer_status", nullable = false)
     private Boolean inquiryAnswerStatus;
 
-    @Column(name = "inquiry_status")
+    @Column(name = "inquiry_status", nullable = false)
     private Boolean inquiryStatus;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime inquiryCreatedAt;
 
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime inquiryUpdatedAt;
 
-    @Column(name = "member_id")
+    @Column(name = "member_id", nullable = false)
     private Long inquiryMemberId;
 
-    // OneToOne 관계 설정
-    @OneToOne(mappedBy = "inquiry", fetch = FetchType.LAZY) // InquiryAnswer에서 이걸 참조하는 필드명
-    private InquiryAnswer inquiryAnswer;
+
+//    // OneToOne 관계 설정
+//    @OneToOne(mappedBy = "inquiry", fetch = FetchType.LAZY) // InquiryAnswer에서 이걸 참조하는 필드명
+//    private InquiryAnswer inquiryAnswer;
 }

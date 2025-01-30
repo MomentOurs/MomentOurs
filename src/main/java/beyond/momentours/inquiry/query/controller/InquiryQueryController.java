@@ -47,14 +47,14 @@ public class InquiryQueryController {
     }
 
     // 4. 작성자 id로 문의 조회
-    @GetMapping("/member_id")
+    @GetMapping("/member-id")
     public ResponseDTO<List<InquiryAndInquiryAnswerDTO>> getInquiryByMemberId(Long memberId) {
         List<InquiryAndInquiryAnswerDTO> response = inquiryQueryService.findInquiryAnswerByMemberId(memberId);
         return ResponseDTO.ok(response);
     }
 
     // 5. 답변 작성자 id로 문의 조회
-    @GetMapping("/answer_member_id")
+    @GetMapping("/answer-member-id")
     public ResponseDTO<List<InquiryAndInquiryAnswerDTO>> findInquiryAnswerByAnswerMemberId(Long answerMemberId) {
         List<InquiryAndInquiryAnswerDTO> response = inquiryQueryService.findInquiryAnswerByAnswerMemberId(answerMemberId);
         return ResponseDTO.ok(response);

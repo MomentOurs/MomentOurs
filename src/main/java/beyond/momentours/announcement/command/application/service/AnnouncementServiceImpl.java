@@ -33,16 +33,16 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     @Transactional
     public AnnouncementResponseDTO createAnnouncement(CreateAnnouncementRequestDTO requestDTO, Long memberId){
 
-        // 공지사항 엔터티 생성, 도메인 객체 구성
-        Announcement announcement = new Announcement();
-        announcement.setAnnouncementTitle(requestDTO.getAnnouncementTitle());
-        announcement.setAnnouncementContent(requestDTO.getAnnouncementContent());
-        announcement.setAnnouncementStatus(true);
-        announcement.setCreatedAt(LocalDateTime.now());
-        announcement.setUpdatedAt(LocalDateTime.now());
-        announcement.setMemberId(memberId);
-
         try {
+            Announcement announcement = Announcement.builder()
+                    .announcementTitle(requestDTO.getAnnouncementTitle())
+                    .announcementContent(requestDTO.getAnnouncementContent())
+                    .announcementStatus(true)
+                    .createdAt(LocalDateTime.now())
+                    .updatedAt(LocalDateTime.now())
+                    .memberId(memberId)
+                    .build();
+
             // 엔터티 객체 저장하기
             Announcement createdAnnouncement = announcementRepository.save(announcement);
 
@@ -64,21 +64,24 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     @Transactional
     public AnnouncementResponseDTO updateAnnouncement(Long announcementId ,UpdateAnnouncementRequestDTO requestDTO, Long memberId){
 
-        Announcement announcement = announcementRepository.findById(announcementId)
+        Announcement originalAnnouncement = announcementRepository.findById(announcementId)
                 .orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_NOTICE));
 
         // 작성자와 로그인한 사용자가 동일한지 확인
-        if (!announcement.getMemberId().equals(memberId)) {
+        if (!originalAnnouncement.getMemberId().equals(memberId)) {
             throw new CommonException(ErrorCode. FORBIDDEN_ROLE);  // 권한 없음
         }
 
         try {
             // 권한이 있는 경우 수정
-            announcement.setAnnouncementTitle(requestDTO.getAnnouncementTitle());
-            announcement.setAnnouncementContent(requestDTO.getAnnouncementContent());
-            announcement.setUpdatedAt(LocalDateTime.now());
+            // 기존 객체를 복사하면서 일부 속성 수정하기
+            Announcement updatedAnnouncement = originalAnnouncement.toBuilder()
+                    .announcementTitle(requestDTO.getAnnouncementTitle())
+                    .announcementContent(requestDTO.getAnnouncementContent())
+                    .updatedAt(LocalDateTime.now())
+                    .build();
 
-            Announcement updatedAnnouncement = announcementRepository.save(announcement);
+            announcementRepository.save(updatedAnnouncement);
             return AnnouncementResponseDTO.fromEntity(updatedAnnouncement);
         } catch (Exception e) {
             // 수정 실패

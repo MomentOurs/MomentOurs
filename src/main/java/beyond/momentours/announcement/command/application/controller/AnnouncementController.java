@@ -20,7 +20,7 @@ public class AnnouncementController {
     }
 
     // 1. 공지사항 등록
-    @PostMapping("/create")
+    @PostMapping("")
     public ResponseDTO<AnnouncementResponseDTO> createAnnouncement(
             @RequestBody CreateAnnouncementRequestDTO requestDTO,
             CustomUserDetails user // 로그인한 사용자의 정보 + 요청 DTO 정보
@@ -31,7 +31,7 @@ public class AnnouncementController {
     }
 
     // 2. 공지사항 수정
-    @PutMapping("/my/{announcementId}/modify")
+    @PutMapping("/my/{announcementId}")
     public ResponseDTO<AnnouncementResponseDTO> modifyAnnouncement(
             @PathVariable Long announcementId,
             @RequestBody UpdateAnnouncementRequestDTO requestDTO,
@@ -43,7 +43,7 @@ public class AnnouncementController {
     }
 
     // 3. 공지사항 삭제
-    @DeleteMapping("/my/{announcementId}/delete")
+    @DeleteMapping("/my/{announcementId}")
     public void deleteAnnouncement(
             @PathVariable Long announcementId,
             @RequestBody CustomUserDetails user
