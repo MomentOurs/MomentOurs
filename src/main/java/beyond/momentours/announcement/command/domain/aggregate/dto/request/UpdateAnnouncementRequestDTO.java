@@ -2,15 +2,16 @@ package beyond.momentours.announcement.command.domain.aggregate.dto.request;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@NoArgsConstructor
+@Builder
 @AllArgsConstructor
-@Data
+@NoArgsConstructor
+@Getter
+@Setter
+@ToString
 public class UpdateAnnouncementRequestDTO {
 
     // 공지사항 수정 요청 DTO

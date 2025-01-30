@@ -1,20 +1,17 @@
-package beyond.momentours.inquiry.command.domain.aggregate.dto.response;
+package beyond.momentours.inquiry.command.domain.aggregate.vo.response;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.cglib.core.Local;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Data
-public class InquiryAnswerResponseDTO {
+@ToString
+public class InquiryAnswerResponseVO {
 
     @JsonProperty("inquiry_answer_id")
     private Long inquiryAnswerId;
