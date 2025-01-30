@@ -27,7 +27,8 @@ public class MomentController {
     public ResponseDTO<?> createMoment(@RequestBody RequestMomentDTO requestMomentDTO,
                                        @AuthenticationPrincipal CustomUserDetails user) {
         log.info("등록 요청 데이터 : {}", requestMomentDTO);
-        ResponseMomentDTO responseMomentDTO = momentService.createMoment(requestMomentDTO, user);
+        Long memberId = user.getMember().getMemberId();
+        ResponseMomentDTO responseMomentDTO = momentService.createMoment(requestMomentDTO, memberId);
         return ResponseDTO.ok(responseMomentDTO);
     }
 
