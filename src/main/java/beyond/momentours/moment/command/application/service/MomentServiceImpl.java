@@ -1,54 +1,53 @@
 package beyond.momentours.moment.command.application.service;
 
-import beyond.momentours.location.command.domain.aggregate.entity.Location;
-import beyond.momentours.location.command.domain.repository.LocationRepository;
+import beyond.momentours.location.command.application.dto.LocationDTO;
+import beyond.momentours.location.command.application.service.LocationService;
+import beyond.momentours.member.command.application.dto.CustomUserDetails;
 import beyond.momentours.moment.command.application.dto.RequestMomentDTO;
 import beyond.momentours.moment.command.application.dto.ResponseMomentDTO;
+import beyond.momentours.moment.command.application.mapper.MomentConverter;
 import beyond.momentours.moment.command.domain.aggregate.entity.Moment;
 import beyond.momentours.moment.command.domain.repository.MomentRepository;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-
+@Slf4j
 @Service("commandMomentService")
+@RequiredArgsConstructor
 public class MomentServiceImpl implements MomentService {
 
     private final MomentRepository momentRepository;
-    private final LocationRepository locationRepository;
-    private final ModelMapper modelMapper;
+    private final LocationService locationService;
+    private final MomentConverter momentConverter;
 
-    @Autowired
-    public MomentServiceImpl(MomentRepository momentRepository,
-                             LocationRepository locationRepository,
-                             ModelMapper modelMapper) {
-        this.momentRepository = momentRepository;
-        this.locationRepository = locationRepository;
-        this.modelMapper = modelMapper;
-    }
 
     // 추억 등록
     @Transactional
     @Override
-    public ResponseMomentDTO createMoment(RequestMomentDTO requestMomentDTO) {
+    public ResponseMomentDTO createMoment(RequestMomentDTO requestMomentDTO,
+                                          Long memberId) {
 
-        // 추억 등록 시 참조하는 장소가 DB에 존재하는 장소인지 확인
-        Location location = locationRepository.findByLatitudeAndLongitude(
+        // 장소 조회 또는 생성
+        LocationDTO location = locationService.findOrCreateLocation(
+                requestMomentDTO.getLocationName(),
                 requestMomentDTO.getLatitude(),
                 requestMomentDTO.getLongitude()
-        ).orElseGet(() -> { // 존재하지 않으면, 장소 테이블에 새로운 장소 삽입
-            Location newLocation = modelMapper.map(requestMomentDTO, Location.class);
-            return locationRepository.save(newLocation);
-        });
+        );
 
-        Moment moment = modelMapper.map(requestMomentDTO, Moment.class);
-        moment.setLocationId(location.getLocationId());
-        moment.setCreatedAt(LocalDateTime.now());
-        moment.setUpdatedAt(LocalDateTime.now());
+        // DTO → Entity 변환
+        Moment moment = momentConverter.fromDTOToEntity(requestMomentDTO, memberId, location.getLocationId());
 
+        // DB 저장
         Moment savedMoment = momentRepository.save(moment);
-        return modelMapper.map(savedMoment, ResponseMomentDTO.class);
+
+        // Entity → ResponseDTO 변환 후 반환
+        return momentConverter.fromEntityToDTO(savedMoment);
+    }
+
+    @Override
+    public ResponseMomentDTO updateMoment(RequestMomentDTO requestMomentDTO, CustomUserDetails user) {
+        return null;
     }
 }
