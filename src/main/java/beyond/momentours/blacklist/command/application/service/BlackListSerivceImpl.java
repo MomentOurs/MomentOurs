@@ -1,6 +1,5 @@
 package beyond.momentours.blacklist.command.application.service;
 
-import beyond.momentours.blacklist.command.application.dto.BlackListDTO;
 import beyond.momentours.blacklist.command.application.mapper.BlackListConverter;
 import beyond.momentours.blacklist.command.domain.aggregate.entity.BlackList;
 import beyond.momentours.blacklist.command.domain.repository.BlackListRepository;
@@ -25,16 +24,17 @@ public class BlackListSerivceImpl implements BlackListSerivce{
 
 
     @Override
-    public void createBlackList(BlackListDTO blackListDTO) {
+    public void createBlackList(Long memberId, Integer blacklistDays) {
         try {
             LocalDateTime currentDate = LocalDateTime.now();
             LocalDateTime accessibleDate = null;
 
-            if (blackListDTO.getBlacklistDays() != null) {
-                accessibleDate = currentDate.plusDays(blackListDTO.getBlacklistDays());
+            // 영구정지 처리 (-1일 경우 null 유지)
+            if (blacklistDays != null && blacklistDays > 0) {
+                accessibleDate = currentDate.plusDays(blacklistDays);
             }
 
-            BlackList blackList = blackListConverter.fromBlackDTOToBlackList(currentDate, accessibleDate, blackListDTO.getMemberId());
+            BlackList blackList = blackListConverter.fromBlackDTOToBlackList(currentDate, accessibleDate, memberId);
             blackListRepository.save(blackList);
         } catch (Exception e) {
             throw new CommonException(ErrorCode.BLACKLIST_FAILURE);

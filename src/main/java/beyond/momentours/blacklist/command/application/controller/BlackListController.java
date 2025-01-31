@@ -25,12 +25,12 @@ public class BlackListController {
     }
 
     /* 블랙리스트 등록 */
-    @PostMapping("")
-    public ResponseDTO<?> createBlackList(@RequestBody RequestBlackVO requestBlackVO) {
-        BlackListDTO blackListDTO = blackListConverter.fromBlackVOToBlackDTO(requestBlackVO);
-        blackListSerivce.createBlackList(blackListDTO);
-        return ResponseDTO.ok("블랙리스트가 성공적으로 등록되었습니다.");
-    }
+//    @PostMapping("")
+//    public ResponseDTO<?> createBlackList(@RequestBody RequestBlackVO requestBlackVO) {
+//        BlackListDTO blackListDTO = blackListConverter.fromBlackVOToBlackDTO(requestBlackVO);
+//        blackListSerivce.createBlackList(blackListDTO);
+//        return ResponseDTO.ok("블랙리스트가 성공적으로 등록되었습니다.");
+//    }
 
 
 }
