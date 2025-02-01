@@ -6,10 +6,12 @@ import beyond.momentours.common.exception.ErrorCode;
 import beyond.momentours.pre_blacklist.command.application.dto.PreBlacklistDTO;
 import beyond.momentours.pre_blacklist.command.domain.aggregate.entity.PreBlacklist;
 import beyond.momentours.pre_blacklist.command.domain.repository.PreBlacklistRepository;
+import beyond.momentours.pre_blacklist.query.vo.response.ResponsePreBlacklistAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Objects;
 
 @Service("commandPreBlacklistServiceImpl")
@@ -54,7 +56,7 @@ public class PreBlacklistServiceImpl implements PreBlacklistService {
                             .status(preBlacklistDTO.getStatus())
                             .build();
                     preBlacklistRepository.save(preBlacklistStatus);
-                    return; // 함수 종료
+                    return;
             }
 
             // 예비 블랙리스트 상태 업데이트
