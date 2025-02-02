@@ -4,4 +4,5 @@ import beyond.momentours.pre_blacklist.command.domain.aggregate.entity.PreBlackl
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PreBlacklistRepository extends JpaRepository<PreBlacklist, Long> {
+    PreBlacklist findByMemberId(Long memberId);
 }

@@ -6,13 +6,9 @@ import beyond.momentours.common.exception.ErrorCode;
 import beyond.momentours.pre_blacklist.command.application.dto.PreBlacklistDTO;
 import beyond.momentours.pre_blacklist.command.domain.aggregate.entity.PreBlacklist;
 import beyond.momentours.pre_blacklist.command.domain.repository.PreBlacklistRepository;
-import beyond.momentours.pre_blacklist.query.vo.response.ResponsePreBlacklistAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Objects;
 
 @Service("commandPreBlacklistServiceImpl")
 public class PreBlacklistServiceImpl implements PreBlacklistService {
@@ -68,6 +64,26 @@ public class PreBlacklistServiceImpl implements PreBlacklistService {
 
             // 블랙리스트로 이동
             blackListSerivce.createBlackList(preBlacklist.getMemberId(), blacklistDays);
+        } catch (Exception e) {
+            throw new CommonException(ErrorCode.PREBLACKLIST_FAILURE);
+        }
+    }
+
+    @Transactional
+    @Override
+    public void createPreBlacklist(Long reportId, Long memberId) {
+
+        try {
+            PreBlacklist pre = preBlacklistRepository.findByMemberId(memberId);
+
+            PreBlacklist preBlacklist = PreBlacklist.builder()
+                    .status("대기")
+                    .memberId(memberId)
+                    .reportId(reportId)
+                    .blackListCount(pre.getBlackListCount())
+                    .build();
+
+            preBlacklistRepository.save(preBlacklist);
         } catch (Exception e) {
             throw new CommonException(ErrorCode.PREBLACKLIST_FAILURE);
         }

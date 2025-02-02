@@ -31,5 +31,4 @@ public class PreBlacklistController {
         return ResponseDTO.ok("예비 블랙리스트 진행상태가 성공적으로 변경되었습니다.");
     }
 
-
 }
