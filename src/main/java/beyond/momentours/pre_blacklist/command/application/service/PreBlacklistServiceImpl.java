@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Service("commandPreBlacklistServiceImpl")
 public class PreBlacklistServiceImpl implements PreBlacklistService {
 
@@ -59,6 +61,8 @@ public class PreBlacklistServiceImpl implements PreBlacklistService {
             PreBlacklist preBlacklistStatus = PreBlacklist.builder()
                     .status(preBlacklistDTO.getStatus())
                     .blackListCount(preBlacklist.getBlackListCount() + 1)
+                    .statusCreatedAt(LocalDateTime.now())
+                    .statusUpdatedAt(LocalDateTime.now())
                     .build();
             preBlacklistRepository.save(preBlacklistStatus);
 

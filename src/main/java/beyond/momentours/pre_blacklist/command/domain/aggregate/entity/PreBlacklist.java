@@ -28,6 +28,12 @@ public class PreBlacklist {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "status_created_at", nullable = false)
+    private LocalDateTime statusCreatedAt;
+
+    @Column(name = "status_updated_at", nullable = false)
+    private LocalDateTime statusUpdatedAt;
+
     @Column(name = "member_id", nullable = false)
     private Long memberId;
 
