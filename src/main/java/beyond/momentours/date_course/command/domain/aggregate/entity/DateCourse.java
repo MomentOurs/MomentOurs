@@ -48,6 +48,9 @@ public class DateCourse {
     @Column(name = "course_end_date", nullable = false)
     private LocalDateTime courseEndDate;
 
+    @Column(name = "course_certification", nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
+    private Boolean courseCertification = false;
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
@@ -63,5 +66,51 @@ public class DateCourse {
         this.courseView = 0L;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public void updateCourseTitle(String courseTitle) {
+        if (courseTitle != null) {
+            this.courseTitle = courseTitle;
+        }
+    }
+
+    public void updateCourseType(CourseType courseType) {
+        if (courseType != null) {
+            this.courseType = courseType;
+        }
+    }
+
+    public void updateCourseMemo(String courseMemo) {
+        if (courseMemo != null) {
+            this.courseMemo = courseMemo;
+        }
+    }
+
+    public void updateCourseDisclosure(Boolean courseDisclosure) {
+        if (courseDisclosure != null) {
+            this.courseDisclosure = courseDisclosure;
+        }
+    }
+
+    public void updateCourseStartDate(LocalDateTime courseStartDate) {
+        if (courseStartDate != null) {
+            this.courseStartDate = courseStartDate;
+        }
+    }
+
+    public void updateCourseEndDate(LocalDateTime courseEndDate) {
+        if (courseEndDate != null) {
+            this.courseEndDate = courseEndDate;
+        }
+    }
+
+    public void updateUpdatedAt(LocalDateTime updatedAt) {
+        if (updatedAt != null) {
+            this.updatedAt = updatedAt;
+        }
+    }
+
+    public void deleteCourse(Boolean courseStatus) {
+        this.courseStatus = courseStatus;
     }
 }

@@ -61,6 +61,10 @@ dependencies {
 
     // email 인증
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-mail'
+
+    // 페이징 처리를 위한 PageHelpler 의존성 추가
+    implementation 'com.github.pagehelper:pagehelper-spring-boot-starter:1.4.6'
+
 }
 
 test {
