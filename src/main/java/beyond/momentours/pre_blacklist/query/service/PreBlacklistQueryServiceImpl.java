@@ -1,5 +1,7 @@
 package beyond.momentours.pre_blacklist.query.service;
 
+import beyond.momentours.common.exception.CommonException;
+import beyond.momentours.common.exception.ErrorCode;
 import beyond.momentours.pre_blacklist.query.repository.PreBlacklistMapper;
 import beyond.momentours.pre_blacklist.query.vo.response.ResponsePreBlacklistAll;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,13 @@ public class PreBlacklistQueryServiceImpl implements PreBlacklistQueryService{
     /* 회원별로 중복 없이 목록 조회 */
     @Override
     public List<ResponsePreBlacklistAll> getPreBlacklistAll() {
-        return preBlacklistMapper.findByPreBlacklistAll();
+
+        List<ResponsePreBlacklistAll> response = preBlacklistMapper.findByPreBlacklistAll();
+
+        if (response == null) {
+            throw new CommonException(ErrorCode.NOT_FOUND_PREBLACKLIST);
+        }
+
+        return response;
     }
 }

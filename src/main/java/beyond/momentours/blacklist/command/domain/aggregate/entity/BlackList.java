@@ -28,4 +28,10 @@ public class BlackList {
     @Column(name = "accessible_date")
     private LocalDateTime accessibleDate;
 
+    @Column(name = "post_id")
+    private Long postId;
+
+    @Column(name = "post_category")
+    private String postCategory;
+
 }
