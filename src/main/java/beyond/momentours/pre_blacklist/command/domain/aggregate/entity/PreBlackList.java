@@ -11,15 +11,15 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 @ToString
-@Table(name = "tb_pre_blacklist")
-public class PreBlacklist {
+@Table(name = "tb_pre_black_list")
+public class PreBlackList {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pre_black_id", nullable = false)
     private Long preBlackId;
 
-    @Column(name = "blacklist_count", nullable = false)
+    @Column(name = "black_list_count", nullable = false)
     private int blackListCount = 0;
 
     @Column(name = "status", nullable = false)

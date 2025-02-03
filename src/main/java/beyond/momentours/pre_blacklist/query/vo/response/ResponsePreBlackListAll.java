@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ResponsePreBlacklistAll {
+public class ResponsePreBlackListAll {
     @JsonProperty("blacklist_count")
     private Long blackListCount;
 

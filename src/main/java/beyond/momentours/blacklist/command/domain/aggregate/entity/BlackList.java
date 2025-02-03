@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 @ToString
-@Table(name = "tb_blacklist")
+@Table(name = "tb_black_list")
 public class BlackList {
 
     @Id

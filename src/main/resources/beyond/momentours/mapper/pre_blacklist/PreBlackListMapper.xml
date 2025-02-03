@@ -3,10 +3,10 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="beyond.momentours.pre_blacklist.query.repository.PreBlacklistMapper">
-    <resultMap id="preBlacklistMap" type="beyond.momentours.pre_blacklist.query.dto.PreBlacklistDTO">
+<mapper namespace="beyond.momentours.pre_blacklist.query.repository.PreBlackListMapper">
+    <resultMap id="preBlacklistMap" type="beyond.momentours.pre_blacklist.query.dto.PreBlackListDTO">
         <id property="preBlackId" column="pre_black_id"/>
-        <result property="blackListCount" column="blacklist_count"/>
+        <result property="blackListCount" column="black_list_count"/>
         <result property="status" column="status"/>
         <result property="createdAt" column="created_at"/>
         <result property="memberId" column="member_id"/>
@@ -21,13 +21,13 @@
 
     <select id="findByPreBlacklistAll" resultMap="preBlacklistMap">
         SELECT DISTINCT
-        a.blacklist_count,
+        a.black_list_count,
         a.status,
         a.created_at,
         a.pre_black_id,
         a.report_id,
         b.member_name
-        FROM pre_blacklist a
+        FROM pre_black_list a
         JOIN tb_member b ON a.member_id = b.member_id
     </select>
 </mapper>

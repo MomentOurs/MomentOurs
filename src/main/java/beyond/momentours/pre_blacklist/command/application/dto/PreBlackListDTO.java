@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @ToString
 @Builder
-public class PreBlacklistDTO {
+public class PreBlackListDTO {
 
     private Long preBlackId;
     private int blackListCount;

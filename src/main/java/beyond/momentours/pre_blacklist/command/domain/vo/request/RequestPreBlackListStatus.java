@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RequestPreBlacklistStatus {
+public class RequestPreBlackListStatus {
 
     @JsonProperty("pre_black_id")
     private Long preBlackId;
