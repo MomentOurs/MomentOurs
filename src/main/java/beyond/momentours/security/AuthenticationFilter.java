@@ -113,6 +113,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         responseData.put("refreshToken", refreshToken);
         responseData.put("expiration", expArray);
         responseData.put("memberEmail", memberEmail);
+        responseData.put("role", role);
 
         Long memberId = userDetails.getMemberId();
         try {

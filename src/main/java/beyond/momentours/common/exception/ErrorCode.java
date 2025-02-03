@@ -46,6 +46,8 @@ public enum ErrorCode {
     EMAIL_AUTH_CODE_EXPIRED(40117, HttpStatus.UNAUTHORIZED, "인증 번호가 만료되었습니다. 다시 요청해주세요."),
     EMAIL_AUTH_CODE_INVALID(40118, HttpStatus.UNAUTHORIZED, "인증 번호가 올바르지 않습니다. 다시 요청해주세요."),
     LOGIN_HISTORY_FAILURE(40119, HttpStatus.UNAUTHORIZED, "로그인 이력 저장에 실패했습니다."), // 로그인 이력 기록 실패
+    BLACKLIST_FAILURE(40120, HttpStatus.UNAUTHORIZED, "블랙리스트 등록에 실패했습니다."), // 블랙리스트 등록 실패
+    PREBLACKLIST_FAILURE(40121, HttpStatus.UNAUTHORIZED, "예비 블랙리스트 등록에 실패했습니다."), // 블랙리스트 등록 실패
 
     // 403: 권한 부족 (Forbidden)
     FORBIDDEN_ROLE(40300, HttpStatus.FORBIDDEN, "요청한 리소스에 대한 권한이 없습니다."), // 사용자가 요청한 리소스에 대한 권한이 없는 경우
@@ -68,6 +70,8 @@ public enum ErrorCode {
     NOT_FOUND_REPLY(40414, HttpStatus.NOT_FOUND, "해당 대댓글이 존재하지 않습니다"),
     NOT_FOUND_DATE_COURSE_SCRAP_FOLDER(40415, HttpStatus.NOT_FOUND, "해당 데이트 코스 즐겨찾기 폴더가 존재하지 않습니다"),
     NOT_FOUND_COURSE_SCRAP(40416, HttpStatus.NOT_FOUND, "즐겨찾기 된 해당 데이트 코스가 존재하지 않습니다"),
+    NOT_FOUND_PREBLACKLIST(40417, HttpStatus.NOT_FOUND, "해당 예비블랙리스트가 존재하지 않습니다"),
+    NOT_FOUND_BLACKLIST(40418, HttpStatus.NOT_FOUND, "블랙리스트가 존재하지 않습니다"),
 
     // 429: 요청 과다 (Too Many Requests)
     TOO_MANY_REQUESTS(42900, HttpStatus.TOO_MANY_REQUESTS, "요청 횟수가 너무 많습니다. 잠시 후 다시 시도해 주세요."),
