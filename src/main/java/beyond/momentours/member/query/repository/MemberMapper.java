@@ -1,7 +1,11 @@
 package beyond.momentours.member.query.repository;
 
 import beyond.momentours.member.query.dto.MemberDTO;
+import beyond.momentours.member.query.vo.response.ResponseMemberSearchVO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 @Mapper
 public interface MemberMapper {
@@ -11,4 +15,7 @@ public interface MemberMapper {
     String findByMemberEmail(String memberEmail);
 
     MemberDTO findMemberEmailByMypage(Long memberId);
+
+    List<ResponseMemberSearchVO> findMemberSearch(@Param("memberNickname") String memberNickname,
+                                                  @Param("memberEmail") String memberEmail);
 }
