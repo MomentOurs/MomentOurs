@@ -21,4 +21,6 @@ public interface MemberService extends UserDetailsService {
     void updatePassword(MemberDTO memberDTO);
 
     void logout(HttpServletRequest request);
+
+    void withdraw(CustomUserDetails user);
 }

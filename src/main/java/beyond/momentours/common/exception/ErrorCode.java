@@ -49,12 +49,14 @@ public enum ErrorCode {
     BLACKLIST_FAILURE(40120, HttpStatus.UNAUTHORIZED, "블랙리스트 등록에 실패했습니다."), // 블랙리스트 등록 실패
     PREBLACKLIST_FAILURE(40121, HttpStatus.UNAUTHORIZED, "예비 블랙리스트 등록에 실패했습니다."), // 블랙리스트 등록 실패
     LOGGED_OUT(40122, HttpStatus.UNAUTHORIZED, "로그아웃된 토큰입니다."), // 로그아웃된 토큰인 경우
+    WITHDRAW_FAILURE(40123, HttpStatus.UNAUTHORIZED, "회원 탈퇴에 실패했습니다."), // 회원 탈퇴 실패
 
 
 
     // 403: 권한 부족 (Forbidden)
     FORBIDDEN_ROLE(40300, HttpStatus.FORBIDDEN, "요청한 리소스에 대한 권한이 없습니다."), // 사용자가 요청한 리소스에 대한 권한이 없는 경우
     ACCESS_DENIED(40301, HttpStatus.FORBIDDEN, "접근 권한이 거부되었습니다."), // 권한 부족으로 접근이 거부된 경우
+    INACTIVE_ACCOUNT(40302, HttpStatus.FORBIDDEN, "비활성화된 계정입니다."), // 비활성화된 계정인 경우
 
     // 404: 리소스를 찾을 수 없음 (Not Found)
     NOT_FOUND_MEMBER(40401, HttpStatus.NOT_FOUND, "회원이 존재하지 않습니다."),

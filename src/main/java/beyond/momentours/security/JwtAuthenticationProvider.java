@@ -35,6 +35,12 @@ public class JwtAuthenticationProvider {
         if (member == null) {
             throw new CommonException(ErrorCode.NOT_FOUND_MEMBER);
         }
+
+        // 비활성화된 회원 로그인 차단
+        if (!member.getMemberStatus()) {
+            throw new CommonException(ErrorCode.INACTIVE_ACCOUNT);
+        }
+
         CustomUserDetails userDetails = new CustomUserDetails(member);
         return new UsernamePasswordAuthenticationToken(
                 userDetails, null, userDetails.getAuthorities());

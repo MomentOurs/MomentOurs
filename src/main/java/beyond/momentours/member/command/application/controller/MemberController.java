@@ -41,6 +41,14 @@ public class MemberController {
         return ResponseDTO.ok(response);
     }
 
+    /* 회원탈퇴 */
+    @PatchMapping("withdraw")
+    public ResponseDTO<?> withdraw(@AuthenticationPrincipal CustomUserDetails user) {
+        memberService.withdraw(user);
+        return ResponseDTO.ok("회원 탈퇴가 완료되었습니다.");
+    }
+
+
     /* 로그아웃 */
     @PostMapping("logout")
     public ResponseDTO<?> logout(HttpServletRequest request) {

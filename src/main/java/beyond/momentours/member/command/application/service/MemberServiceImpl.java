@@ -9,7 +9,6 @@ import beyond.momentours.member.command.application.dto.MemberDTO;
 import beyond.momentours.member.command.application.mapper.MemberConverter;
 import beyond.momentours.member.command.domain.aggregate.entity.Member;
 import beyond.momentours.member.command.domain.repository.MemberRepository;
-import beyond.momentours.security.JWTFilter;
 import beyond.momentours.security.JWTUtil;
 import beyond.momentours.util.RedisEmailAuthentication;
 import beyond.momentours.util.SecurityUtil;
@@ -61,6 +60,23 @@ public class MemberServiceImpl implements MemberService {
         return reponseMemberDTO;
     }
 
+    /* 회원탈퇴 */
+    @Override
+    @Transactional
+    public void withdraw(CustomUserDetails user) {
+        try {
+            Member member = memberRepository.findById(user.getMemberId())
+                    .orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_MEMBER));
+
+            Member updatedMember = member.toBuilder()
+                    .memberStatus(false) // 회원 상태만 변경
+                    .build();
+            memberRepository.save(updatedMember);
+        } catch (CommonException e) {
+            throw new CommonException(ErrorCode.WITHDRAW_FAILURE);
+        }
+    }
+
     @Override
     public UserDetails loadUserByUsername(String memberEmail) {
 
@@ -70,6 +86,11 @@ public class MemberServiceImpl implements MemberService {
         // 사용자 데이터가 없으면 예외 발생
         if (member == null) {
             throw new CommonException(ErrorCode.NOT_FOUND_MEMBER);
+        }
+
+        // 비활성화된 회원 로그인 차단
+        if (!member.getMemberStatus()) {
+            throw new CommonException(ErrorCode.INACTIVE_ACCOUNT);
         }
 
         // 사용자 데이터를 기반으로 CustomUserDetails 생성
