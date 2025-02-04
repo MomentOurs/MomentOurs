@@ -9,6 +9,7 @@ import beyond.momentours.member.command.application.service.MemberService;
 import beyond.momentours.member.command.domain.vo.reponse.ResponseSignupMemberVO;
 import beyond.momentours.member.command.domain.vo.reponse.ResponseUpdateProfileMemberVO;
 import beyond.momentours.member.command.domain.vo.request.*;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.Email;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,13 @@ public class MemberController {
         ResponseSignupMemberVO response = memberConverter.fromDTOToSignupVO(responseMemberDTO);
 
         return ResponseDTO.ok(response);
+    }
+
+    /* 로그아웃 */
+    @PostMapping("logout")
+    public ResponseDTO<?> logout(HttpServletRequest request) {
+        memberService.logout(request);
+        return ResponseDTO.ok("로그아웃되었습니다.");
     }
 
     /* 회원 정보 수정 */

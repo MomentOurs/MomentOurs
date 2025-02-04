@@ -4,6 +4,7 @@ import beyond.momentours.member.command.application.dto.CustomUserDetails;
 import beyond.momentours.member.command.application.dto.EmailDTO;
 import beyond.momentours.member.command.application.dto.MemberDTO;
 import beyond.momentours.member.command.domain.aggregate.entity.Member;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 public interface MemberService extends UserDetailsService {
@@ -18,4 +19,6 @@ public interface MemberService extends UserDetailsService {
     boolean verifyEmail(EmailDTO emailDTO);
 
     void updatePassword(MemberDTO memberDTO);
+
+    void logout(HttpServletRequest request);
 }

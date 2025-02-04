@@ -1,7 +1,6 @@
 package beyond.momentours.member.command.application.service;
 
 
-import beyond.momentours.common.ResponseDTO;
 import beyond.momentours.common.exception.CommonException;
 import beyond.momentours.common.exception.ErrorCode;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
@@ -10,34 +9,44 @@ import beyond.momentours.member.command.application.dto.MemberDTO;
 import beyond.momentours.member.command.application.mapper.MemberConverter;
 import beyond.momentours.member.command.domain.aggregate.entity.Member;
 import beyond.momentours.member.command.domain.repository.MemberRepository;
-import beyond.momentours.member.query.service.MemberQueryService;
+import beyond.momentours.security.JWTFilter;
+import beyond.momentours.security.JWTUtil;
 import beyond.momentours.util.RedisEmailAuthentication;
+import beyond.momentours.util.SecurityUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
 @Slf4j
-@Service("commandAuthServiceImpl")
+@Service("commandMemberServiceImpl")
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     private final MemberConverter memberConverter;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final MemberQueryService memberQueryService;
     private final MailService mailService;
     private final RedisEmailAuthentication redisEmailAuthentication;
+    private final RedisTemplate<String, String> redisTemplate;
+    private final JWTUtil jwtUtil;
 
     @Autowired
-    public MemberServiceImpl(MemberRepository memberRepository, MemberConverter memberConverter, BCryptPasswordEncoder bCryptPasswordEncoder, MemberQueryService memberQueryService, MailService mailService, RedisEmailAuthentication redisEmailAuthentication) {
+    public MemberServiceImpl(MemberRepository memberRepository, MemberConverter memberConverter, BCryptPasswordEncoder bCryptPasswordEncoder, MailService mailService, RedisEmailAuthentication redisEmailAuthentication, RedisTemplate<String, String> redisTemplate, JWTUtil jwtUtil) {
         this.memberRepository = memberRepository;
         this.memberConverter = memberConverter;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.memberQueryService = memberQueryService;
         this.mailService = mailService;
         this.redisEmailAuthentication = redisEmailAuthentication;
+        this.redisTemplate = redisTemplate;
+        this.jwtUtil = jwtUtil;
     }
 
     @Override
@@ -123,6 +132,26 @@ public class MemberServiceImpl implements MemberService {
         memberDTO.encodedPwd(bCryptPasswordEncoder.encode(memberDTO.getMemberPassword()));
         Member member = memberConverter.fromPasswordDTOToMember(memberDTO);
         memberRepository.updatePasswordByEmail(member.getMemberEmail(), member.getMemberPassword());
+    }
+
+    // 로그아웃 처리
+    @Override
+    @Transactional
+    public void logout(HttpServletRequest request) {
+        // SecurityUtil에서 토큰 추출
+        String token = SecurityUtil.extractToken(request);
+        if (token == null || !jwtUtil.validateToken(token)) {
+            throw new CommonException(ErrorCode.INVALID_TOKEN_ERROR);
+        }
+
+        // 만료 시간 가져오기
+        Date expiration = jwtUtil.getExpirationDateFromToken(token);
+
+        // 현재 시간 기준 남은 시간 계산
+        long expirationMillis = expiration.getTime() - System.currentTimeMillis();
+
+        // Redis에 로그아웃된 토큰 저장
+        redisTemplate.opsForValue().set("로그아웃_" + token, "logout", expirationMillis, TimeUnit.MILLISECONDS);
     }
 
 //    @Override
