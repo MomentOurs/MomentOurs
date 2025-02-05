@@ -28,7 +28,7 @@ public class Report {
     @Column(name = "report_reason", nullable = false)
     private ReportReason reportReason;
 
-    @Column(name = "process_status", nullable = false)
+    @Column(name = "process_status", nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
     private ProcessStatus processStatus;
 
     @Column(name = "target_id", nullable = false)
