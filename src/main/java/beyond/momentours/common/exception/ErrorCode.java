@@ -77,6 +77,7 @@ public enum ErrorCode {
     NOT_FOUND_COURSE_SCRAP(40416, HttpStatus.NOT_FOUND, "즐겨찾기 된 해당 데이트 코스가 존재하지 않습니다"),
     NOT_FOUND_PREBLACKLIST(40417, HttpStatus.NOT_FOUND, "해당 예비블랙리스트가 존재하지 않습니다"),
     NOT_FOUND_BLACKLIST(40418, HttpStatus.NOT_FOUND, "블랙리스트가 존재하지 않습니다"),
+    NOT_FOUND_LOGINHISTORY(40419, HttpStatus.NOT_FOUND, "로그인 이력이 존재하지 않습니다"),
 
     // 429: 요청 과다 (Too Many Requests)
     TOO_MANY_REQUESTS(42900, HttpStatus.TOO_MANY_REQUESTS, "요청 횟수가 너무 많습니다. 잠시 후 다시 시도해 주세요."),

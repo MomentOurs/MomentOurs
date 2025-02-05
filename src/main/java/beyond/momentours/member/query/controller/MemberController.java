@@ -55,5 +55,4 @@ public class MemberController {
         return ResponseDTO.ok(response);
     }
 
-
 }

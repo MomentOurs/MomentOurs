@@ -71,6 +71,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "api/member/signup", "/**").permitAll()
                         .requestMatchers("/api/member/login").permitAll()
                                 .requestMatchers("/api/member").authenticated()
+                                .requestMatchers("/api/admin").authenticated()
 
 //                        .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().authenticated()
