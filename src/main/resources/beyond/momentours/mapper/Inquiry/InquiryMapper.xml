@@ -26,7 +26,7 @@
 
 
     <!-- 1. 모든 문의 조회 -> 문의에 대한 답변 함께 조회 -->
-    <select id="selectAllInquiry" resultMap="beyond.momentours.inquiry.query.dto.InquiryDTO">
+    <select id="selectAllInquiry" resultMap="beyond.momentours.inquiry.query.dto.InquiryAndInquiryAnswerDTO">
         SELECT
             i.inquiry_id,
             i.inquiry_title,
