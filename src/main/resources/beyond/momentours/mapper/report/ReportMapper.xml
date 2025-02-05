@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="beyond.momentours.report.query.repository.ReportMapper">
+    <resultMap id="reportResultMap" type="beyond.momentours.report.command.domain.aggregate.entity.Report">
+        <id property="reportId" column="report_id"/>
+        <result property="reportType" column="report_type"/>
+        <result property="reportReason" column="report_reason"/>
+        <result property="processStatus" column="process_status"/>
+        <result property="targetId" column="target_id"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="reportedUserId" column="reported_user_id"/>
+        <result property="reportUserId" column="report_user_id"/>
+    </resultMap>
+
+    <select id="findMomentOwner" resultType="java.lang.Long">
+        SELECT m.member_id
+        FROM moment m
+        WHERE m.moment_id = #{targetId}
+    </select>
+
+    <select id="findDateCourseOwner" resultType="java.lang.Long">
+        SELECT d.member_id
+        FROM date_course d
+        WHERE d.course_id = #{targetId}
+    </select>
+
+    <select id="countReportsByReportedUserId" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM tb_report
+        WHERE reported_user_id = #{reportedUserId}
+    </select>
+
+</mapper>
