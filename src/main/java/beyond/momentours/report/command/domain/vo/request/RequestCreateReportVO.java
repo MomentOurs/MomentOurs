@@ -14,8 +14,7 @@ public class RequestCreateReportVO {
     private ReportType reportType;
     private ReportReason reportReason;
     private ProcessStatus processStatus;
+    private Long targetId;
     private Long reportedUserId;
     private Long reportUserId;
-    private Long momentId;
-    private Long courseId;
 }

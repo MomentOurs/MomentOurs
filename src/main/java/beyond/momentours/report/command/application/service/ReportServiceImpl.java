@@ -2,6 +2,7 @@ package beyond.momentours.report.command.application.service;
 
 import beyond.momentours.common.exception.CommonException;
 import beyond.momentours.common.exception.ErrorCode;
+import beyond.momentours.pre_blacklist.command.application.service.PreBlackListService;
 import beyond.momentours.report.command.application.dto.ReportDTO;
 import beyond.momentours.report.command.application.mapper.ReportConverter;
 import beyond.momentours.report.command.domain.aggregate.entity.Report;
@@ -20,21 +21,31 @@ public class ReportServiceImpl implements ReportService {
     private final ReportRepository reportRepository;
     private final ReportConverter reportConverter;
     private final ReportMapper reportMapper;
+    private final PreBlackListService preBlackListService;
 
     @Transactional
     @Override
     public ReportDTO createReport(ReportDTO reportDTO) {
         try {
             Long reportedUserId = null;
-            if (reportDTO.getReportType().name().equals("MOMENT")) reportedUserId = reportMapper.findMomentOwner(reportDTO.getMomentId());
-            else if (reportDTO.getReportType().name().equals("DATE_COURSE")) reportedUserId = reportMapper.findDateCourseOwner(reportDTO.getCourseId());
+            if (reportDTO.getReportType().name().equals("MOMENT")) reportedUserId = reportMapper.findMomentOwner(reportDTO.getTargetId());
+            else if (reportDTO.getReportType().name().equals("DATE_COURSE"))reportedUserId = reportMapper.findDateCourseOwner(reportDTO.getTargetId());
 
             if (reportedUserId == null) throw new CommonException(ErrorCode.NOT_FOUND_MEMBER);
 
             Report report = reportConverter.fromDTOToEntity(reportDTO);
+            report.setReportedUserId(reportedUserId);
             log.info("저장할 신고 정보: {}", report);
+
             Report savedReport = reportRepository.save(report);
             log.info("신고 등록 성공: {}", savedReport);
+
+            int reportCount = reportMapper.countReportsByReportedUserId(reportedUserId);
+            if (reportCount == 5) {
+                preBlackListService.createPreBlacklist(savedReport.getReportId(), reportedUserId);
+                log.info("예비 블랙리스트에 추가: userId {}", reportedUserId);
+            }
+
             return reportConverter.fromEntityToDTO(savedReport);
         } catch (Exception e) {
             log.error("신고 등록 중 오류 발생", e);

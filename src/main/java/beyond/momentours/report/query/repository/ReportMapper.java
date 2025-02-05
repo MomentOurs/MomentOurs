@@ -5,7 +5,9 @@ import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface ReportMapper {
-    Long findMomentOwner(@Param("momentId") Long momentId);
-    Long findDateCourseOwner(@Param("courseId") Long courseId);
+    Long findMomentOwner(@Param("targetId") Long targetId);
+    Long findDateCourseOwner(@Param("targetId") Long targetId);
+
+    int countReportsByReportedUserId(@Param("reportedUserId") Long reportedUserId);
 }
 

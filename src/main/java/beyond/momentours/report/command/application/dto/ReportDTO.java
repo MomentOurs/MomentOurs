@@ -18,9 +18,8 @@ public class ReportDTO {
     private ReportType reportType;
     private ReportReason reportReason;
     private ProcessStatus processStatus;
+    private Long targetId;
     private LocalDateTime createdAt;
     private Long reportedUserId;
     private Long reportUserId;
-    private Long momentId;
-    private Long courseId;
 }

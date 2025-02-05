@@ -14,10 +14,9 @@ public class ReportConverter {
                 .reportType(request.getReportType())
                 .reportReason(request.getReportReason())
                 .processStatus(request.getProcessStatus())
+                .targetId(request.getTargetId())
                 .reportedUserId(request.getReportedUserId())
                 .reportUserId(memberId)
-                .momentId(request.getMomentId())
-                .courseId(request.getCourseId())
                 .build();
     }
 
@@ -27,11 +26,10 @@ public class ReportConverter {
                 .reportType(report.getReportType())
                 .reportReason(report.getReportReason())
                 .processStatus(report.getProcessStatus())
+                .targetId(report.getTargetId())
                 .createdAt(report.getCreatedAt())
                 .reportedUserId(report.getReportedUserId())
                 .reportUserId(report.getReportUserId())
-                .momentId(report.getMomentId())
-                .courseId(report.getCourseId())
                 .build();
     }
 
@@ -41,10 +39,9 @@ public class ReportConverter {
                 .reportType(reportDTO.getReportType())
                 .reportReason(reportDTO.getReportReason())
                 .processStatus(reportDTO.getProcessStatus())
+                .targetId(reportDTO.getTargetId())
                 .reportedUserId(reportDTO.getReportedUserId())
                 .reportUserId(reportDTO.getReportUserId())
-                .momentId(reportDTO.getMomentId())
-                .courseId(reportDTO.getCourseId())
                 .build();
     }
 
@@ -54,10 +51,9 @@ public class ReportConverter {
                 .reportType(savedReport.getReportType())
                 .reportReason(savedReport.getReportReason())
                 .processStatus(savedReport.getProcessStatus())
+                .targetId(savedReport.getTargetId())
                 .reportedUserId(savedReport.getReportedUserId())
                 .reportUserId(savedReport.getReportUserId())
-                .momentId(savedReport.getMomentId())
-                .courseId(savedReport.getCourseId())
                 .build();
     }
 
@@ -67,10 +63,9 @@ public class ReportConverter {
                 .reportType(savedReport.getReportType())
                 .reportReason(savedReport.getReportReason())
                 .processStatus(savedReport.getProcessStatus())
+                .targetId(savedReport.getTargetId())
                 .reportedUserId(savedReport.getReportedUserId())
                 .reportUserId(savedReport.getReportUserId())
-                .momentId(savedReport.getMomentId())
-                .courseId(savedReport.getCourseId())
                 .build();
     }
 }

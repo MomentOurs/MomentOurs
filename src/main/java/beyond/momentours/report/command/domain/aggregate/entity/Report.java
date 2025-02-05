@@ -31,6 +31,9 @@ public class Report {
     @Column(name = "process_status", nullable = false)
     private ProcessStatus processStatus;
 
+    @Column(name = "target_id", nullable = false)
+    private Long targetId;
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
@@ -40,9 +43,7 @@ public class Report {
     @Column(name = "report_user_id", nullable = false)
     private Long reportUserId;
 
-    @Column(name = "moment_id")
-    private Long momentId;
-
-    @Column(name = "course_id")
-    private Long courseId;
+    public void setReportedUserId(Long reportedUserId) {
+        this.reportedUserId = reportedUserId;
+    }
 }
