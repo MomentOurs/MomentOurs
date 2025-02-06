@@ -15,7 +15,7 @@
     </resultMap>
 
     <!-- 1. 모든 공지사항 조회 -->
-    <select id="selectAll" resultMap="beyond.momentours.announcement.query.dto.AnnouncementDTO">
+    <select id="selectAll" resultMap="announcementResultMap">
         SELECT
             ta.announcement_id,
             ta.announcement_title,
@@ -33,7 +33,7 @@
     </select>
 
     <!-- 2. id로 공지사항 조회 -->
-    <select id="selectById" resultMap="beyond.momentours.announcement.query.dto.AnnouncementDTO">
+    <select id="selectById" resultMap="announcementResultMap">
         SELECT
             ta.announcement_id,
             ta.announcement_title,
@@ -54,7 +54,7 @@
     </select>
 
     <!-- 3. 키워드로 공지사항 조회 -->
-    <select id="selectByKeyword" resultMap="beyond.momentours.announcement.query.dto.AnnouncementDTO">
+    <select id="selectByKeyword" resultMap="announcementResultMap">
         SELECT
             ta.announcement_id,
             ta.announcement_title,
@@ -82,7 +82,7 @@
 
 
     <!-- 4. 작성자id로 공지사항 조회 -->
-    <select id="selectByMemberId" resultMap="beyond.momentours.announcement.query.dto.AnnouncementDTO">
+    <select id="selectByMemberId" resultMap="announcementResultMap">
         SELECT
             ta.announcement_id,
             ta.announcement_title,
