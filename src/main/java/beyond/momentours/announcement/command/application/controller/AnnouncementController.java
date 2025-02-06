@@ -7,6 +7,7 @@ import beyond.momentours.announcement.command.domain.aggregate.dto.request.Updat
 import beyond.momentours.announcement.command.domain.aggregate.dto.response.AnnouncementResponseDTO;
 import beyond.momentours.common.ResponseDTO;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController("commandAnnouncementController")
@@ -23,7 +24,7 @@ public class AnnouncementController {
     @PostMapping("")
     public ResponseDTO<AnnouncementResponseDTO> createAnnouncement(
             @RequestBody CreateAnnouncementRequestDTO requestDTO,
-            CustomUserDetails user // 로그인한 사용자의 정보 + 요청 DTO 정보
+            @AuthenticationPrincipal CustomUserDetails user // 로그인한 사용자의 정보 + 요청 DTO 정보
     ) {
         Long memberId = user.getMember().getMemberId(); // 로그인한 사용자 정보 받아오기
         AnnouncementResponseDTO responseDTO = announcementService.createAnnouncement(requestDTO, memberId);
@@ -35,7 +36,7 @@ public class AnnouncementController {
     public ResponseDTO<AnnouncementResponseDTO> modifyAnnouncement(
             @PathVariable Long announcementId,
             @RequestBody UpdateAnnouncementRequestDTO requestDTO,
-            CustomUserDetails user  // 요청 DTO 정보 + 로그인 회원 정보
+            @AuthenticationPrincipal CustomUserDetails user  // 요청 DTO 정보 + 로그인 회원 정보
     ){
         Long memberId = user.getMember().getMemberId();
         AnnouncementResponseDTO responseDTO = announcementService.updateAnnouncement(announcementId, requestDTO, memberId);
@@ -46,7 +47,7 @@ public class AnnouncementController {
     @DeleteMapping("/my/{announcementId}")
     public void deleteAnnouncement(
             @PathVariable Long announcementId,
-            @RequestBody CustomUserDetails user
+            @AuthenticationPrincipal CustomUserDetails user
     ) {
         Long memberId = user.getMember().getMemberId();
         announcementService.deleteAnnouncement(announcementId, memberId);
