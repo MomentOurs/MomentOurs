@@ -32,6 +32,7 @@ public class InquiryQueryServiceImpl implements InquiryQueryService {
         try {
             List<InquiryAndInquiryAnswerDTO> inquiries = inquiryMapper.selectAllInquiry();
             if(inquiries == null || inquiries.isEmpty()){
+                log.error("문의가 존재하지 않음");
                 throw new RuntimeException("문의가 존재하지 않음");
             }
             return inquiries;

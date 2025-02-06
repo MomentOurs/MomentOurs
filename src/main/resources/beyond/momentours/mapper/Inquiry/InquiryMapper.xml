@@ -42,10 +42,10 @@
             ia.created_at  AS answer_created_at,
             ia.updated_at AS answer_updated_at,
             ia.member_id AS answer_member_id
-        FROM inquiry i
-        LEFT OUTER JOIN inquiry_answer ia
+        FROM tb_inquiry i
+        LEFT OUTER JOIN tb_inquiry_answer ia
             ON i.inquiry_id = ia.inquiry_id
-        WHERE i.inquiry_status = false;
+        WHERE i.inquiry_status = true;
 
     </select>
 
@@ -65,10 +65,10 @@
             ia.created_at  AS answer_created_at,
             ia.updated_at AS answer_updated_at,
             ia.member_id AS answer_member_id
-        FROM inquiry i
-        LEFT OUTER JOIN inquiry_answer ia
+        FROM tb_inquiry i
+        LEFT OUTER JOIN tb_inquiry_answer ia
             ON i.inquiry_id = ia.inquiry_id
-        WHERE i.inquiry_status = false AND i.inquiry_id = #{inquiryId};
+        WHERE i.inquiry_status = true AND i.inquiry_id = #{inquiryId};
 
     </select>
 
@@ -88,10 +88,10 @@
             ia.created_at  AS answer_created_at,
             ia.updated_at AS answer_updated_at,
             ia.member_id AS answer_member_id
-        FROM inquiry i
-        LEFT OUTER JOIN inquiry_answer ia
+        FROM tb_inquiry i
+        LEFT OUTER JOIN tb_inquiry_answer ia
             ON i.inquiry_id = ia.inquiry_id
-        WHERE i.inquiry_status = false
+        WHERE i.inquiry_status = true
         AND i.inquiry_answer_status = #{inquiryAnswerStatus};
 
     </select>
@@ -112,10 +112,10 @@
             ia.created_at  AS answer_created_at,
             ia.updated_at AS answer_updated_at,
             ia.member_id AS answer_member_id
-        FROM inquiry i
-        LEFT OUTER JOIN inquiry_answer ia
+        FROM tb_inquiry i
+        LEFT OUTER JOIN tb_inquiry_answer ia
             ON i.inquiry_id = ia.inquiry_id
-        WHERE i.inquiry_status = false AND i.member_id = #{memberId};
+        WHERE i.inquiry_status = true AND i.member_id = #{memberId};
 
     </select>
 
@@ -135,10 +135,10 @@
             ia.created_at  AS answer_created_at,
             ia.updated_at AS answer_updated_at,
             ia.member_id AS answer_member_id
-        FROM inquiry i
-        LEFT OUTER JOIN inquiry_answer ia
+        FROM tb_inquiry i
+        LEFT OUTER JOIN tb_inquiry_answer ia
             ON i.inquiry_id = ia.inquiry_id
-        WHERE i.inquiry_status = false AND ia.member_id = #{memberId};
+        WHERE i.inquiry_status = true AND ia.member_id = #{memberId};
 
     </select>
 
@@ -159,11 +159,11 @@
             ia.created_at  AS answer_created_at,
             ia.updated_at AS answer_updated_at,
             ia.member_id AS answer_member_id
-        FROM inquiry i
-        LEFT OUTER JOIN inquiry_answer ia
+        FROM tb_inquiry i
+        LEFT OUTER JOIN tb_inquiry_answer ia
             ON i.inquiry_id = ia.inquiry_id
         WHERE
-            i.inquiry_status = false
+            i.inquiry_status = true
             AND
             (
             i.inquiry_title LIKE CONCAT('%',#{keyword},'%')
