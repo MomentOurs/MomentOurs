@@ -38,22 +38,24 @@ public class InquiryQueryController {
 
     // 3. 답변 여부로 문의 조회 -> 답변 true 들을 조회
     @GetMapping("/status")
-    public ResponseDTO<List<InquiryAndInquiryAnswerDTO>> getInquiryByStatus(@RequestParam Boolean inquiryAnswerStatus) {
+    public ResponseDTO<List<InquiryAndInquiryAnswerDTO>> getInquiryByStatus(@RequestParam Boolean status) {
         List<InquiryAndInquiryAnswerDTO> response
-                = inquiryQueryService.findInquiryAnswerStatusIsTrueOrFalse(inquiryAnswerStatus);
+                = inquiryQueryService.findInquiryAnswerStatusIsTrueOrFalse(status);
         return ResponseDTO.ok(response);
     }
 
     // 4. 작성자 id로 문의 조회
     @GetMapping("/member-id")
-    public ResponseDTO<List<InquiryAndInquiryAnswerDTO>> getInquiryByMemberId(@RequestParam Long memberId) {
+    public ResponseDTO<List<InquiryAndInquiryAnswerDTO>> getInquiryByMemberId(@RequestParam("member-id") Long memberId) {
         List<InquiryAndInquiryAnswerDTO> response = inquiryQueryService.findInquiryAnswerByMemberId(memberId);
         return ResponseDTO.ok(response);
     }
 
     // 5. 답변 작성자 id로 문의 조회
     @GetMapping("/answer-member-id")
-    public ResponseDTO<List<InquiryAndInquiryAnswerDTO>> findInquiryAnswerByAnswerMemberId(@RequestParam Long answerMemberId) {
+    public ResponseDTO<List<InquiryAndInquiryAnswerDTO>> findInquiryAnswerByAnswerMemberId(
+            @RequestParam("answer-member-id") Long answerMemberId)
+    {
         List<InquiryAndInquiryAnswerDTO> response = inquiryQueryService.findInquiryAnswerByAnswerMemberId(answerMemberId);
         return ResponseDTO.ok(response);
     }
