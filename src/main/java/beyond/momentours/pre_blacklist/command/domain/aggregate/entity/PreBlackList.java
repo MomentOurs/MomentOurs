@@ -37,9 +37,6 @@ public class PreBlackList {
     @Column(name = "member_id", nullable = false)
     private Long memberId;
 
-    @Column(name = "report_id", nullable = false)
-    private Long reportId;
-
     @PrePersist
     private void prePersist() {
         this.createdAt = LocalDateTime.now();

@@ -4,6 +4,7 @@ import beyond.momentours.common.exception.CommonException;
 import beyond.momentours.common.exception.ErrorCode;
 import beyond.momentours.pre_blacklist.query.repository.PreBlackListMapper;
 import beyond.momentours.pre_blacklist.query.vo.response.ResponsePreBlackListAll;
+import beyond.momentours.report.command.application.dto.ReportDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,5 +31,14 @@ public class PreBlackListQueryServiceImpl implements PreBlackListQueryService {
         }
 
         return response;
+    }
+
+    @Override
+    public List<ReportDTO> getReportsByPreBlackList(Long preBlackListId) {
+        List<ReportDTO> reports = preBlackListMapper.findReportsByPreBlackListId(preBlackListId);
+
+        if (reports == null || reports.isEmpty()) throw new CommonException(ErrorCode.NOT_FOUND_REPORT);
+
+        return reports;
     }
 }

@@ -16,5 +16,4 @@ public class PreBlackListDTO {
     private String status;
     private LocalDateTime createdAt;
     private Long memberId;
-    private Long reportId;
 }

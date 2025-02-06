@@ -23,9 +23,6 @@ public class ResponsePreBlackListAll {
     @JsonProperty("created_at")
     private String createdAt;
 
-    @JsonProperty("status")
-    private String reportId;
-
     @JsonProperty("member_name")
     private String memberName;
 }
