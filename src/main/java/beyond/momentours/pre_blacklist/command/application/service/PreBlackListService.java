@@ -7,5 +7,5 @@ public interface PreBlackListService {
     void updateStatus(PreBlackListDTO preBlacklistDTO);
 
     @Transactional
-    void createPreBlacklist(Long reportId, Long memberId);
+    Long getOrCreatePreBlacklist(Long memberId);
 }
