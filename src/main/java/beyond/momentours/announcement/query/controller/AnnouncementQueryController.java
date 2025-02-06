@@ -31,7 +31,7 @@ public class AnnouncementQueryController {
     }
 
     // 2. id로 공지사항 조회
-    @GetMapping("/id")
+    @GetMapping("/id/{id}")
     public ResponseDTO<AnnouncementDTO> getAnnouncementById(@PathVariable Long id){
         AnnouncementDTO response = announcementService.findAnnouncementById(id);
         return ResponseDTO.ok(response);
