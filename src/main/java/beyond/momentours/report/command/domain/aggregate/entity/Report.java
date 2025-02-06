@@ -43,7 +43,12 @@ public class Report {
     @Column(name = "report_user_id", nullable = false)
     private Long reportUserId;
 
+    @Column(name = "pre_black_id")
+    private Long preBlackId;
+
     public void setReportedUserId(Long reportedUserId) {
         this.reportedUserId = reportedUserId;
     }
+
+    public void setPreBlackId(Long preBlackId) { this.preBlackId = preBlackId; }
 }

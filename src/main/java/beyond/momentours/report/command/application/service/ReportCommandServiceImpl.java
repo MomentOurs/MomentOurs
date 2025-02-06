@@ -14,9 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Slf4j
-@Service("commandReportService")
+@Service
 @RequiredArgsConstructor
-public class ReportServiceImpl implements ReportService {
+public class ReportCommandServiceImpl implements ReportCommandService {
 
     private final ReportRepository reportRepository;
     private final ReportConverter reportConverter;
@@ -29,7 +29,7 @@ public class ReportServiceImpl implements ReportService {
         try {
             Long reportedUserId = null;
             if (reportDTO.getReportType().name().equals("MOMENT")) reportedUserId = reportMapper.findMomentOwner(reportDTO.getTargetId());
-            else if (reportDTO.getReportType().name().equals("DATE_COURSE"))reportedUserId = reportMapper.findDateCourseOwner(reportDTO.getTargetId());
+            else if (reportDTO.getReportType().name().equals("DATE_COURSE")) reportedUserId = reportMapper.findDateCourseOwner(reportDTO.getTargetId());
 
             if (reportedUserId == null) throw new CommonException(ErrorCode.NOT_FOUND_MEMBER);
 
@@ -41,9 +41,10 @@ public class ReportServiceImpl implements ReportService {
             log.info("신고 등록 성공: {}", savedReport);
 
             int reportCount = reportMapper.countReportsByReportedUserId(reportedUserId);
+
             if (reportCount == 5) {
-                preBlackListService.createPreBlacklist(savedReport.getReportId(), reportedUserId);
-                log.info("예비 블랙리스트에 추가: userId {}", reportedUserId);
+                Long preBlackId = preBlackListService.getOrCreatePreBlacklist(reportedUserId);
+                log.info("5번째 신고와 이전 신고에 preBlackId 추가: {}", preBlackId);
             }
 
             return reportConverter.fromEntityToDTO(savedReport);
@@ -52,6 +53,5 @@ public class ReportServiceImpl implements ReportService {
             throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
-
 }
 

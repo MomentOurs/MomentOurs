@@ -22,4 +22,5 @@ public class ReportDTO {
     private LocalDateTime createdAt;
     private Long reportedUserId;
     private Long reportUserId;
+    private Long preBlackId;
 }
