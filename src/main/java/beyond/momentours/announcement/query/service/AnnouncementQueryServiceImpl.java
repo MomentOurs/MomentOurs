@@ -24,7 +24,6 @@ public class AnnouncementQueryServiceImpl implements AnnouncementQueryService {
     }
 
 
-
     // 2. id로 공지사항 조회
     public AnnouncementDTO findAnnouncementById(Long announcementId){
         return announcementMapper.selectById(announcementId);
@@ -39,4 +38,5 @@ public class AnnouncementQueryServiceImpl implements AnnouncementQueryService {
     public List<AnnouncementDTO> findAnnouncementByMemberId(Long memberId){
         return announcementMapper.selectByMemberId(memberId);
     }
+
 }
