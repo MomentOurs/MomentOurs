@@ -47,7 +47,7 @@ public class AnnouncementQueryController {
 
     // 4. 작성자 id로 공지사항 조회
     @GetMapping("/member-id")
-    public ResponseDTO<List<AnnouncementDTO>> getAnnouncementByMemberId(@RequestParam Long memberId){
+    public ResponseDTO<List<AnnouncementDTO>> getAnnouncementByMemberId(@RequestParam("member-id") Long memberId){
         List<AnnouncementDTO> response = announcementService.findAnnouncementByMemberId(memberId);
         return ResponseDTO.ok(response);
     }
