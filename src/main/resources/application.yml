@@ -44,5 +44,11 @@ logging:
 jwt:
   secret-key: ${JWT_SECRET_KEY}
 
+openai:
+  api-key: ${OPENAI_API_KEY}
+  model: gpt-3.5-turbo
+  question-count: 3
+  min-threshold: 2
+
 mybatis:
   mapper-locations: classpath:/beyond/momentours/mapper/**/*.xml
