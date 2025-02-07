@@ -7,5 +7,5 @@ import beyond.momentours.moment.command.application.dto.ResponseMomentDTO;
 public interface MomentService {
     ResponseMomentDTO createMoment(RequestMomentDTO requestMomentDTO, Long memberId);
 
-    ResponseMomentDTO updateMoment(RequestMomentDTO requestMomentDTO, CustomUserDetails user);
+    ResponseMomentDTO updateMoment(Long momentId, RequestMomentDTO requestMomentDTO, Long memberId);
 }

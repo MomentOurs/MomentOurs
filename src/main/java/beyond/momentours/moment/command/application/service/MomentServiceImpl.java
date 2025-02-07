@@ -1,5 +1,7 @@
 package beyond.momentours.moment.command.application.service;
 
+import beyond.momentours.common.exception.CommonException;
+import beyond.momentours.common.exception.ErrorCode;
 import beyond.momentours.location.command.application.dto.LocationDTO;
 import beyond.momentours.location.command.application.service.LocationService;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
@@ -47,7 +49,9 @@ public class MomentServiceImpl implements MomentService {
     }
 
     @Override
-    public ResponseMomentDTO updateMoment(RequestMomentDTO requestMomentDTO, CustomUserDetails user) {
-        return null;
+    public ResponseMomentDTO updateMoment(Long momentId, RequestMomentDTO requestMomentDTO, Long memberId) {
+
+        Moment existingMoment = momentRepository.findById(momentId).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_MOMENT));
+
     }
 }

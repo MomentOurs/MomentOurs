@@ -33,10 +33,13 @@ public class MomentController {
     }
 
     // 추억 수정
-    @PatchMapping
-    public ResponseDTO<?> updateMoment(@RequestBody RequestMomentDTO requestMomentDTO, @AuthenticationPrincipal CustomUserDetails user) {
+    @PatchMapping("/modify/{momentId}")
+    public ResponseDTO<?> updateMoment(@PathVariable Long momentId,
+                                       @RequestBody RequestMomentDTO requestMomentDTO,
+                                       @AuthenticationPrincipal CustomUserDetails user) {
         log.info("수정 요청 데이터 : {}", requestMomentDTO);
-        ResponseMomentDTO responseMomentDTO = momentService.updateMoment(requestMomentDTO, user);
+        Long memberId = user.getMember().getMemberId();
+        ResponseMomentDTO responseMomentDTO = momentService.updateMoment(momentId, requestMomentDTO, memberId);
         return ResponseDTO.ok(responseMomentDTO);
     }
 
