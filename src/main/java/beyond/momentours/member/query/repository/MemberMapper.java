@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface MemberMapper {
 
-    Long findByMemberId(String memberId);
+    Long findByMemberId(Long memberId);
 
     String findByMemberEmail(String memberEmail);
 

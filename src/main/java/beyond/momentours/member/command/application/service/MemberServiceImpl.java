@@ -125,4 +125,8 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.updatePasswordByEmail(member.getMemberEmail(), member.getMemberPassword());
     }
 
+//    @Override
+//    @Transactional
+//    public void changeMemberRole(Long memberId, String)
+
 }
