@@ -2,6 +2,8 @@ package beyond.momentours.inquiry.query.repository;
 
 
 import beyond.momentours.inquiry.query.dto.InquiryAndInquiryAnswerDTO;
+import beyond.momentours.inquiry.query.dto.InquiryDTO;
+import beyond.momentours.inquiry.query.dto.InquiryListDTO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -26,4 +28,20 @@ public interface InquiryMapper {
 
     // 6. 키워드로 문의 조회
     List<InquiryAndInquiryAnswerDTO> selectInquiryByKeyword(String keyword);
+
+    // 7. 답변이 존재하는 문의 조회
+    InquiryAndInquiryAnswerDTO selectInquiryAnswerStatusIsTrue(Long inquiryId);
+
+    // 8. 답변이 존재하지 않는 문의 조회
+    InquiryAndInquiryAnswerDTO selectInquiryAnswerStatusIsFalse(Long inquiryId);
+
+    // 9. 문의 전체 목록 조회
+    List<InquiryListDTO> selectAllInquiryList();
+
+    // 10. 답변 여부로 문의 목록 조회 true/false
+    List<InquiryListDTO> selectInquiryListAnswerStatusIsTrueOrFalse(Boolean inquiryAnswerStatus);
+
+    // 11. 삭제된 문의 목록 조회
+    List<InquiryListDTO> selectInquiryListDeleted(Boolean inquiryStatus);
+
 }

@@ -2,7 +2,9 @@ package beyond.momentours.inquiry.query.service;
 
 import beyond.momentours.common.exception.CommonException;
 import beyond.momentours.common.exception.ErrorCode;
+import beyond.momentours.inquiry.command.domain.aggregate.entity.Inquiry;
 import beyond.momentours.inquiry.query.dto.InquiryAndInquiryAnswerDTO;
+import beyond.momentours.inquiry.query.dto.InquiryListDTO;
 import beyond.momentours.inquiry.query.repository.InquiryMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,9 +65,8 @@ public class InquiryQueryServiceImpl implements InquiryQueryService {
         }
     }
 
-    // 3. 답변 여부로 문의 조회 -> 답변 true 들을 조회
+    // 3. 답변 여부로 문의 조회
     public List<InquiryAndInquiryAnswerDTO> findInquiryAnswerStatusIsTrueOrFalse(Boolean inquiryAnswerStatus){
-        // 답변 true 문의가 존재하지 않으면 예외
         // 조회 안 되면 예외 발생
         try {
             List<InquiryAndInquiryAnswerDTO> inquiries = inquiryMapper.selectInquiryAnswerStatusIsTrueOrFalse(inquiryAnswerStatus);
@@ -136,6 +137,87 @@ public class InquiryQueryServiceImpl implements InquiryQueryService {
             log.error("문의 조회 실패");
             throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    // 7. 답변이 존재하는 문의 조회
+    public InquiryAndInquiryAnswerDTO findInquiryAnswerStatusIsTrue(Long inquiryId){
+        // 문의 조회되지 않으면 예외
+        if(inquiryId == null){
+            log.error("문의id값 누락");
+            throw new IllegalArgumentException("문의id값을 넣어주새요");
+        } try{
+            InquiryAndInquiryAnswerDTO inquiry = inquiryMapper.selectInquiryAnswerStatusIsTrue(inquiryId);
+            if(inquiry == null){
+                throw new RuntimeException("문의id와 일치하는 문의가 없음");
+            }
+            return inquiry;
+        } catch (Exception e){
+            log.error("문의 조회 실패");
+            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // 8. 답변이 존재하지 않는 문의 조회
+    public InquiryAndInquiryAnswerDTO findInquiryAnswerStatusIsFalse(Long inquiryId){
+        if(inquiryId == null){
+            log.error("문의id값 누락");
+            throw new IllegalArgumentException("문의 id값을 넣어주세요");
+        } try{
+            InquiryAndInquiryAnswerDTO inquiry = inquiryMapper.selectInquiryAnswerStatusIsFalse(inquiryId);
+            if(inquiry == null){
+                throw new RuntimeException("문의id와 일치하는 문의가 없음");
+            }
+            return inquiry;
+        } catch (Exception e){
+            log.error("문의 조회 실패");
+            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    // 9. 문의 전체 목록 조회
+    public List<InquiryListDTO> findInquiryList(){
+        try{
+            List<InquiryListDTO> inquiries = inquiryMapper.selectAllInquiryList();
+            if(inquiries == null || inquiries.isEmpty()) {
+                throw new RuntimeException("문의 목록이 없음");
+            }
+            return inquiries;
+        } catch (Exception e){
+            log.error("전체 문의 목록 조회 실패");
+            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    // 10. 답변 여부로 문의 목록 조회
+    public List<InquiryListDTO> findInquiryListAnswerStatusIsTrueOrFalse(Boolean inquiryAnswerStatus){
+        if(inquiryAnswerStatus == null){
+            log.error("문의 답변 상태 값 누락");
+            throw new IllegalArgumentException("문의 답변 상태를 넣어주세요");
+        } try{
+            List<InquiryListDTO> inquiries = inquiryMapper.selectInquiryListAnswerStatusIsTrueOrFalse(inquiryAnswerStatus);
+            return inquiries;
+        } catch (Exception e){
+            log.error("답변 여부로 문의 목록 조회 실패");
+            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    // 11. 삭제된 문의 목록 조회
+    public List<InquiryListDTO> findInquiryListDeleted(Boolean inquiryStatus){
+        if(inquiryStatus == null){
+            log.error("문의 삭제 상태 값 누락");
+            throw new IllegalArgumentException("문의 삭제 상태 값을 넣어주세요");
+        } try{
+            List<InquiryListDTO> inquiries = inquiryMapper.selectInquiryListDeleted(inquiryStatus);
+            return inquiries;
+        } catch (Exception e){
+            log.error("삭제된 문의 목록 조회 실패");
+            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
 
