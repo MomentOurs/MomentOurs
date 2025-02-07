@@ -42,6 +42,6 @@ public interface InquiryMapper {
     List<InquiryListDTO> selectInquiryListAnswerStatusIsTrueOrFalse(Boolean inquiryAnswerStatus);
 
     // 11. 삭제된 문의 목록 조회
-    List<InquiryListDTO> selectInquiryListDeleted(Boolean inquiryStatus);
+    List<InquiryListDTO> selectInquiryListDeleted();
 
 }

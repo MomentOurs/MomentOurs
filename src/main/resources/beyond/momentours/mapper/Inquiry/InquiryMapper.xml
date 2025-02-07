@@ -192,7 +192,8 @@
         LEFT OUTER JOIN tb_inquiry_answer ia
             ON i.inquiry_id = ia.inquiry_id
         WHERE i.inquiry_status = true
-        AND i.inquiry_answer_status = true;
+        AND i.inquiry_answer_status = true
+        AND i.inquiry_id = #{inquiryId};
     </select>
 
     <!-- 8.답변이 없는 문의 조회 -> 조인 x  -->
@@ -208,7 +209,8 @@
             i.member_id AS inquiry_member_id
         FROM tb_inquiry i
         WHERE i.inquiry_status = true
-        AND i.inquiry_answer_status = false;
+        AND i.inquiry_answer_status = false
+        AND i.inquiry_id = #{inquiryId};
     </select>
 
     <!-- 9. 문의 전체 목록 조회 -->

@@ -3,6 +3,7 @@ package beyond.momentours.inquiry.query.controller;
 
 import beyond.momentours.common.ResponseDTO;
 import beyond.momentours.inquiry.query.dto.InquiryAndInquiryAnswerDTO;
+import beyond.momentours.inquiry.query.dto.InquiryListDTO;
 import beyond.momentours.inquiry.query.service.InquiryQueryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ public class InquiryQueryController {
     }
 
     // 3. 답변 여부로 문의 조회 -> 답변 true 들을 조회
-    @GetMapping("/status")
+    @GetMapping("/answer/status")
     public ResponseDTO<List<InquiryAndInquiryAnswerDTO>> getInquiryByStatus(@RequestParam Boolean status) {
         List<InquiryAndInquiryAnswerDTO> response
                 = inquiryQueryService.findInquiryAnswerStatusIsTrueOrFalse(status);
@@ -53,10 +54,47 @@ public class InquiryQueryController {
 
     // 5. 답변 작성자 id로 문의 조회
     @GetMapping("/answer-member-id")
-    public ResponseDTO<List<InquiryAndInquiryAnswerDTO>> findInquiryAnswerByAnswerMemberId(
+    public ResponseDTO<List<InquiryAndInquiryAnswerDTO>> getInquiryAnswerByAnswerMemberId(
             @RequestParam("answer-member-id") Long answerMemberId)
     {
         List<InquiryAndInquiryAnswerDTO> response = inquiryQueryService.findInquiryAnswerByAnswerMemberId(answerMemberId);
+        return ResponseDTO.ok(response);
+    }
+
+    // 7. 답변이 존재하는 문의 조회
+    @GetMapping("/answer/status/true/{inquiryId}")
+    public ResponseDTO<InquiryAndInquiryAnswerDTO> getInquiryAnswerStatusIsTrue(@PathVariable Long inquiryId)
+    {
+        InquiryAndInquiryAnswerDTO response = inquiryQueryService.findInquiryAnswerStatusIsTrue(inquiryId);
+        return ResponseDTO.ok(response);
+    }
+
+    // 8. 답변이 존재하지 않는 문의 조회
+    @GetMapping("/answer/status/false/{inquiryId}")
+    public ResponseDTO<InquiryAndInquiryAnswerDTO> getInquiryAnswerStatusIsFalse(@PathVariable Long inquiryId)
+    {
+        InquiryAndInquiryAnswerDTO response = inquiryQueryService.findInquiryAnswerStatusIsFalse(inquiryId);
+        return ResponseDTO.ok(response);
+    }
+
+    // 9. 문의 전체 목록 조회
+    @GetMapping("/list/all")
+    public ResponseDTO<List<InquiryListDTO>> getInquiryList(){
+        List<InquiryListDTO> response = inquiryQueryService.findInquiryList();
+        return ResponseDTO.ok(response);
+    }
+
+    // 10. 답변 여부로 문의 목록 조회 true/false
+    @GetMapping("/list/status")
+    public ResponseDTO<List<InquiryListDTO>> getInquiryListByStatus(@RequestParam Boolean status) {
+        List<InquiryListDTO> response = inquiryQueryService.findInquiryListAnswerStatusIsTrueOrFalse(status);
+        return ResponseDTO.ok(response);
+    }
+
+    // 11. 삭제된 문의 목록 조회
+    @GetMapping("/list/deleted")
+    public ResponseDTO<List<InquiryListDTO>> getInquiryListDeleted(){
+        List<InquiryListDTO> response = inquiryQueryService.findInquiryListDeleted();
         return ResponseDTO.ok(response);
     }
 

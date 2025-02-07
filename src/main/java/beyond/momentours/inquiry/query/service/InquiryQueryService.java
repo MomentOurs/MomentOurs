@@ -38,5 +38,5 @@ public interface InquiryQueryService {
     List<InquiryListDTO> findInquiryListAnswerStatusIsTrueOrFalse(Boolean inquiryAnswerStatus);
 
     // 11. 삭제된 문의 목록 조회
-    List<InquiryListDTO> findInquiryListDeleted(Boolean inquiryStatus);
+    List<InquiryListDTO> findInquiryListDeleted();
 }

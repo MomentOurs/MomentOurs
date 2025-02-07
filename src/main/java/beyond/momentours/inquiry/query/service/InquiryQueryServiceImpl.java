@@ -6,6 +6,7 @@ import beyond.momentours.inquiry.command.domain.aggregate.entity.Inquiry;
 import beyond.momentours.inquiry.query.dto.InquiryAndInquiryAnswerDTO;
 import beyond.momentours.inquiry.query.dto.InquiryListDTO;
 import beyond.momentours.inquiry.query.repository.InquiryMapper;
+import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,12 +36,13 @@ public class InquiryQueryServiceImpl implements InquiryQueryService {
             List<InquiryAndInquiryAnswerDTO> inquiries = inquiryMapper.selectAllInquiry();
             if(inquiries == null || inquiries.isEmpty()){
                 log.error("문의가 존재하지 않음");
-                throw new RuntimeException("문의가 존재하지 않음");
+                throw new EntityNotFoundException("문의가 존재하지 않음");
             }
             return inquiries;
-        }catch (Exception e){
-            log.error("문의 조회 실패");
-            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
+        } catch (EntityNotFoundException e) {
+            throw new CommonException(ErrorCode.NOT_FOUND_INQUIRY);
+        } catch (Exception e) {
+            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);  // 500
         }
     }
 
@@ -56,12 +58,13 @@ public class InquiryQueryServiceImpl implements InquiryQueryService {
         try{
             InquiryAndInquiryAnswerDTO inquiry = inquiryMapper.selectInquiryById(inquiryId);
             if(inquiry == null){
-                throw new RuntimeException("문의가 존재하지 않음");
+                throw new EntityNotFoundException("문의가 존재하지 않음");
             }
             return inquiry;
-        } catch(Exception e){
-            log.error("문의 조회 실패");
-            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
+        } catch (EntityNotFoundException e) {
+            throw new CommonException(ErrorCode.NOT_FOUND_INQUIRY);
+        } catch (Exception e) {
+            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);  // 500
         }
     }
 
@@ -71,12 +74,13 @@ public class InquiryQueryServiceImpl implements InquiryQueryService {
         try {
             List<InquiryAndInquiryAnswerDTO> inquiries = inquiryMapper.selectInquiryAnswerStatusIsTrueOrFalse(inquiryAnswerStatus);
             if (inquiries == null || inquiries.isEmpty()) {
-                throw new RuntimeException("현재 답변 상태에 대한 문의가 존재하지 않음");
+                throw new EntityNotFoundException("현재 답변 상태에 대한 문의가 존재하지 않음");
             }
             return inquiries;
-        } catch (Exception e){
-            log.error("문의 조회 실패");
-            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
+        } catch (EntityNotFoundException e) {
+            throw new CommonException(ErrorCode.NOT_FOUND_INQUIRY);
+        } catch (Exception e) {
+            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);  // 500
         }
     }
 
@@ -91,12 +95,13 @@ public class InquiryQueryServiceImpl implements InquiryQueryService {
         try{
             List<InquiryAndInquiryAnswerDTO> inquiries = inquiryMapper.selectInquiryAnswerByMemberId(memberId);
             if(inquiries == null || inquiries.isEmpty()) {
-                throw new RuntimeException("해당 작성자 id에 대한 문의가 존재하지 않음");
+                throw new EntityNotFoundException("해당 작성자 id에 대한 문의가 존재하지 않음");
             }
             return inquiries;
-        }catch(Exception e){
-            log.error("문의 조회 실패");
-            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
+        } catch (EntityNotFoundException e) {
+            throw new CommonException(ErrorCode.NOT_FOUND_INQUIRY);
+        } catch (Exception e) {
+            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);  // 500
         }
     }
 
@@ -111,12 +116,13 @@ public class InquiryQueryServiceImpl implements InquiryQueryService {
         try{
             List<InquiryAndInquiryAnswerDTO> inquiries = inquiryMapper.selectInquiryAnswerByAnswerMemberId(answerMemberId);
             if(inquiries == null || inquiries.isEmpty()) {
-               throw new RuntimeException("해당 답변 작성자 id에 대한 문의가 존재하지 않음");
+               throw new EntityNotFoundException("해당 답변 작성자 id에 대한 문의가 존재하지 않음");
             }
             return inquiries;
-        }catch(Exception e){
-            log.error("문의 조회 실패");
-            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
+        } catch (EntityNotFoundException e) {
+            throw new CommonException(ErrorCode.NOT_FOUND_INQUIRY);
+        } catch (Exception e) {
+            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);  // 500
         }
     }
 
@@ -133,29 +139,32 @@ public class InquiryQueryServiceImpl implements InquiryQueryService {
                 throw new RuntimeException("해당 키워드와 일치하는 문의가 없음");
             }
             return inquiries;
-        } catch (Exception e){
-            log.error("문의 조회 실패");
-            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
+        } catch (EntityNotFoundException e) {
+            throw new CommonException(ErrorCode.NOT_FOUND_INQUIRY);
+        } catch (Exception e) {
+            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);  // 500
         }
     }
 
     // 7. 답변이 존재하는 문의 조회
-    public InquiryAndInquiryAnswerDTO findInquiryAnswerStatusIsTrue(Long inquiryId){
-        // 문의 조회되지 않으면 예외
-        if(inquiryId == null){
+    public InquiryAndInquiryAnswerDTO findInquiryAnswerStatusIsTrue(Long inquiryId) {
+        if (inquiryId == null) {
             log.error("문의id값 누락");
-            throw new IllegalArgumentException("문의id값을 넣어주새요");
-        } try{
+            throw new IllegalArgumentException("문의id값을 넣어주세요");
+        }
+        try {
             InquiryAndInquiryAnswerDTO inquiry = inquiryMapper.selectInquiryAnswerStatusIsTrue(inquiryId);
-            if(inquiry == null){
-                throw new RuntimeException("문의id와 일치하는 문의가 없음");
+            if (inquiry == null) {
+                throw new EntityNotFoundException("문의id와 일치하는 문의가 없음");
             }
             return inquiry;
-        } catch (Exception e){
-            log.error("문의 조회 실패");
-            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
+        } catch (EntityNotFoundException e) {
+            throw new CommonException(ErrorCode.NOT_FOUND_INQUIRY);
+        } catch (Exception e) {
+            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);  // 500
         }
     }
+
 
     // 8. 답변이 존재하지 않는 문의 조회
     public InquiryAndInquiryAnswerDTO findInquiryAnswerStatusIsFalse(Long inquiryId){
@@ -165,11 +174,13 @@ public class InquiryQueryServiceImpl implements InquiryQueryService {
         } try{
             InquiryAndInquiryAnswerDTO inquiry = inquiryMapper.selectInquiryAnswerStatusIsFalse(inquiryId);
             if(inquiry == null){
-                throw new RuntimeException("문의id와 일치하는 문의가 없음");
+                throw new EntityNotFoundException("문의id와 일치하는 문의가 없음");
             }
             return inquiry;
-        } catch (Exception e){
-            log.error("문의 조회 실패");
+        } catch (EntityNotFoundException e) {
+            throw new CommonException(ErrorCode.NOT_FOUND_INQUIRY);
+        }
+        catch (Exception e){
             throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
 
@@ -183,9 +194,10 @@ public class InquiryQueryServiceImpl implements InquiryQueryService {
                 throw new RuntimeException("문의 목록이 없음");
             }
             return inquiries;
-        } catch (Exception e){
-            log.error("전체 문의 목록 조회 실패");
-            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
+        } catch (EntityNotFoundException e) {
+            throw new CommonException(ErrorCode.NOT_FOUND_INQUIRY);
+        } catch (Exception e) {
+            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);  // 500
         }
 
     }
@@ -197,27 +209,30 @@ public class InquiryQueryServiceImpl implements InquiryQueryService {
             throw new IllegalArgumentException("문의 답변 상태를 넣어주세요");
         } try{
             List<InquiryListDTO> inquiries = inquiryMapper.selectInquiryListAnswerStatusIsTrueOrFalse(inquiryAnswerStatus);
+            if(inquiries == null || inquiries.isEmpty()) {
+                throw new EntityNotFoundException("답변 상태에 따른 문의 목록이 없음");
+            }
             return inquiries;
-        } catch (Exception e){
-            log.error("답변 여부로 문의 목록 조회 실패");
-            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
+        } catch (EntityNotFoundException e) {
+            throw new CommonException(ErrorCode.NOT_FOUND_INQUIRY);
+        } catch (Exception e) {
+            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);  // 500
         }
-
     }
 
     // 11. 삭제된 문의 목록 조회
-    public List<InquiryListDTO> findInquiryListDeleted(Boolean inquiryStatus){
-        if(inquiryStatus == null){
-            log.error("문의 삭제 상태 값 누락");
-            throw new IllegalArgumentException("문의 삭제 상태 값을 넣어주세요");
-        } try{
-            List<InquiryListDTO> inquiries = inquiryMapper.selectInquiryListDeleted(inquiryStatus);
+    public List<InquiryListDTO> findInquiryListDeleted(){
+        try{
+            List<InquiryListDTO> inquiries = inquiryMapper.selectInquiryListDeleted();
+            if(inquiries == null || inquiries.isEmpty()) {
+                throw new EntityNotFoundException("삭제된 문의 목록이 없음");
+            }
             return inquiries;
-        } catch (Exception e){
-            log.error("삭제된 문의 목록 조회 실패");
-            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
+        } catch (EntityNotFoundException e) {
+            throw new CommonException(ErrorCode.NOT_FOUND_INQUIRY);
+        } catch (Exception e) {
+            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);  // 500
         }
-
     }
 
 
