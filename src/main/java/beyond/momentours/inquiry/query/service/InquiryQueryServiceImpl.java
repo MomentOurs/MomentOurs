@@ -42,7 +42,7 @@ public class InquiryQueryServiceImpl implements InquiryQueryService {
         } catch (EntityNotFoundException e) {
             throw new CommonException(ErrorCode.NOT_FOUND_INQUIRY);
         } catch (Exception e) {
-            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);  // 500
+            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -64,7 +64,7 @@ public class InquiryQueryServiceImpl implements InquiryQueryService {
         } catch (EntityNotFoundException e) {
             throw new CommonException(ErrorCode.NOT_FOUND_INQUIRY);
         } catch (Exception e) {
-            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);  // 500
+            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -80,7 +80,7 @@ public class InquiryQueryServiceImpl implements InquiryQueryService {
         } catch (EntityNotFoundException e) {
             throw new CommonException(ErrorCode.NOT_FOUND_INQUIRY);
         } catch (Exception e) {
-            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);  // 500
+            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -101,7 +101,7 @@ public class InquiryQueryServiceImpl implements InquiryQueryService {
         } catch (EntityNotFoundException e) {
             throw new CommonException(ErrorCode.NOT_FOUND_INQUIRY);
         } catch (Exception e) {
-            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);  // 500
+            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -122,7 +122,7 @@ public class InquiryQueryServiceImpl implements InquiryQueryService {
         } catch (EntityNotFoundException e) {
             throw new CommonException(ErrorCode.NOT_FOUND_INQUIRY);
         } catch (Exception e) {
-            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);  // 500
+            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -142,7 +142,7 @@ public class InquiryQueryServiceImpl implements InquiryQueryService {
         } catch (EntityNotFoundException e) {
             throw new CommonException(ErrorCode.NOT_FOUND_INQUIRY);
         } catch (Exception e) {
-            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);  // 500
+            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -161,7 +161,7 @@ public class InquiryQueryServiceImpl implements InquiryQueryService {
         } catch (EntityNotFoundException e) {
             throw new CommonException(ErrorCode.NOT_FOUND_INQUIRY);
         } catch (Exception e) {
-            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);  // 500
+            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -191,13 +191,13 @@ public class InquiryQueryServiceImpl implements InquiryQueryService {
         try{
             List<InquiryListDTO> inquiries = inquiryMapper.selectAllInquiryList();
             if(inquiries == null || inquiries.isEmpty()) {
-                throw new RuntimeException("문의 목록이 없음");
+                throw new EntityNotFoundException("문의 목록이 없음");
             }
             return inquiries;
         } catch (EntityNotFoundException e) {
             throw new CommonException(ErrorCode.NOT_FOUND_INQUIRY);
         } catch (Exception e) {
-            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);  // 500
+            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -216,7 +216,7 @@ public class InquiryQueryServiceImpl implements InquiryQueryService {
         } catch (EntityNotFoundException e) {
             throw new CommonException(ErrorCode.NOT_FOUND_INQUIRY);
         } catch (Exception e) {
-            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);  // 500
+            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -231,7 +231,7 @@ public class InquiryQueryServiceImpl implements InquiryQueryService {
         } catch (EntityNotFoundException e) {
             throw new CommonException(ErrorCode.NOT_FOUND_INQUIRY);
         } catch (Exception e) {
-            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);  // 500
+            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
         }
     }
 
