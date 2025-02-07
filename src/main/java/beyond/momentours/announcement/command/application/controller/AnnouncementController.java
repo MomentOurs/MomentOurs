@@ -45,12 +45,13 @@ public class AnnouncementController {
 
     // 3. 공지사항 삭제
     @DeleteMapping("/my/{announcementId}")
-    public void deleteAnnouncement(
+    public ResponseDTO<AnnouncementResponseDTO> deleteAnnouncement(
             @PathVariable Long announcementId,
             @AuthenticationPrincipal CustomUserDetails user
     ) {
         Long memberId = user.getMember().getMemberId();
-        announcementService.deleteAnnouncement(announcementId, memberId);
+        AnnouncementResponseDTO responseDTO = announcementService.deleteAnnouncement(announcementId, memberId);
+        return ResponseDTO.ok(responseDTO);
     }
 
 }

@@ -17,5 +17,5 @@ public interface AnnouncementService {
 
 
     // 3. 공지사항 삭제 서비스
-   void deleteAnnouncement(Long announcementId, Long memberId);
+    AnnouncementResponseDTO deleteAnnouncement(Long announcementId, Long memberId);
 }
