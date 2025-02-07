@@ -51,7 +51,43 @@ public class MomentServiceImpl implements MomentService {
     @Override
     public ResponseMomentDTO updateMoment(Long momentId, RequestMomentDTO requestMomentDTO, Long memberId) {
 
-        Moment existingMoment = momentRepository.findById(momentId).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_MOMENT));
+        Moment existingMoment = momentRepository.findById(momentId)
+                .orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_MOMENT));
 
+        // 수정 권한 확인
+        if (!existingMoment.getMemberId().equals(memberId)) {
+            throw new CommonException(ErrorCode.UNAUTHORIZED_ACCESS);
+        }
+
+        Long locationId = existingMoment.getLocationId();
+        if (requestMomentDTO.getLocationName() != null) {
+            LocationDTO newLocation = locationService.findOrCreateLocation(
+                    requestMomentDTO.getLocationName(),
+                    requestMomentDTO.getLatitude(),
+                    requestMomentDTO.getLongitude()
+            );
+            locationId = newLocation.getLocationId();
+        }
+
+        existingMoment.updateMoment(requestMomentDTO, locationId);
+
+        Moment updatedMoment = momentRepository.save(existingMoment);
+        return momentConverter.fromEntityToDTO(updatedMoment);
+    }
+
+    @Override
+    public ResponseMomentDTO deleteMoment(Long momentId, Long memberId) {
+
+        Moment existingMoment = momentRepository.findById(momentId)
+                .orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_MOMENT));
+
+        if (!existingMoment.getMemberId().equals(memberId)) {
+            throw new CommonException(ErrorCode.UNAUTHORIZED_ACCESS);
+        }
+
+        existingMoment.softDelete();
+
+        momentRepository.save(existingMoment);
+        return momentConverter.fromEntityToDTO(existingMoment);
     }
 }

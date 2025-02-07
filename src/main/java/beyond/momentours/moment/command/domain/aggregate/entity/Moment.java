@@ -1,5 +1,6 @@
 package beyond.momentours.moment.command.domain.aggregate.entity;
 
+import beyond.momentours.moment.command.application.dto.RequestMomentDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -68,4 +69,18 @@ public class Moment {
         this.momentView = 0;
     }
 
+    public void updateMoment(RequestMomentDTO requestMomentDTO, Long locationId) {
+        this.momentTitle = requestMomentDTO.getMomentTitle();
+        this.momentCategory = requestMomentDTO.getMomentCategory();
+        this.momentContent = requestMomentDTO.getMomentContent();
+        this.momentDisclosure = requestMomentDTO.isMomentDisclosure();
+        this.momentCommentStatus = requestMomentDTO.isMomentCommentStatus();
+        this.locationId = locationId;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void softDelete() {
+        this.momentStatus = false;
+        this.updatedAt = LocalDateTime.now();
+    }
 }

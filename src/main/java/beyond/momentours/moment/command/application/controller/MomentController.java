@@ -43,4 +43,14 @@ public class MomentController {
         return ResponseDTO.ok(responseMomentDTO);
     }
 
+    // 추억 삭제
+    @PatchMapping("/delete/{momentId")
+    public ResponseDTO<?> deleteMoment(@PathVariable Long momentId,
+                                       @AuthenticationPrincipal CustomUserDetails user) {
+        log.info("삭제 요청 데이터 id : momentId = {}", momentId);
+        Long memberId = user.getMember().getMemberId();
+        ResponseMomentDTO responseMomentDTO = momentService.deleteMoment(momentId, memberId);
+        return ResponseDTO.ok(responseMomentDTO);
+    }
+
 }

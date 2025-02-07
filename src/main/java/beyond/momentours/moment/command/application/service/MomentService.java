@@ -8,4 +8,6 @@ public interface MomentService {
     ResponseMomentDTO createMoment(RequestMomentDTO requestMomentDTO, Long memberId);
 
     ResponseMomentDTO updateMoment(Long momentId, RequestMomentDTO requestMomentDTO, Long memberId);
+
+    ResponseMomentDTO deleteMoment(Long momentId, Long memberId);
 }
