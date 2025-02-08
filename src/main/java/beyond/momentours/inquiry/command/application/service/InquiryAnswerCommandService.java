@@ -11,5 +11,5 @@ public interface InquiryAnswerCommandService {
     public InquiryAnswerDTO updateInquiryAnswer(InquiryAnswerDTO inquiryAnswerDTO);
 
     // 3. 문의 답변 삭제
-    public void deleteInquiryAnswer(Long inquiryAnswerId, Long answerMemberId);
+//    public void deleteInquiryAnswer(Long inquiryAnswerId, Long answerMemberId);
 }

@@ -5,10 +5,12 @@ import beyond.momentours.inquiry.query.dto.InquiryAndInquiryAnswerDTO;
 import beyond.momentours.inquiry.query.dto.InquiryDTO;
 import beyond.momentours.inquiry.query.dto.InquiryListDTO;
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Mapper
+@Repository
 public interface InquiryMapper {
 
     // 1. 모든 문의 조회 -> 문의에 대한 답변 함께 조회

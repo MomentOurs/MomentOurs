@@ -35,7 +35,7 @@ public class InquiryController {
     ) {
         Long memberId = user.getMember().getMemberId(); //로그인 사용자 정보
 
-        InquiryDTO requestDTO = inquiryConverter.voToDto(requestVO, memberId,null);
+        InquiryDTO requestDTO = inquiryConverter.createVoToDto(requestVO, memberId,null);
         InquiryDTO responseDTO = inquiryCommandService.createInquiry(requestDTO);
         InquiryResponseVO responseVO = inquiryConverter.dtoToVo(responseDTO);
 
@@ -52,7 +52,7 @@ public class InquiryController {
             ){
         Long memberId = user.getMember().getMemberId();
 
-        InquiryDTO requestDTO = inquiryConverter.voToDto(requestVO, memberId, inquiryId);
+        InquiryDTO requestDTO = inquiryConverter.updateVoToDto(requestVO, memberId, inquiryId);
         InquiryDTO responseDTO = inquiryCommandService.updateInquiry(requestDTO);
         InquiryResponseVO responseVO = inquiryConverter.dtoToVo(responseDTO);
 

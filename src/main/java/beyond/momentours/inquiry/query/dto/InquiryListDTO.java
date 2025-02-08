@@ -23,9 +23,6 @@ public class InquiryListDTO {
     @JsonProperty("inquiry_title")
     private String inquiryTitle;
 
-    @JsonProperty("inquiry_status")
-    private String inquiryStatus;
-
     @JsonProperty("inquiry_answer_status")
     private Boolean inquiryAnswerStatus;
 
