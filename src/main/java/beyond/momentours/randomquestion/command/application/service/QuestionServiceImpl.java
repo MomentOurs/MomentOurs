@@ -69,7 +69,7 @@ public class QuestionServiceImpl implements QuestionService {
                 randomQuestionRepository.save(randomQuestion);
             }
             // 방금 추가된 질문 조회
-            availableQuestions.addAll(randomQuestionRepository.findTop(minThreshold));
+            availableQuestions = randomQuestionService.findAllQuestions();
         }
 
         // 랜덤한 질문 하나를 커플에게 배정

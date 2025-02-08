@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController("commandRandomQuestionController")
-@RequestMapping("/api/random-question/")
+@RequestMapping("api/random-question")
 public class RandomQuestionController {
     private final QuestionService questionService;
 
@@ -18,7 +18,7 @@ public class RandomQuestionController {
         this.questionService = questionService;
     }
 
-    @PostMapping("/assign/{coupleId}")
+    @PostMapping("assign/{coupleId}")
     public ResponseDTO<?> createRandomQuestionByCoupleId(@PathVariable Long coupleId) {
         questionService.createNewQuestion(coupleId);
         return ResponseDTO.ok("질문이 배정되었습니다.");

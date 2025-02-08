@@ -49,18 +49,26 @@ public class ChatGptServiceImpl implements ChatGptService {
 
         // 응답 처리
         Map<String, Object> response = responseMono.block(); // 동기 방식으로 변환
+        if (response == null || !response.containsKey("choices")) {
+            throw new RuntimeException("ChatGPT 응답 오류: choices 필드 없음");
+        }
         return extractQuestions(response);
     }
 
     // OpenAI API 응답에서 질문을 추출하는 메서드
     private List<String> extractQuestions(Map<String, Object> response) {
-        if (response == null || !response.containsKey("choices")) {
-            throw new RuntimeException("ChatGPT 응답 오류");
+        List<Map<String, Object>> choices = (List<Map<String, Object>>) response.get("choices");
+        if (choices == null || choices.isEmpty()) {
+            throw new RuntimeException("ChatGPT 응답 오류: choices 배열이 비어 있음");
         }
 
-        List<Map<String, Object>> choices = (List<Map<String, Object>>) response.get("choices");
-        String content = (String) ((Map<String, Object>) choices.get(0).get("message")).get("content");
+        Map<String, Object> firstChoice = choices.get(0);
+        Map<String, Object> message = (Map<String, Object>) firstChoice.get("message");
+        if (message == null || !message.containsKey("content")) {
+            throw new RuntimeException("ChatGPT 응답 오류: message.content 없음");
+        }
 
+        String content = (String) message.get("content");
         return List.of(content.split("\n"));
     }
 }
