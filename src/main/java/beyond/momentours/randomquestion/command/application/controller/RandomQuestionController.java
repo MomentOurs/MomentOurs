@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
+
 @RestController("commandRandomQuestionController")
 @RequestMapping("api/random-question")
 public class RandomQuestionController {
@@ -19,7 +22,7 @@ public class RandomQuestionController {
     }
 
     @PostMapping("assign/{coupleId}")
-    public ResponseDTO<?> createRandomQuestionByCoupleId(@PathVariable Long coupleId) {
+    public ResponseDTO<?> createRandomQuestionByCoupleId(@PathVariable Long coupleId) throws InterruptedException, ExecutionException, TimeoutException {
         questionService.createNewQuestion(coupleId);
         return ResponseDTO.ok("질문이 배정되었습니다.");
     }

@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 @Service("commandQuestionServiceImpl")
 public class QuestionServiceImpl implements QuestionService {
@@ -35,21 +37,21 @@ public class QuestionServiceImpl implements QuestionService {
     // 사용하지 않은 질문이 3개 이하면 새로운 질문 생성 후 저장
     @Transactional
     @Override
-    public void createNewQuestion(Long coupleId) {
+    public void createNewQuestion(Long coupleId) throws InterruptedException, ExecutionException, TimeoutException {
         // 저장된 랜덤질문 모두 조회
         List<RandomQuestion> allQuestions = randomQuestionService.findAllQuestions();
 
         // 질문이 아예 없으면 (완전 초기) 지피티에게 새로운 질문 요청
-        if (allQuestions.isEmpty()) {
-            List<String> newQuestions = chatGptService.fetchQuestionsFromChatGPT();
-            for (String question : newQuestions) {
-                RandomQuestion randomQuestion = RandomQuestion.builder()
-                        .quesContent(question)
-                        .build();
-                randomQuestionRepository.save(randomQuestion);
-            }
-            allQuestions = randomQuestionService.findAllQuestions();
-        }
+//        if (allQuestions.isEmpty()) {
+//            List<String> newQuestions = chatGptService.fetchQuestionsFromChatGPT();
+//            for (String question : newQuestions) {
+//                RandomQuestion randomQuestion = RandomQuestion.builder()
+//                        .quesContent(question)
+//                        .build();
+//                randomQuestionRepository.save(randomQuestion);
+//            }
+//            allQuestions = randomQuestionService.findAllQuestions();
+//        }
 
         // 특정 커플이 사용한 질문 목록 조회
         List<Long> usedQuestionIds = randomQuestionService.findUsedQuestionsByCoupleId(coupleId);
