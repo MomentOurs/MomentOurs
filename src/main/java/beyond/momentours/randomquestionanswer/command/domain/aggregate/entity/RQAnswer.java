@@ -28,10 +28,22 @@ public class RQAnswer {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @Column(name = "ques_id")
-    private Long quesId;
+    @Column(name = "user_ques_id")
+    private Long userQuesId;
 
     @Column(name = "member_id")
     private Long memberId;
+
+    @PrePersist
+    private void prePersist() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = createdAt;
+    }
+
+    // Update 되기 전에 실행
+    @PreUpdate
+    private void preUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 
 }

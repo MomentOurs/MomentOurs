@@ -49,7 +49,7 @@ jwt:
 openai:
   api-url: https://api.openai.com
   api-key: ${OPENAI_API_KEY}
-  model: text-davinci-003
+  model: gpt-3.5-turbo
   question-count: 3
   min-threshold: 2
 

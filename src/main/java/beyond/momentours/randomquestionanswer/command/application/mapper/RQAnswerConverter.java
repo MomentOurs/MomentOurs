@@ -9,7 +9,8 @@ public class RQAnswerConverter {
 
     public RQAnswerDTO entityToDTO(RQAnswer rqAnswer){
 
-        RQAnswerDTO rqAnswerDTO = new RQAnswerDTO();
+        RQAnswerDTO rqAnswerDTO = RQAnswerDTO.builder()
+                .;
 
         rqAnswerDTO.setQuesAnswerId(rqAnswer.getQuesAnswerId());
         rqAnswerDTO.setQuesAnsContent(rqAnswer.getQuesAnsContent());
@@ -21,17 +22,12 @@ public class RQAnswerConverter {
         return rqAnswerDTO;
     }
 
-    public RQAnswer dtoToEntity(RQAnswerDTO rqAnswerDTO){
+    public RQAnswer dtoToEntity(RQAnswerDTO rqAnswerDTO, Long memberId){
 
-        RQAnswer rqAnswer = RQAnswer.builder()
-                .quesAnswerId(rqAnswerDTO.getQuesAnswerId())
+        return RQAnswer.builder()
                 .quesAnsContent(rqAnswerDTO.getQuesAnsContent())
-                .createdAt(rqAnswerDTO.getCreatedAt())
-                .updatedAt(rqAnswerDTO.getUpdatedAt())
-                .quesId(rqAnswerDTO.getQuesId())
-                .memberId(rqAnswerDTO.getMemberId())
+                .userQuesId(rqAnswerDTO.getUserQuesId())
+                .memberId(memberId)
                 .build();
-
-        return rqAnswer;
     }
 }
