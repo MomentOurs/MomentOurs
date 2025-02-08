@@ -4,7 +4,7 @@ import beyond.momentours.common.exception.CommonException;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
 import beyond.momentours.report.command.application.dto.ReportDTO;
 import beyond.momentours.report.command.application.mapper.ReportConverter;
-import beyond.momentours.report.command.application.service.ReportService;
+import beyond.momentours.report.command.application.service.ReportCommandService;
 import beyond.momentours.report.command.domain.vo.request.RequestCreateReportVO;
 import beyond.momentours.report.command.domain.vo.response.ResponseCreateReportVO;
 import lombok.RequiredArgsConstructor;
@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("commandReportController")
+@RestController
 @RequestMapping("api/report")
 @Slf4j
 @RequiredArgsConstructor
-public class ReportController {
+public class ReportCommandController {
 
-    private final ReportService reportService;
+    private final ReportCommandService reportCommandService;
     private final ReportConverter reportConverter;
 
     @PostMapping
@@ -31,7 +31,7 @@ public class ReportController {
         log.info("신고 요청 데이터: {}", request);
         try {
             ReportDTO reportDTO = reportConverter.fromCreateVOToDTO(request, user.getMemberId());
-            ReportDTO savedReport = reportService.createReport(reportDTO);
+            ReportDTO savedReport = reportCommandService.createReport(reportDTO);
             ResponseCreateReportVO response = reportConverter.fromDTOToCreateVO(savedReport);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (CommonException e) {

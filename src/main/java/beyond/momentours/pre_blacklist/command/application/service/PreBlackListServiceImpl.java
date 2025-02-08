@@ -6,22 +6,27 @@ import beyond.momentours.common.exception.ErrorCode;
 import beyond.momentours.pre_blacklist.command.application.dto.PreBlackListDTO;
 import beyond.momentours.pre_blacklist.command.domain.aggregate.entity.PreBlackList;
 import beyond.momentours.pre_blacklist.command.domain.repository.PreBlackListRepository;
+import beyond.momentours.report.query.service.ReportQueryService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
+@Slf4j
 @Service("commandPreBlacklistServiceImpl")
 public class PreBlackListServiceImpl implements PreBlackListService {
 
     private final PreBlackListRepository preBlacklistRepository;
     private final BlackListSerivce blackListSerivce;
+    private final ReportQueryService reportQueryService;
 
     @Autowired
-    public PreBlackListServiceImpl(PreBlackListRepository preBlacklistRepository, BlackListSerivce blackListSerivce) {
+    public PreBlackListServiceImpl(PreBlackListRepository preBlacklistRepository, BlackListSerivce blackListSerivce, ReportQueryService reportQueryService) {
         this.preBlacklistRepository = preBlacklistRepository;
         this.blackListSerivce = blackListSerivce;
+        this.reportQueryService = reportQueryService;
     }
 
     @Override
@@ -75,20 +80,26 @@ public class PreBlackListServiceImpl implements PreBlackListService {
 
     @Transactional
     @Override
-    public void createPreBlacklist(Long reportId, Long memberId) {
-
+    public Long getOrCreatePreBlacklist(Long memberId) {
         try {
             PreBlackList pre = preBlacklistRepository.findByMemberId(memberId);
 
-            PreBlackList preBlacklist = PreBlackList.builder()
-                    .status("대기")
-                    .memberId(memberId)
-                    .reportId(reportId)
-                    .blackListCount(pre.getBlackListCount())
-                    .build();
+            if (pre == null) {
+                PreBlackList preBlacklist = PreBlackList.builder()
+                        .status("대기")
+                        .memberId(memberId)
+                        .blackListCount(0)
+                        .build();
+                PreBlackList savedPreBlacklist = preBlacklistRepository.save(preBlacklist);
 
-            preBlacklistRepository.save(preBlacklist);
+                reportQueryService.updateReportsWithPreBlackId(memberId, savedPreBlacklist.getPreBlackId());
+                return savedPreBlacklist.getPreBlackId();
+            } else {
+                reportQueryService.updateReportsWithPreBlackId(memberId, pre.getPreBlackId());
+                return pre.getPreBlackId();
+            }
         } catch (Exception e) {
+            log.error("예비 블랙리스트 생성 오류", e);
             throw new CommonException(ErrorCode.PREBLACKLIST_FAILURE);
         }
     }
