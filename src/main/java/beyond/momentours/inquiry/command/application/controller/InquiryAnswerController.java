@@ -11,6 +11,7 @@ import beyond.momentours.inquiry.command.domain.aggregate.vo.request.InquiryAnsw
 import beyond.momentours.inquiry.command.domain.aggregate.vo.response.InquiryAnswerResponseVO;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController("commandInquiryAnswerController")
@@ -29,7 +30,7 @@ public class InquiryAnswerController {
     @PostMapping("")
     public ResponseDTO<InquiryAnswerResponseVO> createInquiryAnswer(
             @RequestBody InquiryAnswerCreateOrUpdateVO requestVO,
-            CustomUserDetails user
+            @AuthenticationPrincipal CustomUserDetails user
     ){
         Long answerMemberId = user.getMember().getMemberId();
 
@@ -47,7 +48,7 @@ public class InquiryAnswerController {
     public ResponseDTO<InquiryAnswerResponseVO> updateInquiryAnswer(
             @PathVariable Long inquiryAnswerId,
             @RequestBody InquiryAnswerCreateOrUpdateVO requestVO,
-            CustomUserDetails user
+            @AuthenticationPrincipal CustomUserDetails user
     ){
         Long answerMemberId = user.getMember().getMemberId();
 
@@ -63,7 +64,7 @@ public class InquiryAnswerController {
     @DeleteMapping("/my/{inquiryAnswerId}")
     public void deleteInquiryAnswer(
             @PathVariable Long inquiryAnswerId,
-            CustomUserDetails user){
+            @AuthenticationPrincipal CustomUserDetails user){
         Long answerMemberId = user.getMember().getMemberId();
         inquiryAnswerCommandService.deleteInquiryAnswer(inquiryAnswerId, answerMemberId);
 
