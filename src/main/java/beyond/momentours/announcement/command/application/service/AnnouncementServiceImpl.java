@@ -96,7 +96,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     // 설명. 자신이 등록한 공지사항이 아니면 삭제 권한이 없음
     @Override
     @Transactional
-    public void deleteAnnouncement(Long announcementId, Long memberId) {
+    public AnnouncementResponseDTO deleteAnnouncement(Long announcementId, Long memberId) {
 
         Announcement announcement = announcementRepository.findById(announcementId)
                 .orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_NOTICE));
@@ -106,7 +106,14 @@ public class AnnouncementServiceImpl implements AnnouncementService {
             throw new CommonException(ErrorCode. FORBIDDEN_ROLE);
         }
         try {
-            announcementRepository.deleteById(announcementId);
+            // 권한이 있는 경우 삭제
+            // announcementStatus = false로 변경
+            Announcement updatedAnnouncement = announcement.toBuilder()
+                    .announcementStatus(false)
+                    .build();
+
+            announcementRepository.save(updatedAnnouncement);
+            return AnnouncementResponseDTO.fromEntity(updatedAnnouncement);
         }
         catch (Exception e) {
             // 삭제 실패

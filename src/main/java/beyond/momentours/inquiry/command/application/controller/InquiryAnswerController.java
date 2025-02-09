@@ -11,10 +11,11 @@ import beyond.momentours.inquiry.command.domain.aggregate.vo.request.InquiryAnsw
 import beyond.momentours.inquiry.command.domain.aggregate.vo.response.InquiryAnswerResponseVO;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController("commandInquiryAnswerController")
-@RequestMapping("api/inquiry-answer")
+@RequestMapping("api/inquiry-answer/inquiry-id")
 public class InquiryAnswerController {
 
     private final InquiryAnswerCommandService inquiryAnswerCommandService;
@@ -26,14 +27,15 @@ public class InquiryAnswerController {
     }
 
     // 1. 문의 답변 등록
-    @PostMapping("")
+    @PostMapping("/{inquiryId}")
     public ResponseDTO<InquiryAnswerResponseVO> createInquiryAnswer(
+            @PathVariable Long inquiryId,
             @RequestBody InquiryAnswerCreateOrUpdateVO requestVO,
-            CustomUserDetails user
+            @AuthenticationPrincipal CustomUserDetails user
     ){
         Long answerMemberId = user.getMember().getMemberId();
 
-        InquiryAnswerDTO requestDTO = inquiryAnswerConverter.voToDto(requestVO, answerMemberId);
+        InquiryAnswerDTO requestDTO = inquiryAnswerConverter.createVoToDto(requestVO, answerMemberId,inquiryId);
         InquiryAnswerDTO responseDTO = inquiryAnswerCommandService.createInquiryAnswer(requestDTO);
         InquiryAnswerResponseVO responseVO = inquiryAnswerConverter.dtoToVo(responseDTO);
 
@@ -43,15 +45,15 @@ public class InquiryAnswerController {
 
 
     // 2. 문의 답변 수정
-    @PutMapping("/my/{inquiryAnswerId}")
+    @PutMapping("/{inquiryId}")
     public ResponseDTO<InquiryAnswerResponseVO> updateInquiryAnswer(
-            @PathVariable Long inquiryAnswerId,
+            @PathVariable Long inquiryId,
             @RequestBody InquiryAnswerCreateOrUpdateVO requestVO,
-            CustomUserDetails user
+            @AuthenticationPrincipal CustomUserDetails user
     ){
         Long answerMemberId = user.getMember().getMemberId();
 
-        InquiryAnswerDTO requestDTO = inquiryAnswerConverter.voToDto(requestVO, answerMemberId);
+        InquiryAnswerDTO requestDTO = inquiryAnswerConverter.updateVoToDto(requestVO, answerMemberId, inquiryId);
         InquiryAnswerDTO responseDTO = inquiryAnswerCommandService.updateInquiryAnswer(requestDTO);
         InquiryAnswerResponseVO responseVO = inquiryAnswerConverter.dtoToVo(responseDTO);
 
@@ -60,12 +62,12 @@ public class InquiryAnswerController {
 
 
     // 3. 문의 답변 삭제
-    @DeleteMapping("/my/{inquiryAnswerId}")
-    public void deleteInquiryAnswer(
-            @PathVariable Long inquiryAnswerId,
-            CustomUserDetails user){
-        Long answerMemberId = user.getMember().getMemberId();
-        inquiryAnswerCommandService.deleteInquiryAnswer(inquiryAnswerId, answerMemberId);
-
-    }
+//    @DeleteMapping("/my/{inquiryId}")
+//    public void deleteInquiryAnswer(
+//            @PathVariable Long inquiryAnswerId,
+//            @AuthenticationPrincipal CustomUserDetails user){
+//        Long answerMemberId = user.getMember().getMemberId();
+//        inquiryAnswerCommandService.deleteInquiryAnswer(inquiryAnswerId, answerMemberId);
+//
+//    }
 }

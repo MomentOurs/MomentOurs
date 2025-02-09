@@ -20,6 +20,7 @@ public class AnnouncementDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Long memberId;
+    private String memberName;
 
 
 }

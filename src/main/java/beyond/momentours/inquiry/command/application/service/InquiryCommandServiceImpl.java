@@ -90,7 +90,7 @@ public class InquiryCommandServiceImpl implements InquiryCommandService{
             throw new CommonException(ErrorCode.FORBIDDEN_ROLE);
         }
         try{
-            inquiryRepository.deleteById(inquiryId);
+            inquiryRepository.softDeleteByInquiryId(inquiryId);
         }
         catch (Exception e){
             log.error("문의 삭제 실패");

@@ -38,12 +38,6 @@ public class InquiryResponseVO {
     @JsonProperty("member_id")
     private Long inquiryMemberId;
 
-    @JsonProperty("inquiry_id")
-    private InquiryAnswer inquiryAnswer;
-
-
-
-
 
 
 }

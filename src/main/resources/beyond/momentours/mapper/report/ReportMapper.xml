@@ -34,17 +34,17 @@
         WHERE reported_user_id = #{reportedUserId}
     </select>
 
-    <select id="findRecentReportsByReportedUserId" resultType="beyond.momentours.report.command.domain.aggregate.entity.Report">
-        SELECT *
+    <select id="findRecentReportsByReportedUserId" resultMap="reportResultMap">
+        SELECT report_id, report_type, report_reason, process_status, target_id, created_at, reported_user_id, report_user_id, pre_black_id
         FROM tb_report
         WHERE reported_user_id = #{reportedUserId}
         ORDER BY created_at DESC
         LIMIT 5
     </select>
 
-    <select id="findReportById" resultType="beyond.momentours.report.query.dto.ReportDTO">
-        SELECT r.report_id, r.report_type, r.report_reason, r.process_status, r.target_id, r.created_at, r.reported_user_id, r.report_user_id
-        FROM report r
+    <select id="findReportById" resultType="beyond.momentours.report.command.application.dto.ReportDTO">
+        SELECT r.report_id, r.report_type, r.report_reason, r.process_status, r.target_id, r.created_at, r.reported_user_id, r.report_user_id, r.pre_black_id
+        FROM tb_report r
         WHERE r.report_id = #{reportId}
     </select>
 </mapper>
