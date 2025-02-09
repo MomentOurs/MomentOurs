@@ -13,16 +13,16 @@
         <result property="memberId" column="member_id"/>
     </resultMap>
 
-    <select id="findByQuesAnswerIdAndMemberId" resultMap="rqAnswerMap">
+    <select id="findByQuesAnswerId" resultMap="rqAnswerMap" parameterType="Long">
         SELECT
-             , a.ques_ans_id
-             , ques_ans_content
-             , created_at
-             , updated_at
-             , user_ques_id
-             , member_id
+             , a.ques_ans_id,
+             , a.ques_ans_content
+             , a.created_at
+             , a.updated_at
+             , a.user_ques_id
+             , a.member_id
           FROM tb_ques_answer a
-         WHERE a.ques_ans_id = #{quesAnswerId}
-           AND a.member_id = #{memberId}
+         INNER JOIN tb_user_random_question b ON a.user_ques_id = b.user_ques_id
+         WHERE a.user_ques_id = #{userQuesId}
     </select>
 </mapper>

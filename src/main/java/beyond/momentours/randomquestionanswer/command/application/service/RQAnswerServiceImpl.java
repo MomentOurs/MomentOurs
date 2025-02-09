@@ -7,7 +7,6 @@ import beyond.momentours.randomquestionanswer.command.application.dto.RQAnswerDT
 import beyond.momentours.randomquestionanswer.command.application.mapper.RQAnswerConverter;
 import beyond.momentours.randomquestionanswer.command.domain.aggregate.entity.RQAnswer;
 import beyond.momentours.randomquestionanswer.command.domain.repository.RQAnswerRepository;
-import beyond.momentours.randomquestionanswer.query.service.RQAnswerQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
