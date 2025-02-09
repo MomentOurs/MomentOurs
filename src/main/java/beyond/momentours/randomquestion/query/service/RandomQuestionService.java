@@ -1,11 +1,18 @@
 package beyond.momentours.randomquestion.query.service;
 
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
+import beyond.momentours.randomquestion.command.domain.aggregate.entity.RandomQuestion;
 import beyond.momentours.randomquestion.query.dto.RandomQuestionDTO;
 import com.github.pagehelper.PageInfo;
+
+import java.util.List;
 
 public interface RandomQuestionService {
     PageInfo<RandomQuestionDTO> getRandomQuestion(int page, int size, CustomUserDetails user);
 
     RandomQuestionDTO getRandomQuestionDetail(Long quesId, CustomUserDetails user);
+
+    List<RandomQuestion> findAllQuestions();
+
+    List<Long> findUsedQuestionsByCoupleId(Long coupleId);
 }

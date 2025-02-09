@@ -1,6 +1,5 @@
 package beyond.momentours.randomquestion.query.dto;
 
-import jakarta.persistence.Column;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -10,7 +9,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @ToString
 @Builder
-public class RandomQuestionDTO {
+public class UserRandomQuestionDTO {
+
+    private Long userQuesId;
+    private String ansStatus;
+    private LocalDateTime createdAt;
+    private Long coupleId;
     private Long quesId;
-    private String quesContent;
 }

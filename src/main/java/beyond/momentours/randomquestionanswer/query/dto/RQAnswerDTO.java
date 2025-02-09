@@ -1,4 +1,4 @@
-package beyond.momentours.randomquestionanswer.command.application.dto;
+package beyond.momentours.randomquestionanswer.query.dto;
 
 import lombok.*;
 
@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @Builder
 @ToString
 public class RQAnswerDTO {
-
     private Long quesAnswerId;
     private String quesAnsContent;
     private LocalDateTime createdAt;
