@@ -44,7 +44,7 @@ public class MomentController {
     }
 
     // 추억 삭제
-    @PatchMapping("/delete/{momentId")
+    @PatchMapping("/delete/{momentId}")
     public ResponseDTO<?> deleteMoment(@PathVariable Long momentId,
                                        @AuthenticationPrincipal CustomUserDetails user) {
         log.info("삭제 요청 데이터 id : momentId = {}", momentId);
