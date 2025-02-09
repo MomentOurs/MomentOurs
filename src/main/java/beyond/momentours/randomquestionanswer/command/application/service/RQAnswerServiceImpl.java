@@ -17,13 +17,11 @@ public class RQAnswerServiceImpl implements RQAnswerService {
 
     private final RQAnswerConverter rqAnswerConverter;
     private final RQAnswerRepository rqAnswerRepository;
-    private final RQAnswerQueryService rqAnswerQueryService;
 
     @Autowired
-    public RQAnswerServiceImpl(RQAnswerConverter rqAnswerConverter, RQAnswerRepository rqAnswerRepository, RQAnswerQueryService rqAnswerQueryService) {
+    public RQAnswerServiceImpl(RQAnswerConverter rqAnswerConverter, RQAnswerRepository rqAnswerRepository) {
         this.rqAnswerConverter = rqAnswerConverter;
         this.rqAnswerRepository = rqAnswerRepository;
-        this.rqAnswerQueryService = rqAnswerQueryService;
     }
 
 
@@ -54,7 +52,22 @@ public class RQAnswerServiceImpl implements RQAnswerService {
                 rqAnswerRepository.updateContent(rqAnswerDTO.getQuesAnswerId(), rqAnswerDTO.getQuesAnsContent());
             }
         } catch (CommonException e) {
-            throw new CommonException(ErrorCode.QUES_ANSWER_FAILURE);
+            throw new CommonException(ErrorCode.QUES_ANSWER_UPDATE_FAILURE);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void deleteAnswer(Long quesAnswerId, CustomUserDetails user) {
+        try {
+            Long memberId = user.getMemberId();
+            RQAnswer rqAnswer = rqAnswerRepository.findByQuesAnswerIdAndMemberId(quesAnswerId, memberId);
+            if (rqAnswer == null) {
+                throw new CommonException(ErrorCode.NOT_FOUND_QUES_ANSWER);
+            }
+            rqAnswerRepository.deleteById(quesAnswerId);
+        } catch (CommonException e) {
+            throw new CommonException(ErrorCode.QUES_ANSWER_DELETE_FAILURE);
         }
     }
 }

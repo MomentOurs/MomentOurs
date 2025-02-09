@@ -7,4 +7,6 @@ public interface RQAnswerService {
     void createRQAnswer(RQAnswerDTO rqAnswerDTO, CustomUserDetails user);
 
     void updateRQAnswer(RQAnswerDTO rqAnswerDTO, CustomUserDetails user);
+
+    void deleteAnswer(Long quesAnswerId, CustomUserDetails user);
 }
