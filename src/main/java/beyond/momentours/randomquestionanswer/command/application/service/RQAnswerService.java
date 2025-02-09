@@ -5,4 +5,6 @@ import beyond.momentours.randomquestionanswer.command.application.dto.RQAnswerDT
 
 public interface RQAnswerService {
     void createRQAnswer(RQAnswerDTO rqAnswerDTO, CustomUserDetails user);
+
+    void updateRQAnswer(RQAnswerDTO rqAnswerDTO, CustomUserDetails user);
 }

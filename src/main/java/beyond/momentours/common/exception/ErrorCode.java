@@ -50,6 +50,7 @@ public enum ErrorCode {
     BLACKLIST_FAILURE(40120, HttpStatus.UNAUTHORIZED, "블랙리스트 등록에 실패했습니다."), // 블랙리스트 등록 실패
     PREBLACKLIST_FAILURE(40121, HttpStatus.UNAUTHORIZED, "예비 블랙리스트 등록에 실패했습니다."), // 블랙리스트 등록 실패
     RANDOMQUES_ANSWER_FAILURE(40122, HttpStatus.UNAUTHORIZED, "랜덤질문 답변 등록에 실패했습니다."), // 블랙리스트 등록 실패
+    QUES_ANSWER_FAILURE(40123, HttpStatus.UNAUTHORIZED, "랜덤질문 답변 수정에 실패했습니다."), // 랜덤질문 답변 수정 실패
 
     // 403: 권한 부족 (Forbidden)
     FORBIDDEN_ROLE(40300, HttpStatus.FORBIDDEN, "요청한 리소스에 대한 권한이 없습니다."), // 사용자가 요청한 리소스에 대한 권한이 없는 경우

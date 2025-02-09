@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RequestRQAnswerCreatedVO {
+public class RequestRQAnswerUpdatedVO {
+    private Long quesAnswerId;
     private String quesAnsContent;
-    private Long userQuesId;
 }

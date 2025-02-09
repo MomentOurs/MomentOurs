@@ -2,25 +2,11 @@ package beyond.momentours.randomquestionanswer.command.application.mapper;
 
 import beyond.momentours.randomquestionanswer.command.application.dto.RQAnswerDTO;
 import beyond.momentours.randomquestionanswer.command.domain.aggregate.entity.RQAnswer;
+import beyond.momentours.randomquestionanswer.command.domain.vo.request.RequestRQAnswerUpdatedVO;
 import org.springframework.stereotype.Component;
 
 @Component
 public class RQAnswerConverter {
-
-    public RQAnswerDTO entityToDTO(RQAnswer rqAnswer){
-
-        RQAnswerDTO rqAnswerDTO = RQAnswerDTO.builder()
-                .;
-
-        rqAnswerDTO.setQuesAnswerId(rqAnswer.getQuesAnswerId());
-        rqAnswerDTO.setQuesAnsContent(rqAnswer.getQuesAnsContent());
-        rqAnswerDTO.setCreatedAt(rqAnswer.getCreatedAt());
-        rqAnswerDTO.setUpdatedAt(rqAnswer.getUpdatedAt());
-        rqAnswerDTO.setQuesId(rqAnswer.getQuesId());
-        rqAnswerDTO.setMemberId(rqAnswer.getMemberId());
-
-        return rqAnswerDTO;
-    }
 
     public RQAnswer dtoToEntity(RQAnswerDTO rqAnswerDTO, Long memberId){
 
@@ -30,4 +16,12 @@ public class RQAnswerConverter {
                 .memberId(memberId)
                 .build();
     }
+
+    public RQAnswerDTO updateVoToDTO(RequestRQAnswerUpdatedVO requestRQAnswerUpdatedVO) {
+        return RQAnswerDTO.builder()
+                .quesAnswerId(requestRQAnswerUpdatedVO.getQuesAnswerId())
+                .quesAnsContent(requestRQAnswerUpdatedVO.getQuesAnsContent())
+                .build();
+    }
+
 }
