@@ -5,6 +5,7 @@ import beyond.momentours.member.command.application.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -29,13 +30,15 @@ public class SecurityConfig {
     private final JWTUtil jwtUtil;
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
     private final LoginHistoryService loginHistoryService;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Autowired
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, JwtAuthenticationProvider jwtAuthenticationProvider, LoginHistoryService loginHistoryService) {
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, JwtAuthenticationProvider jwtAuthenticationProvider, LoginHistoryService loginHistoryService, RedisTemplate<String, String> redisTemplate) {
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtUtil = jwtUtil;
         this.jwtAuthenticationProvider = jwtAuthenticationProvider;
         this.loginHistoryService = loginHistoryService;
+        this.redisTemplate = redisTemplate;
     }
 
     //AuthenticationManager Bean 등록
@@ -68,6 +71,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "api/member/signup", "/**").permitAll()
                         .requestMatchers("/api/member/login").permitAll()
                                 .requestMatchers("/api/member").authenticated()
+                                .requestMatchers("/api/admin").authenticated()
 
 //                        .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().authenticated()
@@ -76,7 +80,7 @@ public class SecurityConfig {
                 // 세션 설정
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.addFilterAt(new AuthenticationFilter(authenticationManager(authenticationConfiguration), jwtUtil, loginHistoryService), UsernamePasswordAuthenticationFilter.class);
-        http.addFilterBefore(new JWTFilter(jwtUtil, jwtAuthenticationProvider), AuthenticationFilter.class);
+        http.addFilterBefore(new JWTFilter(jwtUtil, jwtAuthenticationProvider, redisTemplate), AuthenticationFilter.class);
 
         return http.build();
     }

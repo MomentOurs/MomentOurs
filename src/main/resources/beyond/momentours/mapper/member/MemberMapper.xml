@@ -21,31 +21,49 @@
     </resultMap>
 
     <select id="findByMemberId" resultType="Long" parameterType="Long">
-        SELECT member_id
-        FROM tb_member
-        WHERE member_id = #{memberId}
-        AND member_status = 1;
+        SELECT
+                a.member_id
+        FROM tb_member a
+        WHERE a.member_id = #{memberId}
+        AND a.member_status = 1;
     </select>
 
     <select id="findByMemberEmail" resultType="string" parameterType="string">
-        SELECT member_email
-        FROM tb_member
-        WHERE member_email = #{memberEmail}
-        AND member_status = 1;
+        SELECT
+               a.member_email
+          FROM tb_member a
+         WHERE a.member_email = #{memberEmail}
+        AND a.member_status = 1;
     </select>
 
     <select id="findMemberEmailByMypage" resultMap="memberResultMap" parameterType="Long">
         SELECT
-        member_email,
-        member_nickname,
-        member_name,
-        member_phone,
-        member_birth,
-        member_gender,
-        member_mbti
-        FROM tb_member
-        WHERE member_id = #{memberId}
-        AND member_status = 1;
+               a.member_email,
+               a.member_nickname,
+               a.member_name,
+               a.member_phone,
+               a.member_birth,
+               a.member_gender,
+               a.member_mbti
+        FROM tb_member a
+        WHERE a.member_id = #{memberId}
+        AND a.member_status = 1;
+    </select>
+
+    <select id="findMemberSearch" resultMap="memberResultMap">
+        SELECT
+               a.member_email
+               a.member_nickname
+          FROM tb_member a
+         WHERE
+            <trim prefixOverrides="AND">
+                <if test="memberNickname != null and memberNickname != ''">
+                    AND a.member_nickname LIKE CONCAT('%', #{memberNickname}, '%')
+                </if>
+                <if test="memberEmail != null and memberEmail != ''">
+                    AND a.member_email LIKE CONCAT('%', #{memberEmail}, '%')
+                </if>
+            </trim>
     </select>
 
 </mapper>

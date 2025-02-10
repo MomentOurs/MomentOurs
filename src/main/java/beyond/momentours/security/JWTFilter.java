@@ -1,11 +1,13 @@
 package beyond.momentours.security;
 
+import beyond.momentours.util.SecurityUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -19,10 +21,12 @@ public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
+    private final RedisTemplate<String, String> redisTemplate;
 
-    public JWTFilter(JWTUtil jwtUtil, JwtAuthenticationProvider jwtAuthenticationProvider) {
+    public JWTFilter(JWTUtil jwtUtil, JwtAuthenticationProvider jwtAuthenticationProvider, RedisTemplate<String, String> redisTemplate) {
         this.jwtUtil = jwtUtil;
         this.jwtAuthenticationProvider = jwtAuthenticationProvider;
+        this.redisTemplate = redisTemplate;
     }
 
     @Override
@@ -37,19 +41,28 @@ public class JWTFilter extends OncePerRequestFilter {
         }
 
         // 헤더에서 access키에 담긴 토큰을 꺼냄
-        String accessToken = request.getHeader("Authorization");
+//        String accessToken = request.getHeader("Authorization");
+//
+//        // "Bearer "와 공백을 제거
+//        if (accessToken != null && accessToken.startsWith("Bearer ")) {
+//            accessToken = accessToken.substring(7).trim(); // "Bearer " 제거 후 공백 제거
+//        } else {
+//            throw new IllegalArgumentException("Authorization header is missing or malformed.");
+//        }
 
-        // "Bearer "와 공백을 제거
-        if (accessToken != null && accessToken.startsWith("Bearer ")) {
-            accessToken = accessToken.substring(7).trim(); // "Bearer " 제거 후 공백 제거
-        } else {
-            throw new IllegalArgumentException("Authorization header is missing or malformed.");
-        }
+        // 헤더에서 JWT 토큰 추출
+        String accessToken = SecurityUtil.extractToken(request);
 
         // 토큰이 없다면 다음 필터로 넘김
         if (accessToken == null) {
             filterChain.doFilter(request, response);
             return;
+        }
+
+        // 로그아웃된 토큰 체크
+        if (Boolean.TRUE.equals(redisTemplate.hasKey("로그아웃_" + accessToken))) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("로그아웃된 토큰입니다.");
         }
 
         // 토큰 만료 여부 확인, 만료시 다음 필터로 넘기지 않음
@@ -87,4 +100,5 @@ public class JWTFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
 
     }
+
 }

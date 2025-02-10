@@ -6,11 +6,14 @@ import beyond.momentours.member.query.dto.MemberDTO;
 import beyond.momentours.member.query.mapper.MemberQueryConverter;
 import beyond.momentours.member.query.service.MemberQueryService;
 import beyond.momentours.member.query.vo.request.RequestIdVO;
+import beyond.momentours.member.query.vo.response.ResponseMemberSearchVO;
 import beyond.momentours.member.query.vo.response.ResponseMypageVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController("queryMemberController")
@@ -43,4 +46,13 @@ public class MemberController {
         ResponseMypageVO response = memberQueryConverter.fromDtoToMypageVO(memberDTO);
         return ResponseDTO.ok(response);
     }
+
+    /* 회원 아이디 & 닉네임 검색 */
+    @GetMapping("search")
+    public ResponseDTO<List<ResponseMemberSearchVO>> getSearch(@RequestParam(required = false) String memberNickname,
+                                                               @RequestParam(required = false) String memberEmail) {
+        List<ResponseMemberSearchVO> response = memberQueryService.getMemberSearch(memberNickname, memberEmail);
+        return ResponseDTO.ok(response);
+    }
+
 }

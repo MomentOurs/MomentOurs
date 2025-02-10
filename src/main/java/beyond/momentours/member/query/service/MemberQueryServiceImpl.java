@@ -5,9 +5,12 @@ import beyond.momentours.common.exception.ErrorCode;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
 import beyond.momentours.member.query.dto.MemberDTO;
 import beyond.momentours.member.query.repository.MemberMapper;
+import beyond.momentours.member.query.vo.response.ResponseMemberSearchVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Slf4j
 @Service("queryMemberService")
@@ -47,5 +50,15 @@ public class MemberQueryServiceImpl implements MemberQueryService {
             throw new CommonException(ErrorCode.NOT_FOUND_MEMBER);
 
         return member;
+    }
+
+    @Override
+    public List<ResponseMemberSearchVO> getMemberSearch(String memberNickname, String memberEmail) {
+        List<ResponseMemberSearchVO> response = memberMapper.findMemberSearch(memberNickname, memberEmail);
+
+        if (response == null) {
+            throw new CommonException(ErrorCode.NOT_FOUND_MEMBER);
+        }
+        return response;
     }
 }
