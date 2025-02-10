@@ -37,6 +37,7 @@ public class InquiryAnswerCommandServiceImpl implements InquiryAnswerCommandServ
             }
             InquiryAnswer inquiryAnswer = inquiryAnswerConverter.dtoToEntity(inquiryAnswerDTO);
             InquiryAnswer saved = inquiryAnswerRepository.save(inquiryAnswer);
+            inquiryAnswerRepository.createInquiryAnswerByInquiryId(saved.getInquiryId());
             return inquiryAnswerConverter.entityToDto(saved);
         } catch(Exception e){
             //등록 실패 예외
@@ -50,7 +51,7 @@ public class InquiryAnswerCommandServiceImpl implements InquiryAnswerCommandServ
     @Override
     @Transactional
     public InquiryAnswerDTO updateInquiryAnswer(InquiryAnswerDTO inquiryAnswerDTO){
-        InquiryAnswer originalInquiryAnswer = inquiryAnswerRepository.findById(inquiryAnswerDTO.getInquiryAnswerId())
+        InquiryAnswer originalInquiryAnswer = inquiryAnswerRepository.findByInquiryId(inquiryAnswerDTO.getInquiryId())
                 .orElseThrow(()->new CommonException(ErrorCode.NOT_FOUND_QUES_ANSWER));
 
         if(!originalInquiryAnswer.getAnswerMemberId().equals(inquiryAnswerDTO.getAnswerMemberId())){
@@ -73,23 +74,23 @@ public class InquiryAnswerCommandServiceImpl implements InquiryAnswerCommandServ
     }
 
     // 3. 문의 답변 삭제
-    @Override
-    @Transactional
-    public void deleteInquiryAnswer(Long inquiryAnswerId, Long answerMemberId){
-
-        InquiryAnswer inquiryAnswer = inquiryAnswerRepository.findById(inquiryAnswerId)
-                .orElseThrow(()->new CommonException(ErrorCode.NOT_FOUND_QUES_ANSWER));
-
-        if(!inquiryAnswer.getAnswerMemberId().equals(answerMemberId)){
-            throw new CommonException(ErrorCode.FORBIDDEN_ROLE);
-        }
-        try{
-            inquiryAnswerRepository.deleteById(inquiryAnswerId);
-        }
-        catch (Exception e){
-            log.error("문의 답변 삭제 실패");
-            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
-    }
+//    @Override
+//    @Transactional
+//    public void deleteInquiryAnswer(Long inquiryAnswerId, Long answerMemberId){
+//
+//        InquiryAnswer inquiryAnswer = inquiryAnswerRepository.findById(inquiryAnswerId)
+//                .orElseThrow(()->new CommonException(ErrorCode.NOT_FOUND_QUES_ANSWER));
+//
+//        if(!inquiryAnswer.getAnswerMemberId().equals(answerMemberId)){
+//            throw new CommonException(ErrorCode.FORBIDDEN_ROLE);
+//        }
+//        try{
+//            inquiryAnswerRepository.deleteById(inquiryAnswerId);
+//        }
+//        catch (Exception e){
+//            log.error("문의 답변 삭제 실패");
+//            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
 }

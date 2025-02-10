@@ -7,6 +7,7 @@ import beyond.momentours.common.ResponseDTO;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,12 +27,12 @@ public class AnnouncementQueryController {
     // 1. 모든 공지사항 조회
     @GetMapping("/all")
     public ResponseDTO<List<AnnouncementDTO>> getAllAnnouncements() {
-        List<AnnouncementDTO> responsee = announcementService.findAllAnnouncements();
-        return ResponseDTO.ok(responsee);
+        List<AnnouncementDTO> response = announcementService.findAllAnnouncements();
+        return ResponseDTO.ok(response);
     }
 
     // 2. id로 공지사항 조회
-    @GetMapping("/id")
+    @GetMapping("/id/{id}")
     public ResponseDTO<AnnouncementDTO> getAnnouncementById(@PathVariable Long id){
         AnnouncementDTO response = announcementService.findAnnouncementById(id);
         return ResponseDTO.ok(response);
@@ -46,7 +47,7 @@ public class AnnouncementQueryController {
 
     // 4. 작성자 id로 공지사항 조회
     @GetMapping("/member-id")
-    public ResponseDTO<List<AnnouncementDTO>> getAnnouncementByMemberId(@RequestParam Long memberId){
+    public ResponseDTO<List<AnnouncementDTO>> getAnnouncementByMemberId(@RequestParam("member-id") Long memberId){
         List<AnnouncementDTO> response = announcementService.findAnnouncementByMemberId(memberId);
         return ResponseDTO.ok(response);
     }
@@ -54,7 +55,8 @@ public class AnnouncementQueryController {
 
     // 5. 로그인한 사용자의 공지사항 조회
     @GetMapping("/my")
-    public ResponseDTO<List<AnnouncementDTO>> getMyAnnouncements(CustomUserDetails user) {
+    public ResponseDTO<List<AnnouncementDTO>> getMyAnnouncements(
+            @AuthenticationPrincipal CustomUserDetails user) {
         // 로그인된 사용자의 memberId
         Long memberId = user.getMember().getMemberId();
 

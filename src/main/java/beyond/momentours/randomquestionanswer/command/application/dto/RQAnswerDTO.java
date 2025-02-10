@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Setter
+@Builder
 @ToString
 public class RQAnswerDTO {
 
@@ -15,6 +15,6 @@ public class RQAnswerDTO {
     private String quesAnsContent;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private Long quesId;
+    private Long userQuesId;
     private Long memberId;
 }

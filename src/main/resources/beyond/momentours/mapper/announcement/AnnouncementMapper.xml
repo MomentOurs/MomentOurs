@@ -4,7 +4,7 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="beyond.momentours.announcement.query.repository.AnnouncementMapper">
-    <resultMap id="announcementResultMap" type="beyond.momentours.announcement.command.domain.aggregate.entity.Announcement">
+    <resultMap id="announcementResultMap" type="beyond.momentours.announcement.query.dto.AnnouncementDTO">
         <id property="announcementId" column="announcement_id"/>
         <result property="announcementTitle" column="announcement_title"/>
         <result property="announcementContent" column="announcement_content"/>
@@ -12,10 +12,12 @@
         <result property="createdAt" column="created_at"/>
         <result property="updatedAt" column="updated_at"/>
         <result property="memberId" column="member_id"/>
+        <result property="memberName" column="member_name"/>
     </resultMap>
 
+
     <!-- 1. 모든 공지사항 조회 -->
-    <select id="selectAll" resultMap="beyond.momentours.announcement.query.dto.AnnouncementDTO">
+    <select id="selectAll" resultMap="announcementResultMap">
         SELECT
             ta.announcement_id,
             ta.announcement_title,
@@ -24,16 +26,16 @@
             ta.created_at,
             ta.updated_at,
             ta.member_id,
-            tm.member_nickname
+            tm.member_name
         FROM
             tb_announcement ta
         INNER JOIN tb_member tm
             ON ta.member_id = tm.member_id
-        WHERE ta.announcement_status = false;
+        WHERE ta.announcement_status = true;
     </select>
 
     <!-- 2. id로 공지사항 조회 -->
-    <select id="selectById" resultMap="beyond.momentours.announcement.query.dto.AnnouncementDTO">
+    <select id="selectById" resultMap="announcementResultMap">
         SELECT
             ta.announcement_id,
             ta.announcement_title,
@@ -48,13 +50,13 @@
         ON
             ta.member_id = tm.member_id
         WHERE
-            ta.announcement_status = false
+            ta.announcement_status = true
             AND
             ta.announcement_id = #{announcementId};
     </select>
 
     <!-- 3. 키워드로 공지사항 조회 -->
-    <select id="selectByKeyword" resultMap="beyond.momentours.announcement.query.dto.AnnouncementDTO">
+    <select id="selectByKeyword" resultMap="announcementResultMap">
         SELECT
             ta.announcement_id,
             ta.announcement_title,
@@ -69,7 +71,7 @@
         ON
             ta.member_id = tm.member_id
         WHERE
-            ta.announcement_status = false
+            ta.announcement_status = true
             AND
             (
             ta.announcement_title LIKE CONCAT('%',#{keyword},'%')
@@ -82,7 +84,7 @@
 
 
     <!-- 4. 작성자id로 공지사항 조회 -->
-    <select id="selectByMemberId" resultMap="beyond.momentours.announcement.query.dto.AnnouncementDTO">
+    <select id="selectByMemberId" resultMap="announcementResultMap">
         SELECT
             ta.announcement_id,
             ta.announcement_title,
@@ -99,7 +101,7 @@
         WHERE
             ta.member_id = #{memberId}
             AND
-            ta.announcement_status = false
+            ta.announcement_status = true
     </select>
 
 </mapper>

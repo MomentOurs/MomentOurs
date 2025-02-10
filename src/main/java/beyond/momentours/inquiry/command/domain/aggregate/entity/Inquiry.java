@@ -42,8 +42,4 @@ public class Inquiry {
     @Column(name = "member_id", nullable = false)
     private Long inquiryMemberId;
 
-
-//    // OneToOne 관계 설정
-//    @OneToOne(mappedBy = "inquiry", fetch = FetchType.LAZY) // InquiryAnswer에서 이걸 참조하는 필드명
-//    private InquiryAnswer inquiryAnswer;
 }
