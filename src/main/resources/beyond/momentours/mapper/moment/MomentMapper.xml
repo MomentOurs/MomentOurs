@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="beyond.momentours.moment.query.repository.MomentMapper">
+
+    <!-- 내가 쓴 추억 조회 (페이징 적용 가능) -->
+    <select id="findMyMoments" resultType="beyond.momentours.moment.query.dto.MomentDTO">
+        SELECT * FROM tb_moment
+        WHERE member_id = #{memberId}
+          AND moment_status = true
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- 특정 Moment 상세 조회 -->
+    <select id="findMomentById" resultType="beyond.momentours.moment.query.dto.MomentDTO">
+        SELECT * FROM tb_moment
+        WHERE moment_id = #{momentId}
+          AND moment_status = true
+    </select>
+
+    <!-- 지도에서 조회: 내 추억 + 공개된 타인 추억 -->
+    <select id="findMomentsForMap" resultType="beyond.momentours.moment.query.dto.MomentDTO">
+        SELECT * FROM tb_moment
+        WHERE location_id IN (
+            SELECT location_id FROM tb_location
+            WHERE latitude BETWEEN #{minLat} AND #{maxLat}
+              AND longitude BETWEEN #{minLng} AND #{maxLng}
+        )
+          AND (moment_disclosure = true OR member_id = #{memberId})
+          AND moment_status = true
+    </select>
+
+</mapper>
