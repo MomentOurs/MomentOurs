@@ -27,9 +27,6 @@ public class DateCourse {
     @Column(name = "course_type", nullable = false)
     private CourseType courseType;
 
-    @Column(name = "course_memo")
-    private String courseMemo;
-
     @Column(name = "course_disclosure", nullable = false)
     private Boolean courseDisclosure;
 
@@ -77,12 +74,6 @@ public class DateCourse {
     public void updateCourseType(CourseType courseType) {
         if (courseType != null) {
             this.courseType = courseType;
-        }
-    }
-
-    public void updateCourseMemo(String courseMemo) {
-        if (courseMemo != null) {
-            this.courseMemo = courseMemo;
         }
     }
 

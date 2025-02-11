@@ -15,7 +15,6 @@ import java.util.List;
 public class RequestCreateDateCourseVO {
     private String courseTitle;
     private CourseType courseType;
-    private String courseMemo;
     private Boolean courseDisclosure;
     private LocalDateTime courseStartDate;
     private LocalDateTime courseEndDate;

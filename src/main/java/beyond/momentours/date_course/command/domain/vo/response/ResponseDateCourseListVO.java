@@ -14,7 +14,6 @@ public class ResponseDateCourseListVO {
     private Long courseId;
     private String courseTitle;
     private CourseType courseType;
-    private String courseMemo;
     private Long courseLike;
     private Long courseView;
     private LocalDateTime courseStartDate;
