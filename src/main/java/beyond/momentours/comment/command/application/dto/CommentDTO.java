@@ -15,10 +15,9 @@ public class CommentDTO {
     private Long commentId;
     private String commentContent;
     private CommentType commentType;
+    private Long targetId;
     private Boolean commentStatus;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Long memberId;
-    private Long quesId;
-    private Long coupleLogId;
 }
