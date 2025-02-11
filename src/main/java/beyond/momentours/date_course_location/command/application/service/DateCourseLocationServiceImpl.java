@@ -35,6 +35,7 @@ public class DateCourseLocationServiceImpl implements DateCourseLocationService 
                             .locationId(location.getLocationId())
                             .sequence(locationDTO.getSequence())
                             .courseLocationStatus(true)
+                            .courseMemo(locationDTO.getCourseMemo())
                             .build();
 
                     dateCourseLocationRepository.save(courseLocation);
@@ -60,6 +61,7 @@ public class DateCourseLocationServiceImpl implements DateCourseLocationService 
                     .locationId(location.getLocationId())
                     .sequence(locationDTO.getSequence())
                     .courseLocationStatus(true)
+                    .courseMemo(locationDTO.getCourseMemo())
                     .build();
 
             dateCourseLocationRepository.save(courseLocation);
