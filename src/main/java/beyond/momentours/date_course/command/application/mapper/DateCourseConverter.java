@@ -22,6 +22,7 @@ public class DateCourseConverter {
                 .courseDisclosure(request.getCourseDisclosure())
                 .courseStartDate(request.getCourseStartDate())
                 .courseEndDate(request.getCourseEndDate())
+                .folderId(request.getFolderId())
                 .build();
     }
 
@@ -39,6 +40,7 @@ public class DateCourseConverter {
                 .createdAt(saveDateCourseDTO.getCreatedAt())
                 .updatedAt(saveDateCourseDTO.getUpdatedAt())
                 .memberId(saveDateCourseDTO.getMemberId())
+                .folderId(saveDateCourseDTO.getFolderId())
                 .build();
     }
 
@@ -50,6 +52,7 @@ public class DateCourseConverter {
                 .courseStartDate(dateCourseDTO.getCourseStartDate())
                 .courseEndDate(dateCourseDTO.getCourseEndDate())
                 .memberId(dateCourseDTO.getMemberId())
+                .folderId(dateCourseDTO.getFolderId())
                 .build();
     }
 
@@ -67,6 +70,7 @@ public class DateCourseConverter {
                 .createdAt(savedCourse.getCreatedAt())
                 .updatedAt(savedCourse.getUpdatedAt())
                 .memberId(savedCourse.getMemberId())
+                .folderId(savedCourse.getFolderId())
                 .build();
     }
 

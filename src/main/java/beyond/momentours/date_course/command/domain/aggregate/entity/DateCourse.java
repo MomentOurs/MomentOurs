@@ -57,6 +57,9 @@ public class DateCourse {
     @Column(name = "member_id", nullable = false)
     private Long memberId;
 
+    @Column(name = "folder_id", nullable = false)
+    private Long folderId;
+
     @PrePersist
     private void onCreate() {
         this.courseLike = 0L;

@@ -26,6 +26,7 @@ public class DateCourseDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Long memberId;
+    private Long folderId;
 
     private List<DateCourseLocationVO> locations;
 }

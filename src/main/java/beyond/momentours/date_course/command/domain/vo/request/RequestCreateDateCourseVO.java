@@ -18,6 +18,7 @@ public class RequestCreateDateCourseVO {
     private Boolean courseDisclosure;
     private LocalDateTime courseStartDate;
     private LocalDateTime courseEndDate;
+    private Long folderId;
 
     private List<DateCourseLocationVO> locations;
 }

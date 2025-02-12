@@ -71,4 +71,10 @@
         FROM tb_random_question
         WHERE ques_id = #{quesId}
     </select>
+
+    <select id="findAnsStatusByUserQuesId" resultType="String">
+        SELECT ans_status
+        FROM tb_user_random_question
+        WHERE user_ques_id = #{userQuesId}
+    </select>
 </mapper>

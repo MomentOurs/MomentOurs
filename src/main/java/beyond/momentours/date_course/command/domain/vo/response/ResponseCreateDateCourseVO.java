@@ -23,4 +23,5 @@ public class ResponseCreateDateCourseVO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Long memberId;
+    private Long folderId;
 }

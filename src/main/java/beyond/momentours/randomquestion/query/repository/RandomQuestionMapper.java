@@ -7,7 +7,6 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
-import java.util.Optional;
 
 @Mapper
 public interface RandomQuestionMapper {
@@ -20,4 +19,6 @@ public interface RandomQuestionMapper {
     List<Long> findUsedQuestionsByCoupleId(@Param("coupleId") Long coupleId);
 
     UserRandomQuestion findByQuestionId(@Param("quesId") Long quesId);
+
+    String findAnsStatusByUserQuesId(@Param("userQuesId") Long userQuesId);
 }
