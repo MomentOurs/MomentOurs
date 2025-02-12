@@ -1,0 +1,70 @@
+package beyond.momentours.comment.query.service;
+
+import beyond.momentours.comment.command.application.dto.CommentDTO;
+import beyond.momentours.comment.command.application.mapper.CommentConverter;
+import beyond.momentours.comment.command.domain.aggregate.entity.Comment;
+import beyond.momentours.comment.query.repository.CommentMapper;
+import beyond.momentours.common.exception.CommonException;
+import beyond.momentours.common.exception.ErrorCode;
+import beyond.momentours.randomquestion.command.domain.aggregate.entity.UserRandomQuestion;
+import beyond.momentours.randomquestion.query.repository.RandomQuestionMapper;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class CommentQueryServiceImpl implements CommentQueryService {
+
+    private final CommentConverter commentConverter;
+    private final CommentMapper commentDAO;
+    private final RandomQuestionMapper randomQuestionMapper;
+
+    @Override
+    public List<CommentDTO> getCommentsByCoupleLogId(Long coupleLogId) {
+        List<Comment> comments = commentDAO.findCommentsByCoupleLogId(coupleLogId);
+        log.info("조회된 커플로그 댓글 목록: {}", comments);
+
+        return comments.stream()
+                .map(commentConverter::fromEntityToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CommentDTO> getCommentsByQuestionId(Long userQuesId) {
+        String ansStatus = randomQuestionMapper.findAnsStatusByUserQuesId(userQuesId);
+        log.info("랜덤 질문의 ansStatus: {}", ansStatus);
+
+        if (!"All".equals(ansStatus)) throw new CommonException(ErrorCode.INVALID_RANDOM_QUESTION_STATUS);
+
+        List<Comment> comments = commentDAO.findCommentsByQuestionId(userQuesId);
+        log.info("조회된 질문 댓글 목록: {}", comments);
+
+        return comments.stream()
+                .map(commentConverter::fromEntityToDTO)
+                .collect(Collectors.toList());
+    }
+
+    private void validateCommentTypeStatus(CommentDTO commentDTO) {
+        switch (commentDTO.getCommentType()) {
+//            case COUPLE_LOG:
+//                CoupleLog = coupleLogRepository.findById(commentDTO.getCoupleLogId()).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_COUPLE_LOG));
+//                break;
+
+            case QUESTION:
+                UserRandomQuestion randomQuestion = randomQuestionMapper.findByQuestionId(commentDTO.getTargetId());
+                if (randomQuestion == null) throw new CommonException(ErrorCode.NOT_FOUND_RANDOM_QUESTION);
+                if (!"All".equals(randomQuestion.getAnsStatus())) {
+                    throw new CommonException(ErrorCode.INVALID_RANDOM_QUESTION_STATUS);
+                }
+                break;
+
+            default:
+                throw new CommonException(ErrorCode.INVALID_COMMENT_TYPE);
+        }
+    }
+}
