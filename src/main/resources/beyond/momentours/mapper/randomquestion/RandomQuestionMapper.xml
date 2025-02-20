@@ -63,4 +63,18 @@
          WHERE a.couple_id = #{coupleId}
     </select>
 
+    <!-- 특정 quesId에 해당하는 질문 조회 -->
+    <select id="findByQuestionId" resultMap="randomQuestionResultMap" parameterType="long">
+        SELECT
+        ques_id,
+        ques_content
+        FROM tb_random_question
+        WHERE ques_id = #{quesId}
+    </select>
+
+    <select id="findAnsStatusByUserQuesId" resultType="String">
+        SELECT ans_status
+        FROM tb_user_random_question
+        WHERE user_ques_id = #{userQuesId}
+    </select>
 </mapper>

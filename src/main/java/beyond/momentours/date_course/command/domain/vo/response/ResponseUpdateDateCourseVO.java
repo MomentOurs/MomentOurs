@@ -14,7 +14,6 @@ public class ResponseUpdateDateCourseVO {
     private Long courseId;
     private String courseTitle;
     private CourseType courseType;
-    private String courseMemo;
     private Boolean courseDisclosure;
     private LocalDateTime courseStartDate;
     private LocalDateTime courseEndDate;

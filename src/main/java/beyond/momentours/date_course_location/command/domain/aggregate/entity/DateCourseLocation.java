@@ -28,4 +28,7 @@ public class DateCourseLocation {
 
     @Column(name = "sequence", nullable = false)
     private Integer sequence;
+
+    @Column(name = "course_memo")
+    private String courseMemo;
 }

@@ -27,9 +27,6 @@ public class DateCourse {
     @Column(name = "course_type", nullable = false)
     private CourseType courseType;
 
-    @Column(name = "course_memo")
-    private String courseMemo;
-
     @Column(name = "course_disclosure", nullable = false)
     private Boolean courseDisclosure;
 
@@ -60,6 +57,9 @@ public class DateCourse {
     @Column(name = "member_id", nullable = false)
     private Long memberId;
 
+    @Column(name = "folder_id", nullable = false)
+    private Long folderId;
+
     @PrePersist
     private void onCreate() {
         this.courseLike = 0L;
@@ -77,12 +77,6 @@ public class DateCourse {
     public void updateCourseType(CourseType courseType) {
         if (courseType != null) {
             this.courseType = courseType;
-        }
-    }
-
-    public void updateCourseMemo(String courseMemo) {
-        if (courseMemo != null) {
-            this.courseMemo = courseMemo;
         }
     }
 

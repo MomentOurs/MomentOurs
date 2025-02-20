@@ -4,7 +4,11 @@ import beyond.momentours.comment.command.domain.aggregate.entity.Comment;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 @Mapper
 public interface CommentMapper {
-    Comment findCommentById(@Param("commentId") Long commentId);
+    List<Comment> findCommentsByCoupleLogId(@Param("coupleLogId") Long coupleLogId);
+
+    List<Comment> findCommentsByQuestionId(@Param("userQuesId") Long userQuesId);
 }

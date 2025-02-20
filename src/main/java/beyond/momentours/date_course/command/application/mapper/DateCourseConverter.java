@@ -19,10 +19,10 @@ public class DateCourseConverter {
         return DateCourseDTO.builder()
                 .courseTitle(request.getCourseTitle())
                 .courseType(request.getCourseType())
-                .courseMemo(request.getCourseMemo())
                 .courseDisclosure(request.getCourseDisclosure())
                 .courseStartDate(request.getCourseStartDate())
                 .courseEndDate(request.getCourseEndDate())
+                .folderId(request.getFolderId())
                 .build();
     }
 
@@ -31,7 +31,6 @@ public class DateCourseConverter {
                 .courseId(saveDateCourseDTO.getCourseId())
                 .courseTitle(saveDateCourseDTO.getCourseTitle())
                 .courseType(saveDateCourseDTO.getCourseType())
-                .courseMemo(saveDateCourseDTO.getCourseMemo())
                 .courseDisclosure(saveDateCourseDTO.getCourseDisclosure())
                 .courseLike(saveDateCourseDTO.getCourseLike())
                 .courseView(saveDateCourseDTO.getCourseView())
@@ -41,6 +40,7 @@ public class DateCourseConverter {
                 .createdAt(saveDateCourseDTO.getCreatedAt())
                 .updatedAt(saveDateCourseDTO.getUpdatedAt())
                 .memberId(saveDateCourseDTO.getMemberId())
+                .folderId(saveDateCourseDTO.getFolderId())
                 .build();
     }
 
@@ -48,11 +48,11 @@ public class DateCourseConverter {
         return DateCourse.builder()
                 .courseTitle(dateCourseDTO.getCourseTitle())
                 .courseType(dateCourseDTO.getCourseType())
-                .courseMemo(dateCourseDTO.getCourseMemo())
                 .courseDisclosure(dateCourseDTO.getCourseDisclosure())
                 .courseStartDate(dateCourseDTO.getCourseStartDate())
                 .courseEndDate(dateCourseDTO.getCourseEndDate())
                 .memberId(dateCourseDTO.getMemberId())
+                .folderId(dateCourseDTO.getFolderId())
                 .build();
     }
 
@@ -61,7 +61,6 @@ public class DateCourseConverter {
                 .courseId(savedCourse.getCourseId())
                 .courseTitle(savedCourse.getCourseTitle())
                 .courseType(savedCourse.getCourseType())
-                .courseMemo(savedCourse.getCourseMemo())
                 .courseDisclosure(savedCourse.getCourseDisclosure())
                 .courseLike(savedCourse.getCourseLike())
                 .courseView(savedCourse.getCourseView())
@@ -71,6 +70,7 @@ public class DateCourseConverter {
                 .createdAt(savedCourse.getCreatedAt())
                 .updatedAt(savedCourse.getUpdatedAt())
                 .memberId(savedCourse.getMemberId())
+                .folderId(savedCourse.getFolderId())
                 .build();
     }
 
@@ -79,7 +79,6 @@ public class DateCourseConverter {
                 .courseId(courseId)
                 .courseTitle(request.getCourseTitle())
                 .courseType(request.getCourseType())
-                .courseMemo(request.getCourseMemo())
                 .courseDisclosure(request.getCourseDisclosure())
                 .courseStartDate(request.getCourseStartDate())
                 .courseEndDate(request.getCourseEndDate())
@@ -91,7 +90,6 @@ public class DateCourseConverter {
                 .courseId(updatedCourseDTO.getCourseId())
                 .courseTitle(updatedCourseDTO.getCourseTitle())
                 .courseType(updatedCourseDTO.getCourseType())
-                .courseMemo(updatedCourseDTO.getCourseMemo())
                 .courseDisclosure(updatedCourseDTO.getCourseDisclosure())
                 .courseStartDate(updatedCourseDTO.getCourseStartDate())
                 .courseEndDate(updatedCourseDTO.getCourseEndDate())
@@ -107,7 +105,6 @@ public class DateCourseConverter {
                         .courseId(course.getCourseId())
                         .courseTitle(course.getCourseTitle())
                         .courseType(course.getCourseType())
-                        .courseMemo(course.getCourseMemo())
                         .courseLike(course.getCourseLike())
                         .courseView(course.getCourseView())
                         .courseStartDate(course.getCourseStartDate())
@@ -122,7 +119,6 @@ public class DateCourseConverter {
                 .courseId(dateCourseDTO.getCourseId())
                 .courseTitle(dateCourseDTO.getCourseTitle())
                 .courseType(dateCourseDTO.getCourseType())
-                .courseMemo(dateCourseDTO.getCourseMemo())
                 .courseLike(dateCourseDTO.getCourseLike())
                 .courseView(dateCourseDTO.getCourseView())
                 .courseStatus(dateCourseDTO.getCourseStatus())

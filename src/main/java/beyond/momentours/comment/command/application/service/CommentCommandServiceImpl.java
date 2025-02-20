@@ -8,19 +8,24 @@ import beyond.momentours.comment.query.repository.CommentMapper;
 import beyond.momentours.common.exception.CommonException;
 import beyond.momentours.common.exception.ErrorCode;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
+import beyond.momentours.randomquestion.command.domain.aggregate.entity.UserRandomQuestion;
+import beyond.momentours.randomquestion.query.repository.RandomQuestionMapper;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Slf4j
-@Service("commandCommentService")
+@Service
 @RequiredArgsConstructor
-public class CommentServiceImpl implements CommentService {
+public class CommentCommandServiceImpl implements CommentCommandService {
 
     private final CommentRepository commentRepository;
     private final CommentConverter commentConverter;
     private final CommentMapper commentDAO;
+    private final RandomQuestionMapper randomQuestionMapper;
 
+    @Transactional
     @Override
     public CommentDTO createComment(CommentDTO commentDTO, CustomUserDetails user) {
         CommentDTO commentDTOInfo = setCommentTypeFields(commentDTO);
@@ -39,6 +44,7 @@ public class CommentServiceImpl implements CommentService {
         return commentConverter.fromEntityToDTO(savedComment);
     }
 
+    @Transactional
     @Override
     public CommentDTO updateComment(CommentDTO commentDTO, CustomUserDetails user) {
         Long memberId = user.getMemberId();
@@ -63,7 +69,7 @@ public class CommentServiceImpl implements CommentService {
         return commentConverter.fromEntityToDTO(existingComment);
     }
 
-
+    @Transactional
     @Override
     public CommentDTO deleteComment(Long commentId, CustomUserDetails user) {
         Comment existingComment = commentRepository.findById(commentId).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_COMMENT));
@@ -97,14 +103,12 @@ public class CommentServiceImpl implements CommentService {
         switch (commentDTO.getCommentType()) {
             case COUPLE_LOG:
                 log.info("COUPLE_LOG 타입의 댓글 처리");
-                commentDTO.setCoupleLogId(commentDTO.getCoupleLogId());
-                commentDTO.setQuesId(null);
+                commentDTO.setTargetId(commentDTO.getTargetId());
                 break;
 
             case QUESTION:
                 log.info("QUESTION 타입의 댓글 처리");
-                commentDTO.setQuesId(commentDTO.getQuesId());
-                commentDTO.setCoupleLogId(null);
+                commentDTO.setTargetId(commentDTO.getTargetId());
                 break;
 
             default:
@@ -121,13 +125,13 @@ public class CommentServiceImpl implements CommentService {
 //                        .orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_COUPLE_LOG));
 //                break;
 //
-//            case QUESTION:
-//                RandomQuestion randomQuestion = randomQuestionRepository.findById(commentDTO.getQuesId())
-//                        .orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_RANDOM_QUESTION));
-//                if (!"All".equals(randomQuestion.getAnsStatus())) {
-//                    throw new CommonException(ErrorCode.INVALID_RANDOM_QUESTION_STATUS);
-//                }
-//                break;
+            case QUESTION:
+                UserRandomQuestion randomQuestion = randomQuestionMapper.findByQuestionId(commentDTO.getTargetId());
+                if (randomQuestion == null) throw new CommonException(ErrorCode.NOT_FOUND_RANDOM_QUESTION);
+                if (!"All".equals(randomQuestion.getAnsStatus())) {
+                    throw new CommonException(ErrorCode.INVALID_RANDOM_QUESTION_STATUS);
+                }
+                break;
 
             default:
                 throw new CommonException(ErrorCode.INVALID_COMMENT_TYPE);
