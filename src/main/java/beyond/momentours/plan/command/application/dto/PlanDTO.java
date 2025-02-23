@@ -1,5 +1,6 @@
 package beyond.momentours.plan.command.application.dto;
 
+import beyond.momentours.plan.command.domain.aggregate.PlanType;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 public class PlanDTO {
     private Long planId;
+    private PlanType planType;
     private String planTitle;
     private String planContent;
     private LocalDateTime planStartDate;
