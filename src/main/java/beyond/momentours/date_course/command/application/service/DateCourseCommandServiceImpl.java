@@ -7,7 +7,8 @@ import beyond.momentours.date_course.command.application.mapper.DateCourseConver
 import beyond.momentours.date_course.command.domain.aggregate.entity.DateCourse;
 import beyond.momentours.date_course.command.domain.repository.DateCourseRepository;
 import beyond.momentours.date_course.query.repository.DateCourseMapper;
-import beyond.momentours.date_course_location.command.application.service.DateCourseLocationService;
+import beyond.momentours.date_course_location.command.application.service.DateCourseLocationCommandService;
+import beyond.momentours.date_course_location.query.service.DateCourseLocationQueryService;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,8 @@ public class DateCourseCommandServiceImpl implements DateCourseCommandService {
     private final DateCourseRepository dateCourseRepository;
     private final DateCourseConverter dateCourseConverter;
     private final DateCourseMapper dateCourseDAO;
-    private final DateCourseLocationService dateCourseLocationService;
+    private final DateCourseLocationCommandService dateCourseLocationCommandService;
+    private final DateCourseLocationQueryService dateCourseLocationQueryService;
 
     @Transactional
     @Override
@@ -38,7 +40,7 @@ public class DateCourseCommandServiceImpl implements DateCourseCommandService {
             log.info("저장할 데이트 코스 : {}", dateCourse);
             DateCourse savedCourse = dateCourseRepository.save(dateCourse);
 
-            dateCourseLocationService.createDateCourseLocations(savedCourse.getCourseId(), dateCourseDTO.getLocations());
+            dateCourseLocationCommandService.createDateCourseLocations(savedCourse.getCourseId(), dateCourseDTO.getLocations());
 
             log.info("데이트 코스 등록 성공 : {}", savedCourse);
             return dateCourseConverter.fromEntityToDTO(savedCourse);
@@ -74,6 +76,40 @@ public class DateCourseCommandServiceImpl implements DateCourseCommandService {
         log.info("데이트 코스 Soft Delete 완료: courseId={}, userId={}", courseId, user.getMemberId());
     }
 
+    @Transactional
+    @Override
+    public void certifyDateCourse(Long courseId, CustomUserDetails user) {
+        DateCourse dateCourse = dateCourseDAO.findActiveById(courseId).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_DATE_COURSE));
+
+        if (!dateCourse.getMemberId().equals(user.getMemberId())) throw new CommonException(ErrorCode.UNAUTHORIZED_ACCESS);
+
+        boolean hasMoment = dateCourseLocationQueryService.hasMomentsInCourse(courseId);
+
+        if (hasMoment) {
+            dateCourse.certifyCourse();
+            dateCourse.updateUpdatedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
+            dateCourseRepository.save(dateCourse);
+            log.info("데이트 코스 인증 완료: courseId={}, userId={}", courseId, user.getMemberId());
+        } else {
+            throw new CommonException(ErrorCode.NOT_FOUND_MOMENT);
+        }
+    }
+
+    @Transactional
+    @Override
+    public DateCourseDTO updateCourseSchedule(DateCourseDTO dateCourseDTO, CustomUserDetails user) {
+        DateCourse dateCourse = dateCourseRepository.findById(dateCourseDTO.getCourseId()).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_DATE_COURSE));
+
+        if (!dateCourse.getMemberId().equals(user.getMemberId())) throw new CommonException(ErrorCode.UNAUTHORIZED_ACCESS);
+
+        dateCourse.updateSchedule(dateCourseDTO.getCourseStartDate(), dateCourseDTO.getCourseEndDate());
+        dateCourseRepository.save(dateCourse);
+
+        log.info("데이트 코스 일정 업데이트 완료: courseId={}, userId={}, start={}, end={}", dateCourse.getCourseId(), user.getMemberId(), dateCourseDTO.getCourseStartDate(), dateCourseDTO.getCourseEndDate());
+
+        return dateCourseConverter.fromEntityToDTO(dateCourse);
+    }
+
     private void update(DateCourseDTO dateCourseDTO, DateCourse existingCourse, Long courseId) {
         existingCourse.updateCourseTitle(dateCourseDTO.getCourseTitle());
         existingCourse.updateCourseType(dateCourseDTO.getCourseType());
@@ -82,7 +118,7 @@ public class DateCourseCommandServiceImpl implements DateCourseCommandService {
         existingCourse.updateCourseEndDate(dateCourseDTO.getCourseEndDate());
 
         if (dateCourseDTO.getLocations() != null) {
-            dateCourseLocationService.updateDateCourseLocations(courseId, dateCourseDTO.getLocations());
+            dateCourseLocationCommandService.updateDateCourseLocations(courseId, dateCourseDTO.getLocations());
         }
 
         existingCourse.updateUpdatedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
