@@ -92,7 +92,7 @@ public class PlanCommandServiceImpl implements PlanCommandService {
             throw new CommonException(ErrorCode.ACCESS_DENIED);
         }
 
-        existingPlan.updateStatus(false);  // 상태를 비활성화로 변경
+        existingPlan.updateStatus(false);
         log.info("상태 변경 후 Plan : {}", existingPlan);
 
         planRepository.save(existingPlan);
@@ -112,5 +112,4 @@ public class PlanCommandServiceImpl implements PlanCommandService {
             existingPlan.updateCourseId(courseId);
         }
     }
-
 }

@@ -1,20 +1,22 @@
 package beyond.momentours.date_course.command.domain.vo.request;
 
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@ToString
 public class RequestUpdateDateCourseScheduleVO {
-
-    @NotNull(message = "시작 날짜를 입력해야 합니다.")
+    @JsonProperty("course_start_date")
     private LocalDateTime courseStartDate;
 
-    @NotNull(message = "종료 날짜를 입력해야 합니다.")
+    @JsonProperty("course_end_date")
     private LocalDateTime courseEndDate;
+
+    @JsonProperty("plan_type")
+    private String planType;
 }
