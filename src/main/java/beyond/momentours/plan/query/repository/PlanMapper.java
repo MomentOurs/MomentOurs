@@ -14,7 +14,7 @@ public interface PlanMapper {
 
     Long findByCourseId(Long courseId);
 
-    List<Plan> findByCoupleIdAndDateRange(@Param("coupleId") Long coupleId, @Param("planStartDate") LocalDateTime planStartDate, @Param("planEndDate") LocalDateTime planEndDate);
+    List<Plan> findByTypeAndDateRange(@Param("coupleId") Long coupleId, @Param("planStartDate") LocalDateTime planStartDate, @Param("planEndDate") LocalDateTime planEndDate, @Param("types") List<String> types);
 
-    List<Plan> findByDate(@Param("coupleId") Long coupleId, @Param("selectedDateStart") LocalDateTime selectedDateStart, @Param("selectedDateEnd") LocalDateTime selectedDateEnd);
+    List<Plan> findByMemberOrCoupleIdAndDateRange(@Param("memberId") Long memberId, @Param("coupleId") Long coupleId, @Param("planStartDate") LocalDateTime planStartDate, @Param("planEndDate") LocalDateTime planEndDate);
 }
