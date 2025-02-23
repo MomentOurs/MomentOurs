@@ -10,6 +10,9 @@ import beyond.momentours.date_course.query.repository.DateCourseMapper;
 import beyond.momentours.date_course_location.command.application.service.DateCourseLocationCommandService;
 import beyond.momentours.date_course_location.query.service.DateCourseLocationQueryService;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
+import beyond.momentours.plan.command.application.dto.PlanDTO;
+import beyond.momentours.plan.command.application.service.PlanCommandService;
+import beyond.momentours.plan.command.domain.aggregate.PlanType;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +22,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 @Slf4j
-@Service("commandDateCourseService")
+@Service
 @RequiredArgsConstructor
 public class DateCourseCommandServiceImpl implements DateCourseCommandService {
 
@@ -28,6 +31,7 @@ public class DateCourseCommandServiceImpl implements DateCourseCommandService {
     private final DateCourseMapper dateCourseDAO;
     private final DateCourseLocationCommandService dateCourseLocationCommandService;
     private final DateCourseLocationQueryService dateCourseLocationQueryService;
+    private final PlanCommandService planCommandService;
 
     @Transactional
     @Override
@@ -97,9 +101,8 @@ public class DateCourseCommandServiceImpl implements DateCourseCommandService {
 
     @Transactional
     @Override
-    public DateCourseDTO updateCourseSchedule(DateCourseDTO dateCourseDTO, CustomUserDetails user) {
+    public DateCourseDTO updateCourseSchedule(DateCourseDTO dateCourseDTO, CustomUserDetails user, String planTypeStr) {
         DateCourse dateCourse = dateCourseRepository.findById(dateCourseDTO.getCourseId()).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_DATE_COURSE));
-
         if (!dateCourse.getMemberId().equals(user.getMemberId())) throw new CommonException(ErrorCode.UNAUTHORIZED_ACCESS);
 
         dateCourse.updateSchedule(dateCourseDTO.getCourseStartDate(), dateCourseDTO.getCourseEndDate());
@@ -107,7 +110,31 @@ public class DateCourseCommandServiceImpl implements DateCourseCommandService {
 
         log.info("데이트 코스 일정 업데이트 완료: courseId={}, userId={}, start={}, end={}", dateCourse.getCourseId(), user.getMemberId(), dateCourseDTO.getCourseStartDate(), dateCourseDTO.getCourseEndDate());
 
+        PlanType planType = getPlanTypeFromString(planTypeStr);
+        PlanDTO planDTO = PlanDTO.builder()
+                .planType(planType)
+                .planTitle(dateCourseDTO.getCourseTitle())
+                .planContent(dateCourseDTO.getCourseTitle() + "데이트 코스 일정")
+                .planStartDate(dateCourseDTO.getCourseStartDate())
+                .planEndDate(dateCourseDTO.getCourseEndDate())
+                .courseId(dateCourseDTO.getCourseId())
+                .build();
+
+        planCommandService.createPlan(planDTO, user);
+        log.info("데이트 코스에 따른 일정 등록 완료: courseId={}, planType={}", dateCourse.getCourseId(), planType);
+
         return dateCourseConverter.fromEntityToDTO(dateCourse);
+    }
+
+    private PlanType getPlanTypeFromString(String planTypeStr) {
+        if (planTypeStr == null) {
+            return PlanType.PERSONAL_TRIP;
+        }
+        try {
+            return PlanType.valueOf(planTypeStr.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
     }
 
     private void update(DateCourseDTO dateCourseDTO, DateCourse existingCourse, Long courseId) {
