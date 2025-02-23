@@ -5,6 +5,7 @@ import beyond.momentours.common.exception.ErrorCode;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
 import beyond.momentours.plan.command.application.mapper.PlanConverter;
 import beyond.momentours.plan.command.application.dto.PlanDTO;
+import beyond.momentours.plan.command.domain.aggregate.PlanType;
 import beyond.momentours.plan.command.domain.aggregate.entity.Plan;
 import beyond.momentours.plan.command.domain.repository.PlanRepository;
 import beyond.momentours.plan.query.repository.PlanMapper;
@@ -12,13 +13,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 @Slf4j
-@Service("commandPlanService")
+@Service
 @RequiredArgsConstructor
-public class PlanServiceImpl implements PlanService {
+public class PlanCommandServiceImpl implements PlanCommandService {
 
     private final PlanRepository planRepository;
     private final PlanConverter planConverter;
@@ -27,21 +25,28 @@ public class PlanServiceImpl implements PlanService {
     @Override
     public PlanDTO createPlan(PlanDTO planDTO, CustomUserDetails user) {
         Long memberId = user.getMemberId();
+        Long coupleId = null;
+
+        if (planDTO.getPlanType() == PlanType.COUPLE || planDTO.getPlanType() == PlanType.COUPLE_TRIP) {
+            coupleId = planDAO.findByCoupleId(memberId);
+            if (coupleId == null) throw new CommonException(ErrorCode.NOT_FOUND_COUPLE);
+            memberId = null;
+        } else if (planDTO.getPlanType() == PlanType.PERSONAL || planDTO.getPlanType() == PlanType.PERSONAL_TRIP) {
+            coupleId = null;
+        }
+
+        log.info("planType: {}, memberId: {}, coupleId: {}", planDTO.getPlanType(), memberId, coupleId);
+
         planDTO.setMemberId(memberId);
-
-        Long coupleId = planDAO.findByCoupleId(memberId);
-        log.info("memberId : {} , coupleId : {}", memberId, coupleId);
-
         Plan plan = planConverter.fromDTOToEntity(planDTO, coupleId);
 
         if (planDTO.getCourseId() != null) {
             Long courseId = planDAO.findByCourseId(planDTO.getCourseId());
             log.info("courseId : {}", courseId);
-
             plan.setCourseId(plan, courseId);
         }
-        log.info("저장 전 plan : {}", plan);
 
+        log.info("저장 전 plan : {}", plan);
         plan.register(plan);
         planRepository.save(plan);
         log.info("저장 후 plan : {}", plan);
@@ -74,8 +79,7 @@ public class PlanServiceImpl implements PlanService {
     }
 
     @Override
-    public PlanDTO deletePlan(Long planId, CustomUserDetails user) {
-        // Plan 조회
+    public PlanDTO deactivatePlan(Long planId, CustomUserDetails user) {
         Plan existingPlan = planRepository.findById(planId).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_PLAN));
         log.info("삭제 요청된 Plan 데이터: {}", existingPlan);
 
@@ -88,57 +92,12 @@ public class PlanServiceImpl implements PlanService {
             throw new CommonException(ErrorCode.ACCESS_DENIED);
         }
 
-        existingPlan.updateStatus(false);
+        existingPlan.updateStatus(false);  // 상태를 비활성화로 변경
         log.info("상태 변경 후 Plan : {}", existingPlan);
 
         planRepository.save(existingPlan);
 
         return planConverter.fromEntityToDTO(existingPlan);
-    }
-
-    @Override
-    public List<PlanDTO> getPlans(int year, int month, CustomUserDetails user) {
-        LocalDateTime planStartDate = LocalDateTime.of(year, month, 1, 0, 0, 0);
-        LocalDateTime planEndDate = planStartDate.withDayOfMonth(planStartDate.toLocalDate().lengthOfMonth())
-                .withHour(23)
-                .withMinute(59)
-                .withSecond(59);
-
-        log.info("스케줄 조회 - 시작 날짜: {}, 종료 날짜: {}", planStartDate, planEndDate);
-
-        Long memberId = user.getMemberId();
-        Long coupleId = planDAO.findByCoupleId(memberId);
-        log.info("memberId : {} , coupleId : {}", memberId, coupleId);
-
-        List<Plan> plans = planDAO.findByCoupleIdAndDateRange(coupleId, planStartDate, planEndDate);
-
-        return plans.stream()
-                .map(planConverter::fromEntityToDTO)
-                .toList();
-    }
-
-    @Override
-    public List<PlanDTO> getPlansByDate(int year, int month, int day, CustomUserDetails user) {
-        LocalDateTime selectedDateStart = LocalDateTime.of(year, month, day, 0, 0, 0);
-        LocalDateTime selectedDateEnd = LocalDateTime.of(year, month, day, 23, 59, 59);
-
-        log.info("특정 날짜 일정 조회 - 시작: {}, 종료: {}", selectedDateStart, selectedDateEnd);
-
-        Long memberId = user.getMemberId();
-        Long coupleId = planDAO.findByCoupleId(memberId);
-
-        List<Plan> plans = planDAO.findByDate(coupleId, selectedDateStart, selectedDateEnd);
-
-        return plans.stream()
-                .map(planConverter::fromEntityToDTO)
-                .toList();
-    }
-
-    @Override
-    public PlanDTO getPlanById(Long planId) {
-        Plan plan = planRepository.findById(planId).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_PLAN));
-
-        return planConverter.fromEntityToDTO(plan);
     }
 
     private void updatePlan(PlanDTO planDTO, Plan existingPlan) {

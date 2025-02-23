@@ -6,7 +6,7 @@ import jakarta.transaction.Transactional;
 
 import java.util.List;
 
-public interface PlanService {
+public interface PlanCommandService {
     @Transactional
     PlanDTO createPlan(PlanDTO planDTO, CustomUserDetails user);
 
@@ -14,11 +14,5 @@ public interface PlanService {
     PlanDTO updatePlan(PlanDTO planDTO, CustomUserDetails user);
 
     @Transactional
-    PlanDTO deletePlan(Long planId, CustomUserDetails user);
-
-    List<PlanDTO> getPlans(int year, int month, CustomUserDetails user);
-
-    List<PlanDTO> getPlansByDate(int year, int month, int day, CustomUserDetails user);
-
-    PlanDTO getPlanById(Long planId);
+    PlanDTO deactivatePlan(Long planId, CustomUserDetails user);
 }
