@@ -98,16 +98,14 @@ public class DateCourseCommandController {
         }
     }
 
-    @Operation(description = "데이트 코스에서 특정 코스 일정 등록할 때 null이었던 시작일, 종료일 수정")
-    @PatchMapping("/{courseId}/schedule")
+    @Operation(description = "데이트 코스에서 특정 코스 일정 등록할 때 null이었던 시작일, 종료일 수정, 타입도 설정")
+    @PostMapping("/{courseId}/schedule")
     public ResponseEntity<?> updateCourseSchedule(@PathVariable Long courseId, @RequestBody @Valid RequestUpdateDateCourseScheduleVO request, @AuthenticationPrincipal CustomUserDetails user) {
-        log.info("데이트 코스 일정 업데이트 요청: courseId={}, userId={}, start={}, end={}",
-                courseId, user.getMemberId(), request.getCourseStartDate(), request.getCourseEndDate());
+        log.info("데이트 코스 일정 업데이트 요청: courseId={}, userId={}, start={}, end={}, planType={}", courseId, user.getMemberId(), request.getCourseStartDate(), request.getCourseEndDate(), request.getPlanType());
         try {
             DateCourseDTO dateCourseDTO = dateCourseConverter.fromUpdateScheduleVOToDTO(request, courseId);
-            DateCourseDTO updatedCourseDTO = dateCourseCommandService.updateCourseSchedule(dateCourseDTO, user);
+            DateCourseDTO updatedCourseDTO = dateCourseCommandService.updateCourseSchedule(dateCourseDTO, user, request.getPlanType());
             ResponseUpdateDateCourseVO response = dateCourseConverter.fromDTOToUpdateVO(updatedCourseDTO);
-
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (CommonException e) {
             log.error("데이트 코스 일정 업데이트 오류: {}", e.getMessage());
@@ -117,5 +115,4 @@ public class DateCourseCommandController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("예상치 못한 오류가 발생했습니다");
         }
     }
-
 }
