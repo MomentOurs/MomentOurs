@@ -13,4 +13,9 @@ public interface DateCourseCommandService {
 
     @Transactional
     void deleteDateCourse(Long courseId, CustomUserDetails user);
+
+    void certifyDateCourse(Long courseId, CustomUserDetails user);
+
+    @Transactional
+    DateCourseDTO updateCourseSchedule(DateCourseDTO dateCourseDTO, CustomUserDetails user, String planTypeStr);
 }
