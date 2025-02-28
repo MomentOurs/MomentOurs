@@ -17,4 +17,6 @@ public interface MemberQueryService {
     List<ResponseMemberSearchVO> getMemberSearch(String memberNickname, String memberEmail);
 
     boolean emailCheck(String memberEmail);
+
+    boolean nicknameCheck(String memberNickname);
 }

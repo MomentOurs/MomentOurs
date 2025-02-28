@@ -66,4 +66,11 @@
             </trim>
     </select>
 
+    <select id="findByMemberNickname" resultType="string" parameterType="string">
+        SELECT
+               a.member_nickname
+          FROM tb_member a
+         WHERE a.member_nickname = #{memberNickname}
+    </select>
+
 </mapper>

@@ -68,4 +68,10 @@ public class MemberQueryServiceImpl implements MemberQueryService {
         return email != null;
     }
 
+    @Override
+    public boolean nicknameCheck(String memberNickname) {
+        String nickname = memberMapper.findByMemberNickname(memberNickname);
+        return nickname != null;
+    }
+
 }

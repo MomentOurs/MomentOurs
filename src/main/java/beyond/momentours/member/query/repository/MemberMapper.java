@@ -18,4 +18,6 @@ public interface MemberMapper {
 
     List<ResponseMemberSearchVO> findMemberSearch(@Param("memberNickname") String memberNickname,
                                                   @Param("memberEmail") String memberEmail);
+
+    String findByMemberNickname(String memberNickname);
 }
