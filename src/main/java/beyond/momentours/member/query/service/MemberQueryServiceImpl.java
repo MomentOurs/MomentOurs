@@ -61,4 +61,11 @@ public class MemberQueryServiceImpl implements MemberQueryService {
         }
         return response;
     }
+
+    @Override
+    public boolean emailCheck(String memberEmail) {
+        String email = memberMapper.findByMemberEmail(memberEmail);
+        return email != null;
+    }
+
 }

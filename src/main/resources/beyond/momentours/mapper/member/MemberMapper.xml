@@ -52,7 +52,7 @@
 
     <select id="findMemberSearch" resultMap="memberResultMap">
         SELECT
-               a.member_email
+               a.member_email,
                a.member_nickname
           FROM tb_member a
          WHERE
