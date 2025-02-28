@@ -2,7 +2,7 @@ package beyond.momentours.comment.command.application.controller;
 
 import beyond.momentours.comment.command.application.dto.CommentDTO;
 import beyond.momentours.comment.command.application.mapper.CommentConverter;
-import beyond.momentours.comment.command.application.service.CommentService;
+import beyond.momentours.comment.command.application.service.CommentCommandService;
 import beyond.momentours.comment.command.domain.vo.request.RequestCreateCommentVO;
 import beyond.momentours.comment.command.domain.vo.request.RequestUpdateCommentVO;
 import beyond.momentours.comment.command.domain.vo.response.ResponseCreateCommentVO;
@@ -16,13 +16,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-@RestController("commandCommentController")
+@RestController
 @RequestMapping("api/comment")
 @Slf4j
 @RequiredArgsConstructor
-public class CommentController {
+public class CommentCommandController {
 
-    private final CommentService commentService;
+    private final CommentCommandService commentService;
     private final CommentConverter commentConverter;
 
     @PostMapping

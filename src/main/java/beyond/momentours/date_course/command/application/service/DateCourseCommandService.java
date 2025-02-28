@@ -4,9 +4,8 @@ import beyond.momentours.date_course.command.application.dto.DateCourseDTO;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
 import jakarta.transaction.Transactional;
 
-import java.util.List;
-
-public interface DateCourseService {
+public interface DateCourseCommandService {
+    @Transactional
     DateCourseDTO createDateCourse(DateCourseDTO dateCourseDTO, CustomUserDetails user);
 
     @Transactional
@@ -15,12 +14,8 @@ public interface DateCourseService {
     @Transactional
     void deleteDateCourse(Long courseId, CustomUserDetails user);
 
-    @Transactional
-    List<DateCourseDTO> getDateCourses(String sortBy);
+    void certifyDateCourse(Long courseId, CustomUserDetails user);
 
     @Transactional
-    DateCourseDTO getDateCourse(Long courseId, CustomUserDetails user);
-
-    @Transactional
-    List<DateCourseDTO> getCoursesByMemberId(CustomUserDetails user);
+    DateCourseDTO updateCourseSchedule(DateCourseDTO dateCourseDTO, CustomUserDetails user, String planTypeStr);
 }

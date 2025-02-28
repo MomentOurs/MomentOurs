@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 public class PlanConverter {
     public PlanDTO fromCreateVOToDTO(RequestCreatePlanVO registerPlanVO) {
         return PlanDTO.builder()
+                .planType(registerPlanVO.getPlanType())
                 .planTitle(registerPlanVO.getPlanTitle())
                 .planContent(registerPlanVO.getPlanContent())
                 .planStartDate(registerPlanVO.getPlanStartDate())
@@ -23,6 +24,7 @@ public class PlanConverter {
 
     public ResponseCreatePlanVO fromDTOToCreateVO(PlanDTO savePlanDTO) {
         return ResponseCreatePlanVO.builder()
+                .planType(savePlanDTO.getPlanType())
                 .planTitle(savePlanDTO.getPlanTitle())
                 .planContent(savePlanDTO.getPlanContent())
                 .planStartDate(savePlanDTO.getPlanStartDate())
@@ -35,6 +37,7 @@ public class PlanConverter {
 
     public Plan fromDTOToEntity(PlanDTO planDTO, Long coupleId) {
         return Plan.builder()
+                .planType(planDTO.getPlanType())
                 .planTitle(planDTO.getPlanTitle())
                 .planContent(planDTO.getPlanContent())
                 .planStartDate(planDTO.getPlanStartDate())
@@ -49,6 +52,7 @@ public class PlanConverter {
     public PlanDTO fromEntityToDTO(Plan plan) {
         return PlanDTO.builder()
                 .planId(plan.getPlanId())
+                .planType(plan.getPlanType())
                 .planTitle(plan.getPlanTitle())
                 .planContent(plan.getPlanContent())
                 .planStartDate(plan.getPlanStartDate())
@@ -64,6 +68,7 @@ public class PlanConverter {
 
     public PlanDTO fromUpdateVOToDTO(RequestUpdatePlanVO editPlanVO) {
         return PlanDTO.builder()
+                .planType(editPlanVO.getPlanType())
                 .planTitle(editPlanVO.getPlanTitle())
                 .planContent(editPlanVO.getPlanContent())
                 .planStartDate(editPlanVO.getPlanStartDate())
@@ -76,6 +81,7 @@ public class PlanConverter {
     public ResponseUpdatePlanVO fromDTOToUpdateVO(PlanDTO editedPlan) {
         return ResponseUpdatePlanVO.builder()
                 .planId(editedPlan.getPlanId())
+                .planType(editedPlan.getPlanType())
                 .planTitle(editedPlan.getPlanTitle())
                 .planContent(editedPlan.getPlanContent())
                 .planStartDate(editedPlan.getPlanStartDate())

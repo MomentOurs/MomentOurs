@@ -27,9 +27,6 @@ public class DateCourse {
     @Column(name = "course_type", nullable = false)
     private CourseType courseType;
 
-    @Column(name = "course_memo")
-    private String courseMemo;
-
     @Column(name = "course_disclosure", nullable = false)
     private Boolean courseDisclosure;
 
@@ -60,6 +57,9 @@ public class DateCourse {
     @Column(name = "member_id", nullable = false)
     private Long memberId;
 
+    @Column(name = "folder_id", nullable = false)
+    private Long folderId;
+
     @PrePersist
     private void onCreate() {
         this.courseLike = 0L;
@@ -77,12 +77,6 @@ public class DateCourse {
     public void updateCourseType(CourseType courseType) {
         if (courseType != null) {
             this.courseType = courseType;
-        }
-    }
-
-    public void updateCourseMemo(String courseMemo) {
-        if (courseMemo != null) {
-            this.courseMemo = courseMemo;
         }
     }
 
@@ -112,5 +106,22 @@ public class DateCourse {
 
     public void deleteCourse(Boolean courseStatus) {
         this.courseStatus = courseStatus;
+    }
+
+    public void certifyCourse() {
+        this.courseCertification = true;
+    }
+
+    public void updateSchedule(LocalDateTime courseStartDate, LocalDateTime courseEndDate) {
+        if (courseStartDate == null || courseEndDate == null) {
+            throw new IllegalArgumentException("시작 날짜와 종료 날짜를 모두 입력해야 합니다.");
+        }
+        if (courseEndDate.isBefore(courseStartDate)) {
+            throw new IllegalArgumentException("종료 날짜는 시작 날짜보다 이후여야 합니다.");
+        }
+
+        this.courseStartDate = courseStartDate;
+        this.courseEndDate = courseEndDate;
+        this.updatedAt = LocalDateTime.now();
     }
 }

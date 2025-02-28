@@ -7,29 +7,31 @@ import beyond.momentours.date_course.command.application.mapper.DateCourseConver
 import beyond.momentours.date_course.command.domain.aggregate.entity.DateCourse;
 import beyond.momentours.date_course.command.domain.repository.DateCourseRepository;
 import beyond.momentours.date_course.query.repository.DateCourseMapper;
-import beyond.momentours.date_course_location.command.application.service.DateCourseLocationService;
+import beyond.momentours.date_course_location.command.application.service.DateCourseLocationCommandService;
+import beyond.momentours.date_course_location.query.service.DateCourseLocationQueryService;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
+import beyond.momentours.plan.command.application.dto.PlanDTO;
+import beyond.momentours.plan.command.application.service.PlanCommandService;
+import beyond.momentours.plan.command.domain.aggregate.PlanType;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
-@Service("commandDateCourseService")
+@Service
 @RequiredArgsConstructor
-public class DateCourseServiceImpl implements DateCourseService {
+public class DateCourseCommandServiceImpl implements DateCourseCommandService {
 
-    private final RedisTemplate<String, String> redisTemplate;
     private final DateCourseRepository dateCourseRepository;
     private final DateCourseConverter dateCourseConverter;
     private final DateCourseMapper dateCourseDAO;
-    private final DateCourseLocationService dateCourseLocationService;
+    private final DateCourseLocationCommandService dateCourseLocationCommandService;
+    private final DateCourseLocationQueryService dateCourseLocationQueryService;
+    private final PlanCommandService planCommandService;
 
     @Transactional
     @Override
@@ -42,7 +44,7 @@ public class DateCourseServiceImpl implements DateCourseService {
             log.info("저장할 데이트 코스 : {}", dateCourse);
             DateCourse savedCourse = dateCourseRepository.save(dateCourse);
 
-            dateCourseLocationService.createDateCourseLocations(savedCourse.getCourseId(), dateCourseDTO.getLocations());
+            dateCourseLocationCommandService.createDateCourseLocations(savedCourse.getCourseId(), dateCourseDTO.getLocations());
 
             log.info("데이트 코스 등록 성공 : {}", savedCourse);
             return dateCourseConverter.fromEntityToDTO(savedCourse);
@@ -80,45 +82,70 @@ public class DateCourseServiceImpl implements DateCourseService {
 
     @Transactional
     @Override
-    public List<DateCourseDTO> getDateCourses(String sortBy) {
-        List<DateCourse> courses = dateCourseDAO.findCoursesWithSorting(sortBy);
-        return courses.stream()
-                .map(dateCourseConverter::fromEntityToDTO)
-                .collect(Collectors.toList());
+    public void certifyDateCourse(Long courseId, CustomUserDetails user) {
+        DateCourse dateCourse = dateCourseDAO.findActiveById(courseId).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_DATE_COURSE));
+
+        if (!dateCourse.getMemberId().equals(user.getMemberId())) throw new CommonException(ErrorCode.UNAUTHORIZED_ACCESS);
+
+        boolean hasMoment = dateCourseLocationQueryService.hasMomentsInCourse(courseId);
+
+        if (hasMoment) {
+            dateCourse.certifyCourse();
+            dateCourse.updateUpdatedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
+            dateCourseRepository.save(dateCourse);
+            log.info("데이트 코스 인증 완료: courseId={}, userId={}", courseId, user.getMemberId());
+        } else {
+            throw new CommonException(ErrorCode.NOT_FOUND_MOMENT);
+        }
     }
 
     @Transactional
     @Override
-    public DateCourseDTO getDateCourse(Long courseId, CustomUserDetails user) {
-        String key = "course:view:" + courseId;
-        redisTemplate.opsForValue().increment(key, 1);
+    public DateCourseDTO updateCourseSchedule(DateCourseDTO dateCourseDTO, CustomUserDetails user, String planTypeStr) {
+        DateCourse dateCourse = dateCourseRepository.findById(dateCourseDTO.getCourseId()).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_DATE_COURSE));
+        if (!dateCourse.getMemberId().equals(user.getMemberId())) throw new CommonException(ErrorCode.UNAUTHORIZED_ACCESS);
 
-        DateCourse dateCourse = dateCourseDAO.findActiveById(courseId).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_DATE_COURSE));
-        if (!dateCourse.getCourseDisclosure() && !dateCourse.getMemberId().equals(user.getMemberId())) throw new CommonException(ErrorCode.ACCESS_DENIED);
+        dateCourse.updateSchedule(dateCourseDTO.getCourseStartDate(), dateCourseDTO.getCourseEndDate());
+        dateCourseRepository.save(dateCourse);
+
+        log.info("데이트 코스 일정 업데이트 완료: courseId={}, userId={}, start={}, end={}", dateCourse.getCourseId(), user.getMemberId(), dateCourseDTO.getCourseStartDate(), dateCourseDTO.getCourseEndDate());
+
+        PlanType planType = getPlanTypeFromString(planTypeStr);
+        PlanDTO planDTO = PlanDTO.builder()
+                .planType(planType)
+                .planTitle(dateCourseDTO.getCourseTitle())
+                .planContent(dateCourseDTO.getCourseTitle() + "데이트 코스 일정")
+                .planStartDate(dateCourseDTO.getCourseStartDate())
+                .planEndDate(dateCourseDTO.getCourseEndDate())
+                .courseId(dateCourseDTO.getCourseId())
+                .build();
+
+        planCommandService.createPlan(planDTO, user);
+        log.info("데이트 코스에 따른 일정 등록 완료: courseId={}, planType={}", dateCourse.getCourseId(), planType);
 
         return dateCourseConverter.fromEntityToDTO(dateCourse);
     }
 
-    @Transactional
-    @Override
-    public List<DateCourseDTO> getCoursesByMemberId(CustomUserDetails user) {
-        Long memberId = user.getMemberId();
-        List<DateCourse> courses = dateCourseDAO.findCoursesByMemberId(memberId);
-        return courses.stream()
-                .map(dateCourseConverter::fromEntityToDTO)
-                .collect(Collectors.toList());
+    private PlanType getPlanTypeFromString(String planTypeStr) {
+        if (planTypeStr == null) {
+            return PlanType.PERSONAL_TRIP;
+        }
+        try {
+            return PlanType.valueOf(planTypeStr.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
     }
 
     private void update(DateCourseDTO dateCourseDTO, DateCourse existingCourse, Long courseId) {
         existingCourse.updateCourseTitle(dateCourseDTO.getCourseTitle());
         existingCourse.updateCourseType(dateCourseDTO.getCourseType());
-        existingCourse.updateCourseMemo(dateCourseDTO.getCourseMemo());
         existingCourse.updateCourseDisclosure(dateCourseDTO.getCourseDisclosure());
         existingCourse.updateCourseStartDate(dateCourseDTO.getCourseStartDate());
         existingCourse.updateCourseEndDate(dateCourseDTO.getCourseEndDate());
 
         if (dateCourseDTO.getLocations() != null) {
-            dateCourseLocationService.updateDateCourseLocations(courseId, dateCourseDTO.getLocations());
+            dateCourseLocationCommandService.updateDateCourseLocations(courseId, dateCourseDTO.getLocations());
         }
 
         existingCourse.updateUpdatedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")));

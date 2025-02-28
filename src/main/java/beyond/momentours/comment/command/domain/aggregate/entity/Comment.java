@@ -27,6 +27,9 @@ public class Comment {
     @Column(name = "comment_type", nullable = false)
     private CommentType commentType;
 
+    @Column(name = "target_id", nullable = false)
+    private Long targetId;
+
     @Column(name = "comment_status", nullable = false, columnDefinition = "BOOLEAN DEFAULT true")
     private Boolean commentStatus = true;
 
@@ -38,12 +41,6 @@ public class Comment {
 
     @Column(name = "member_id", nullable = false)
     private Long memberId;
-
-    @Column(name = "ques_id")
-    private Long quesId;
-
-    @Column(name = "couple_log_id")
-    private Long coupleLogId;
 
     public void create(Comment comment) {
         comment.createdAt = LocalDateTime.now();

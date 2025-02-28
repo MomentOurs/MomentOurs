@@ -14,7 +14,6 @@ public class ResponseCreateDateCourseVO {
     private Long courseId;
     private String courseTitle;
     private CourseType courseType;
-    private String courseMemo;
     private Boolean courseDisclosure;
     private Long courseLike;
     private Long courseView;
@@ -24,4 +23,5 @@ public class ResponseCreateDateCourseVO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Long memberId;
+    private Long folderId;
 }

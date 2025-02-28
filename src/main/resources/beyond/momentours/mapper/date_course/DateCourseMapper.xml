@@ -8,7 +8,6 @@
         <id property="courseId" column="course_id"/>
         <result property="courseTitle" column="course_title"/>
         <result property="courseType" column="course_type"/>
-        <result property="courseMemo" column="course_memo"/>
         <result property="courseDisclosure" column="course_disclosure"/>
         <result property="courseStartDate" column="course_start_date"/>
         <result property="courseEndDate" column="course_end_date"/>
@@ -16,17 +15,18 @@
         <result property="createdAt" column="created_at"/>
         <result property="updatedAt" column="updated_at"/>
         <result property="memberId" column="member_id"/>
+        <result property="folderId" column="folder_id"/>
     </resultMap>
 
     <select id="findActiveById" resultMap="dateCourseResultMap">
-        SELECT course_id, course_title, course_type, course_memo, course_disclosure, course_start_date, course_end_date, course_status, created_at, updated_at, member_id
+        SELECT course_id, course_title, course_type, course_disclosure, course_start_date, course_end_date, course_status, created_at, updated_at, member_id
           FROM date_course
          WHERE course_id = #{courseId}
            AND course_status = true
     </select>
 
     <select id="findCoursesWithSorting" resultMap="dateCourseResultMap">
-        SELECT course_id, course_title, course_type, course_memo, course_disclosure, course_start_date, course_end_date, course_status, course_like, course_view, created_at, updated_at, member_id
+        SELECT course_id, course_title, course_type, course_disclosure, course_start_date, course_end_date, course_status, course_like, course_view, created_at, updated_at, member_id
           FROM date_course
          WHERE course_status = true
            AND course_disclosure = true
@@ -46,7 +46,7 @@
     </update>
 
     <select id="findCoursesByMemberId" resultMap="dateCourseResultMap">
-        SELECT course_id, course_title, course_type, course_memo, course_disclosure, course_start_date, course_end_date, course_status, course_like, course_view, created_at, updated_at, member_id
+        SELECT course_id, course_title, course_type, course_disclosure, course_start_date, course_end_date, course_status, course_like, course_view, created_at, updated_at, member_id
           FROM date_course
          WHERE member_id = #{memberId}
            AND course_status = true

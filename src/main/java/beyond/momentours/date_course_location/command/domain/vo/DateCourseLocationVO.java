@@ -14,4 +14,5 @@ public class DateCourseLocationVO {
     private BigDecimal latitude;
     private BigDecimal longitude;
     private Integer sequence;
+    private String courseMemo;
 }
