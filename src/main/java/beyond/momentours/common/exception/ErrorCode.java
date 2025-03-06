@@ -29,6 +29,7 @@ public enum ErrorCode {
     RANDOMQUES_ANSWER_FAILURE(40018, HttpStatus.UNAUTHORIZED, "랜덤질문 답변 등록에 실패했습니다."), // 블랙리스트 등록 실패
     QUES_ANSWER_UPDATE_FAILURE(40019, HttpStatus.UNAUTHORIZED, "랜덤질문 답변 수정에 실패했습니다."), // 랜덤질문 답변 수정 실패
     QUES_ANSWER_DELETE_FAILURE(40020, HttpStatus.UNAUTHORIZED, "랜덤질문 답변 삭제에 실패했습니다."), // 랜덤질문 답변 삭제 실패
+    EMAIL_ALREADY_EXISTS(40021, HttpStatus.UNAUTHORIZED, "이미 존재하는 이메일입니다."),
 
     // 403: 권한 부족 (Forbidden)
 

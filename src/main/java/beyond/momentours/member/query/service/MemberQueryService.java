@@ -15,4 +15,8 @@ public interface MemberQueryService {
     MemberDTO findMemberEmailByMypage(CustomUserDetails user);
 
     List<ResponseMemberSearchVO> getMemberSearch(String memberNickname, String memberEmail);
+
+    boolean emailCheck(String memberEmail);
+
+    boolean nicknameCheck(String memberNickname);
 }

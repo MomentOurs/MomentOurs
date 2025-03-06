@@ -52,7 +52,7 @@
 
     <select id="findMemberSearch" resultMap="memberResultMap">
         SELECT
-               a.member_email
+               a.member_email,
                a.member_nickname
           FROM tb_member a
          WHERE
@@ -64,6 +64,13 @@
                     AND a.member_email LIKE CONCAT('%', #{memberEmail}, '%')
                 </if>
             </trim>
+    </select>
+
+    <select id="findByMemberNickname" resultType="string" parameterType="string">
+        SELECT
+               a.member_nickname
+          FROM tb_member a
+         WHERE a.member_nickname = #{memberNickname}
     </select>
 
 </mapper>

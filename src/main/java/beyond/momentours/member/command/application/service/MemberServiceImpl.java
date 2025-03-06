@@ -9,6 +9,7 @@ import beyond.momentours.member.command.application.dto.MemberDTO;
 import beyond.momentours.member.command.application.mapper.MemberConverter;
 import beyond.momentours.member.command.domain.aggregate.entity.Member;
 import beyond.momentours.member.command.domain.repository.MemberRepository;
+import beyond.momentours.member.query.service.MemberQueryService;
 import beyond.momentours.security.JWTUtil;
 import beyond.momentours.util.RedisEmailAuthentication;
 import beyond.momentours.util.SecurityUtil;
@@ -31,6 +32,7 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     private final MemberConverter memberConverter;
+    private final MemberQueryService memberQueryService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final MailService mailService;
     private final RedisEmailAuthentication redisEmailAuthentication;
@@ -38,9 +40,10 @@ public class MemberServiceImpl implements MemberService {
     private final JWTUtil jwtUtil;
 
     @Autowired
-    public MemberServiceImpl(MemberRepository memberRepository, MemberConverter memberConverter, BCryptPasswordEncoder bCryptPasswordEncoder, MailService mailService, RedisEmailAuthentication redisEmailAuthentication, RedisTemplate<String, String> redisTemplate, JWTUtil jwtUtil) {
+    public MemberServiceImpl(MemberRepository memberRepository, MemberConverter memberConverter, MemberQueryService memberQueryService, BCryptPasswordEncoder bCryptPasswordEncoder, MailService mailService, RedisEmailAuthentication redisEmailAuthentication, RedisTemplate<String, String> redisTemplate, JWTUtil jwtUtil) {
         this.memberRepository = memberRepository;
         this.memberConverter = memberConverter;
+        this.memberQueryService = memberQueryService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.mailService = mailService;
         this.redisEmailAuthentication = redisEmailAuthentication;
@@ -51,13 +54,14 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public MemberDTO signup(MemberDTO memberDTO) {
-
+        if (memberQueryService.emailCheck(memberDTO.getMemberEmail())) {
+            throw new CommonException(ErrorCode.EMAIL_ALREADY_EXISTS);
+        }
         memberDTO.encodedPwd(bCryptPasswordEncoder.encode(memberDTO.getMemberPassword()));
         Member member = memberConverter.fromDTOToEntity(memberDTO);
         memberRepository.save(member);
-        MemberDTO reponseMemberDTO = memberConverter.fromEntityToDTO(member);
 
-        return reponseMemberDTO;
+        return memberConverter.fromEntityToDTO(member);
     }
 
     /* 회원탈퇴 */
