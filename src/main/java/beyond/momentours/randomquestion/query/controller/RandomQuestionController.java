@@ -11,18 +11,23 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/api/randomquestion")
+@RequestMapping("/api/random-question")
 @RequiredArgsConstructor
 public class RandomQuestionController {
 
     private final RandomQuestionService randomQuestionService;
 
+    @GetMapping("")
+    public ResponseDTO<?> getRandomQuestion(@AuthenticationPrincipal CustomUserDetails user) {
+        return ResponseDTO.ok(randomQuestionService.getRandomQuestion(user));
+    }
+
     // answer_status는 초기값이 0이고, 둘다 답변하면 1이고, 한명만 답변했다면 그 사람의 회원번호
-    @GetMapping("/")
-    public ResponseDTO<?> getRandomQuestion(@RequestParam(defaultValue = "1") int page,
+    @GetMapping("/list")
+    public ResponseDTO<?> getRandomQuestionList(@RequestParam(defaultValue = "1") int page,
                                             @RequestParam(defaultValue = "10") int size,
                                             @AuthenticationPrincipal CustomUserDetails user){
-        PageInfo<RandomQuestionDTO> randomQuestions = randomQuestionService.getRandomQuestion(page, size, user);
+        PageInfo<RandomQuestionDTO> randomQuestions = randomQuestionService.getRandomQuestionList(page, size, user);
 
         return ResponseDTO.ok(randomQuestions);
     }

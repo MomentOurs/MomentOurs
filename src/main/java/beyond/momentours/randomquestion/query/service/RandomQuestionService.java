@@ -8,11 +8,13 @@ import com.github.pagehelper.PageInfo;
 import java.util.List;
 
 public interface RandomQuestionService {
-    PageInfo<RandomQuestionDTO> getRandomQuestion(int page, int size, CustomUserDetails user);
+    PageInfo<RandomQuestionDTO> getRandomQuestionList(int page, int size, CustomUserDetails user);
 
     RandomQuestionDTO getRandomQuestionDetail(Long quesId, CustomUserDetails user);
 
     List<RandomQuestion> findAllQuestions();
 
     List<Long> findUsedQuestionsByCoupleId(Long coupleId);
+
+    RandomQuestionDTO getRandomQuestion(CustomUserDetails user);
 }

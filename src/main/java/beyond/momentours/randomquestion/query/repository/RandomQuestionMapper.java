@@ -21,4 +21,6 @@ public interface RandomQuestionMapper {
     UserRandomQuestion findByQuestionId(@Param("quesId") Long quesId);
 
     String findAnsStatusByUserQuesId(@Param("userQuesId") Long userQuesId);
+
+    RandomQuestionDTO findByAnsStatus(Long coupleId);
 }

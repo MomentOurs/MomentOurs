@@ -41,4 +41,13 @@ public class QueryCoupleServiceImpl implements QueryCoupleService {
         }
         return converter.fromEntityToCoupleDTO(existingCouple);
     }
+
+    @Override
+    public Long getCoupleIdByMemberId(Long memberId) {
+        Long coupleId = coupleMapper.getCoupleIdByMemberId(memberId);
+        if (coupleId == null) {
+            throw new CommonException(ErrorCode.NOT_FOUND_COUPLE);
+        }
+        return  coupleId;
+    }
 }

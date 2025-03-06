@@ -8,4 +8,6 @@ public interface CoupleMapper {
     CoupleList getCoupleByCoupleId(Long coupleId);
 
     CoupleList getCoupleByMemberId(Long memberId);
+
+    Long getCoupleIdByMemberId(Long memberId);
 }
