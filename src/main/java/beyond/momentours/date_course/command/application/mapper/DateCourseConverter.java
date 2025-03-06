@@ -3,6 +3,7 @@ package beyond.momentours.date_course.command.application.mapper;
 import beyond.momentours.date_course.command.application.dto.DateCourseDTO;
 import beyond.momentours.date_course.command.domain.aggregate.entity.DateCourse;
 import beyond.momentours.date_course.command.domain.vo.request.RequestCreateDateCourseVO;
+import beyond.momentours.date_course.command.domain.vo.request.RequestUpdateDateCourseScheduleVO;
 import beyond.momentours.date_course.command.domain.vo.request.RequestUpdateDateCourseVO;
 import beyond.momentours.date_course.command.domain.vo.response.ResponseCreateDateCourseVO;
 import beyond.momentours.date_course.command.domain.vo.response.ResponseDateCourseDetailVO;
@@ -20,8 +21,6 @@ public class DateCourseConverter {
                 .courseTitle(request.getCourseTitle())
                 .courseType(request.getCourseType())
                 .courseDisclosure(request.getCourseDisclosure())
-                .courseStartDate(request.getCourseStartDate())
-                .courseEndDate(request.getCourseEndDate())
                 .folderId(request.getFolderId())
                 .build();
     }
@@ -80,8 +79,6 @@ public class DateCourseConverter {
                 .courseTitle(request.getCourseTitle())
                 .courseType(request.getCourseType())
                 .courseDisclosure(request.getCourseDisclosure())
-                .courseStartDate(request.getCourseStartDate())
-                .courseEndDate(request.getCourseEndDate())
                 .build();
     }
 
@@ -127,6 +124,14 @@ public class DateCourseConverter {
                 .createdAt(dateCourseDTO.getCreatedAt())
                 .updatedAt(dateCourseDTO.getUpdatedAt())
                 .memberId(dateCourseDTO.getMemberId())
+                .build();
+    }
+
+    public DateCourseDTO fromUpdateScheduleVOToDTO(RequestUpdateDateCourseScheduleVO request, Long courseId) {
+        return DateCourseDTO.builder()
+                .courseId(courseId)
+                .courseStartDate(request.getCourseStartDate())
+                .courseEndDate(request.getCourseEndDate())
                 .build();
     }
 }

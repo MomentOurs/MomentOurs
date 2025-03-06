@@ -1,5 +1,6 @@
 package beyond.momentours.plan.command.domain.vo.request;
 
+import beyond.momentours.plan.command.domain.aggregate.PlanType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
@@ -13,6 +14,9 @@ import java.time.LocalDateTime;
 public class RequestUpdatePlanVO {
     @JsonProperty("plan_id")
     private Long planId;
+
+    @JsonProperty("plan_type")
+    private PlanType planType;
 
     @JsonProperty("plan_title")
     private String planTitle;

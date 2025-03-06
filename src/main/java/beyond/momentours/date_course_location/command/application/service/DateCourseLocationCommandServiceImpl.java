@@ -15,9 +15,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Slf4j
-@Service("commandDateCourseLocationService")
+@Service
 @RequiredArgsConstructor
-public class DateCourseLocationServiceImpl implements DateCourseLocationService {
+public class DateCourseLocationCommandServiceImpl implements DateCourseLocationCommandService {
 
     private final LocationService locationService;
     private final DateCourseLocationRepository dateCourseLocationRepository;

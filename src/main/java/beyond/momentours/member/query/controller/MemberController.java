@@ -40,7 +40,7 @@ public class MemberController {
     }
 
     /* 회원정보 조회 */
-    @GetMapping("/mypage")
+    @GetMapping("mypage")
     public ResponseDTO<?> getMypage(@AuthenticationPrincipal CustomUserDetails user) {
         MemberDTO memberDTO = memberQueryService.findMemberEmailByMypage(user);
         ResponseMypageVO response = memberQueryConverter.fromDtoToMypageVO(memberDTO);
@@ -53,6 +53,30 @@ public class MemberController {
                                                                @RequestParam(required = false) String memberEmail) {
         List<ResponseMemberSearchVO> response = memberQueryService.getMemberSearch(memberNickname, memberEmail);
         return ResponseDTO.ok(response);
+    }
+
+    /* 이메일 중복확인 */
+    @GetMapping("check-email")
+    public ResponseDTO<?> emailCheck(@RequestParam String memberEmail) {
+        boolean checkEmail = memberQueryService.emailCheck(memberEmail);
+
+        if (checkEmail) {
+            return ResponseDTO.ok("이미 존재하는 이메일입니다.");
+        } else {
+            return ResponseDTO.ok("사용할 수 있는 이메일입니다.");
+        }
+    }
+
+    /* 닉네임 중복확인 */
+    @GetMapping("check-nickname")
+    public ResponseDTO<?> nicknameCheck(@RequestParam String memberNickname) {
+        boolean checkNickname = memberQueryService.nicknameCheck(memberNickname);
+
+        if (checkNickname) {
+            return ResponseDTO.ok("이미 존재하는 닉네임입니다.");
+        } else {
+            return ResponseDTO.ok("사용할 수 있는 닉네임입니다.");
+        }
     }
 
 }
