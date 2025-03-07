@@ -44,9 +44,8 @@ public class DateCourseQueryServiceImpl implements DateCourseQueryService {
     }
 
     @Override
-    public List<DateCourseDTO> getCoursesByMemberId(CustomUserDetails user) {
-        Long memberId = user.getMemberId();
-        List<DateCourse> courses = dateCourseDAO.findCoursesByMemberId(memberId);
+    public List<DateCourseDTO> getCoursesByFolderId(Long folderId) {
+        List<DateCourse> courses = dateCourseDAO.findCoursesByFolder_FolderId(folderId);
         return courses.stream()
                 .map(dateCourseConverter::fromEntityToDTO)
                 .collect(Collectors.toList());
