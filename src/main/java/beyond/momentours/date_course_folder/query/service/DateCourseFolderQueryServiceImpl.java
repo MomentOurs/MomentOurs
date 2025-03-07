@@ -21,7 +21,6 @@ public class DateCourseFolderQueryServiceImpl implements DateCourseFolderQuerySe
         Long memberId = user.getMemberId();
         log.info("사용자 ID: {} 의 폴더 목록 조회", memberId);
 
-        List<DateCourseFolderDTO> folders = dateCourseFolderMapper.findFoldersByMemberId(memberId);
-        return folders;
+        return dateCourseFolderMapper.findFoldersByMemberId(memberId);
     }
 }
