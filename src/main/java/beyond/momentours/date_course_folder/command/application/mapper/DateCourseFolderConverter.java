@@ -55,7 +55,12 @@ public class DateCourseFolderConverter {
 
     public List<ResponseDateCourseFolderListVO> fromDTOToListVO(List<DateCourseFolderDTO> dtos) {
         return dtos.stream()
-                .map(dto -> new ResponseDateCourseFolderListVO(dto.getFolderId(), dto.getFolderName()))
+                .map(dto -> new ResponseDateCourseFolderListVO(
+                        dto.getFolderId(),
+                        dto.getFolderName(),
+                        dto.getFolderDescription(),
+                        dto.getCourseCount()
+                ))
                 .collect(Collectors.toList());
     }
 }

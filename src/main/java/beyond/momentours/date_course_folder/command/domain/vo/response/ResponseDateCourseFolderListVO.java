@@ -15,4 +15,10 @@ public class ResponseDateCourseFolderListVO {
 
     @JsonProperty("folder_name")
     private String folderName;
+
+    @JsonProperty("folder_description")
+    private String folderDescription;
+
+    @JsonProperty("course_count")
+    private int courseCount;
 }

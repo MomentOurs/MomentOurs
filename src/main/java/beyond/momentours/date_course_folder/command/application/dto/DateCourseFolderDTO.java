@@ -11,5 +11,7 @@ import lombok.*;
 public class DateCourseFolderDTO {
     private Long folderId;
     private String folderName;
+    private String folderDescription;
+    private int courseCount;
     private Long memberId;
 }
