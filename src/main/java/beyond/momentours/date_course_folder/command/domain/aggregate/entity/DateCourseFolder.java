@@ -23,6 +23,9 @@ public class DateCourseFolder {
     @Column(name = "folder_description")
     private String folderDescription;
 
+    @Column(name = "folder_image")
+    private String folderImage;
+
     @Column(name = "member_id", nullable = false)
     private Long memberId;
 }

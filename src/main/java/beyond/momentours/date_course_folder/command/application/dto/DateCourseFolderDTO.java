@@ -12,6 +12,7 @@ public class DateCourseFolderDTO {
     private Long folderId;
     private String folderName;
     private String folderDescription;
+    private String folderImage;
     private int courseCount;
     private Long memberId;
 }

@@ -5,19 +5,20 @@
 
 <mapper namespace="beyond.momentours.date_course_folder.query.repository.DateCourseFolderMapper">
 
-    <resultMap id="dateCourseFolderResultMap" type="beyond.momentours.date_course_folder.command.domain.aggregate.entity.DateCourseFolder">
+    <resultMap id="dateCourseFolderResultMap" type="beyond.momentours.date_course_folder.command.application.dto.DateCourseFolderDTO">
         <id property="folderId" column="folder_id"/>
         <result property="folderName" column="folder_name"/>
         <result property="folderDescription" column="folder_description"/>
+        <result property="folderImage" column="folder_image"/>
         <result property="courseCount" column="course_count"/>
-        <result property="memberId" column="member_id"/>
     </resultMap>
 
     <select id="findFoldersByMemberId" resultMap="dateCourseFolderResultMap">
-        SELECT f.folder_id, f.folder_name, f.folder_description, f.member_id,
+        SELECT f.folder_id, f.folder_name, f.folder_description, f.folder_image, f.member_id,
         (SELECT COUNT(*) FROM tb_date_course WHERE folder_id = f.folder_id) AS course_count
         FROM tb_date_course_folder f
         WHERE f.member_id = #{memberId}
     </select>
+
 
 </mapper>

@@ -59,6 +59,7 @@ public class DateCourseFolderConverter {
                         dto.getFolderId(),
                         dto.getFolderName(),
                         dto.getFolderDescription(),
+                        dto.getFolderImage(),
                         dto.getCourseCount()
                 ))
                 .collect(Collectors.toList());
