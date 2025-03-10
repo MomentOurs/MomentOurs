@@ -3,6 +3,7 @@ package beyond.momentours.randomquestion.query.repository;
 import beyond.momentours.randomquestion.command.domain.aggregate.entity.RandomQuestion;
 import beyond.momentours.randomquestion.command.domain.aggregate.entity.UserRandomQuestion;
 import beyond.momentours.randomquestion.query.dto.RandomQuestionDTO;
+import beyond.momentours.randomquestion.query.dto.UserRandomQuestionDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -22,5 +23,7 @@ public interface RandomQuestionMapper {
 
     String findAnsStatusByUserQuesId(@Param("userQuesId") Long userQuesId);
 
-    RandomQuestionDTO findByAnsStatus(Long coupleId);
+    UserRandomQuestionDTO findByAnsStatus(Long coupleId);
+
+    Long findQuestionsByMemberId(Long coupleId);
 }

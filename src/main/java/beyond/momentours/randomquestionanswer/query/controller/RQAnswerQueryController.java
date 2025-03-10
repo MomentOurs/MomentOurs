@@ -22,9 +22,8 @@ public class RQAnswerQueryController {
     }
 
     @GetMapping("{userQuesId}")
-    public ResponseDTO<?> getRQAnswer(@PathVariable Long userQuesId,
-                                      @AuthenticationPrincipal CustomUserDetails user){
-        ResponseRQAnswerVO response = rqAnswerQueryService.getRQAnswer(userQuesId, user);
+    public ResponseDTO<?> getRQAnswer(@PathVariable Long userQuesId){
+        ResponseRQAnswerVO response = rqAnswerQueryService.getRQAnswer(userQuesId);
         return ResponseDTO.ok(response);
     }
 

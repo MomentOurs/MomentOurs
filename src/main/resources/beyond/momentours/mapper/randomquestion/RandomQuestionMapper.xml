@@ -11,6 +11,12 @@
         <result property="used" column="used"/>
         <result property="coupleId" column="couple_id"/>
         <result property="quesId" column="ques_id"/>
+        <result property="coupleQuesNo" column="couple_ques_no"/>
+
+        <association property="randomQuestion" javaType="beyond.momentours.randomquestion.query.dto.RandomQuestionDTO">
+            <id property="quesId" column="ques_id"/>
+            <result property="quesContent" column="ques_content"/>
+        </association>
     </resultMap>
 
     <resultMap id="randomQuestionResultMap" type="beyond.momentours.randomquestion.query.dto.RandomQuestionDTO">
@@ -81,7 +87,7 @@
     </select>
 
 
-    <select id="findByAnsStatus" resultMap="randomQuestionResultMap" parameterType="Long">
+    <select id="findByAnsStatus" resultMap="userRandomQuestionResultMap" parameterType="Long">
         SELECT
                a.user_ques_id
              , a.ans_status
@@ -89,10 +95,17 @@
              , a.used
              , a.couple_id
              , a.ques_id
+             , a.couple_ques_no
              , b.ques_content
           FROM tb_user_random_question a
           JOIN tb_random_question b ON a.ques_id = b.ques_id
          WHERE a.couple_id = #{coupleId}
-           AND a.ans_status = 'NONE'
+    </select>
+
+    <select id="findQuestionsByMemberId" resultType="Long" parameterType="Long">
+        SELECT
+               COALESCE(MAX(a.couple_ques_no), 0)
+          FROM tb_user_random_question a
+         WHERE a.couple_id = #{coupleId}
     </select>
 </mapper>

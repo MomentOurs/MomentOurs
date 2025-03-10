@@ -5,5 +5,5 @@ import beyond.momentours.randomquestionanswer.query.dto.RQAnswerDTO;
 import beyond.momentours.randomquestionanswer.query.vo.response.ResponseRQAnswerVO;
 
 public interface RQAnswerQueryService {
-    ResponseRQAnswerVO getRQAnswer(Long userQuesId, CustomUserDetails user);
+    ResponseRQAnswerVO getRQAnswer(Long userQuesId);
 }

@@ -34,6 +34,9 @@ public class UserRandomQuestion {
     @Column(name = "ques_id", nullable = false)
     private Long quesId;
 
+    @Column(name = "couple_ques_no", nullable = false)
+    private Long coupleQuesNo;
+
     @PrePersist
     private void prePersist() {
         this.createdAt = LocalDateTime.now();

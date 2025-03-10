@@ -6,10 +6,10 @@ import beyond.momentours.couple.query.service.QueryCoupleService;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
 import beyond.momentours.randomquestion.command.domain.aggregate.entity.RandomQuestion;
 import beyond.momentours.randomquestion.query.dto.RandomQuestionDTO;
+import beyond.momentours.randomquestion.query.dto.UserRandomQuestionDTO;
 import beyond.momentours.randomquestion.query.repository.RandomQuestionMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -55,14 +55,20 @@ public class RandomQuestionServiceImpl implements RandomQuestionService{
 
     // 처음 랜덤질문 조회 화면
     @Override
-    public RandomQuestionDTO getRandomQuestion(CustomUserDetails user) {
+    public UserRandomQuestionDTO getRandomQuestion(CustomUserDetails user) {
         Long memberId = user.getMemberId();
         Long coupleId = queryCoupleService.getCoupleIdByMemberId(memberId);
-        RandomQuestionDTO result = randomQuestionMapper.findByAnsStatus(coupleId);
+        UserRandomQuestionDTO result = randomQuestionMapper.findByAnsStatus(coupleId);
         if (result == null) {
             throw new CommonException(ErrorCode.NOT_FOUND_COUPLE_QUESTION);
         }
         return result;
+    }
+
+    // 커플에 배정된 랜덤질문의 가장 높은 couple_ques_no 조회
+    @Override
+    public Long findQuestionsByMemberId(Long coupleId) {
+        return randomQuestionMapper.findQuestionsByMemberId(coupleId);
     }
 
 }

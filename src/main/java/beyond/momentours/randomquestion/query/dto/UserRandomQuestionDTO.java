@@ -16,4 +16,8 @@ public class UserRandomQuestionDTO {
     private LocalDateTime createdAt;
     private Long coupleId;
     private Long quesId;
+    private Boolean used;
+    private Long coupleQuesNo;
+
+    private RandomQuestionDTO randomQuestion;
 }
