@@ -10,5 +10,5 @@ public interface DateCourseQueryService {
 
     DateCourseDTO getDateCourse(Long courseId, CustomUserDetails user);
 
-    List<DateCourseDTO> getCoursesByMemberId(CustomUserDetails user);
+    List<DateCourseDTO> getCoursesByFolderId(Long folderId);
 }
