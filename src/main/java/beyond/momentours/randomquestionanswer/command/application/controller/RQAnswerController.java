@@ -44,10 +44,10 @@ public class RQAnswerController {
         return ResponseDTO.ok("답변이 성공적으로 수정되었습니다.");
     }
 
-    @DeleteMapping("{quesAnswerId}")
-    public ResponseDTO<?> deleteAnswer(@PathVariable Long quesAnswerId,
+    @DeleteMapping("{userQuesId}")
+    public ResponseDTO<?> deleteAnswer(@PathVariable Long userQuesId,
                                        @AuthenticationPrincipal CustomUserDetails user) {
-        rqAnswerService.deleteAnswer(quesAnswerId, user);
+        rqAnswerService.deleteAnswer(userQuesId, user);
         return ResponseDTO.ok("답변이 성공적으로 삭제되었습니다.");
     }
 }
