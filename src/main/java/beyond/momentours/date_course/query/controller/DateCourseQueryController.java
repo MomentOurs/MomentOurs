@@ -46,8 +46,7 @@ public class DateCourseQueryController {
         log.info("데이트 코스 상세 조회 요청: courseId={}, userId={}", courseId, user.getMemberId());
         try {
             DateCourseDTO dateCourseDTO = dateCourseService.getDateCourse(courseId, user);
-            ResponseDateCourseDetailVO response = dateCourseConverter.fromDTOToDetailVO(dateCourseDTO);
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(dateCourseDTO);
         } catch (CommonException e) {
             log.error("데이트 코스 조회 오류: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

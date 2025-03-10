@@ -1,5 +1,6 @@
 package beyond.momentours.date_course_location.query.repository;
 
+import beyond.momentours.date_course_location.command.domain.aggregate.entity.DateCourseLocation;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -10,4 +11,6 @@ public interface DateCourseLocationMapper {
     List<Long> findLocationIdsByCourseId(@Param("courseId") Long courseId);
 
     int countMomentsByLocationIds(@Param("list") List<Long> locationIds);
+
+    List<DateCourseLocation> findByCourseId(@Param("courseId") Long courseId);
 }

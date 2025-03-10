@@ -9,17 +9,31 @@
         <result property="latitude" column="latitude"/>
         <result property="longitude" column="longitude"/>
         <result property="locationName" column="location_name"/>
+        <result property="address" column="address"/>
         <result property="locationStatus" column="location_status"/>
         <result property="createdAt" column="created_at"/>
         <result property="updatedAt" column="updated_at"/>
     </resultMap>
 
     <select id="findByLatitudeAndLongitudeAndLocationName" resultMap="locationResultMap">
-        SELECT location_id, latitude, longitude, location_name, location_status, created_at, updated_at
+        SELECT location_id, latitude, longitude, location_name, address, location_status, created_at, updated_at
           FROM tb_location
          WHERE latitude = #{latitude}
            AND longitude = #{longitude}
            AND location_name = #{locationName}
+    </select>
+
+    <select id="getLocationById" resultType="beyond.momentours.date_course_location.command.domain.vo.DateCourseLocationVO">
+        SELECT
+        location_name AS locationName,
+        address,
+        latitude,
+        longitude,
+        dcl.sequence,
+        dcl.course_memo AS courseMemo
+        FROM tb_location l
+        JOIN tb_date_course_location dcl ON l.location_id = dcl.location_id
+        WHERE l.location_id = #{locationId}
     </select>
 
 </mapper>

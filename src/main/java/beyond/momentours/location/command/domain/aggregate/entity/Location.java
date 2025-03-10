@@ -30,6 +30,9 @@ public class Location {
     @Column(name = "location_name")
     private String locationName;
 
+    @Column(name = "address")
+    private String address;
+
     @Column(name = "location_status")
     private LocationStatus locationStatus;
 

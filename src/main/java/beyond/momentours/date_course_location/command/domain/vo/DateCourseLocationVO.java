@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 @ToString
 public class DateCourseLocationVO {
     private String locationName;
+    private String address;
     private BigDecimal latitude;
     private BigDecimal longitude;
     private Integer sequence;
