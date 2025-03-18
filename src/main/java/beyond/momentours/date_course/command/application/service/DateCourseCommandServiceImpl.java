@@ -69,8 +69,10 @@ public class DateCourseCommandServiceImpl implements DateCourseCommandService {
     @Transactional
     @Override
     public void deleteDateCourse(Long courseId, CustomUserDetails user) {
-        DateCourse dateCourse = dateCourseDAO.findActiveById(courseId).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_DATE_COURSE));
+        boolean exists = dateCourseDAO.existsActiveById(courseId);
+        if (!exists) throw new CommonException(ErrorCode.NOT_FOUND_DATE_COURSE);
 
+        DateCourse dateCourse = dateCourseRepository.findById(courseId).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_DATE_COURSE));
         if (!dateCourse.getMemberId().equals(user.getMemberId())) throw new CommonException(ErrorCode.UNAUTHORIZED_ACCESS);
 
         dateCourse.deleteCourse(false);
@@ -83,6 +85,9 @@ public class DateCourseCommandServiceImpl implements DateCourseCommandService {
     @Transactional
     @Override
     public void certifyDateCourse(Long courseId, CustomUserDetails user) {
+        boolean exists = dateCourseDAO.existsActiveById(courseId);
+        if (!exists) throw new CommonException(ErrorCode.NOT_FOUND_DATE_COURSE);
+
         DateCourse dateCourse = dateCourseDAO.findActiveById(courseId).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_DATE_COURSE));
 
         if (!dateCourse.getMemberId().equals(user.getMemberId())) throw new CommonException(ErrorCode.UNAUTHORIZED_ACCESS);

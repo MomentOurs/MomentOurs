@@ -35,13 +35,17 @@ spring:
           timeout: 20000
           writetimeout: 20000
 
-
 logging:
   level:
     beyond.momentours: DEBUG
-    org.springframework.security: TRACE
-    org.mybatis: DEBUG
-    java.sql: DEBUG
+    org.springframework.security: DEBUG
+    org.mybatis: INFO
+    org.mybatis.spring.SqlSessionFactoryBean: WARN
+    org.mybatis.spring.mapper.ClassPathMapperScanner: WARN
+    beyond.momentours.date_course.query.repository: INFO
+    beyond.momentours.date_course_folder.query.repository: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
 jwt:
   secret-key: ${JWT_SECRET_KEY}

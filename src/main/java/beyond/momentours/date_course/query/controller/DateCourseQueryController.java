@@ -57,19 +57,20 @@ public class DateCourseQueryController {
         }
     }
 
-    @GetMapping("/my-courses")
-    public ResponseEntity<?> getMyDateCourses(@AuthenticationPrincipal CustomUserDetails user) {
-        log.info("사용자가 등록한 데이트 코스 조회 요청: userId={}", user.getMemberId());
+    @GetMapping("/folder/{folderId}")
+    public ResponseEntity<?> getDateCoursesByFolder(@PathVariable Long folderId) {
+        log.info("폴더 내 데이트 코스 조회 요청: folderId={}", folderId);
         try {
-            List<DateCourseDTO> courses = dateCourseService.getCoursesByMemberId(user);
+            List<DateCourseDTO> courses = dateCourseService.getCoursesByFolderId(folderId);
             List<ResponseDateCourseListVO> response = dateCourseConverter.fromDTOToListVO(courses);
             return ResponseEntity.ok(response);
         } catch (CommonException e) {
-            log.error("사용자 데이트 코스 조회 오류: {}", e.getMessage());
+            log.error("폴더 내 데이트 코스 조회 오류: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
             log.error("예상치 못한 오류", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("예상치 못한 오류가 발생했습니다");
         }
     }
+
 }

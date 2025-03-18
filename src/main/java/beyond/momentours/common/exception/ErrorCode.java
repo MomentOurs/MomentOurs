@@ -87,6 +87,7 @@ public enum ErrorCode {
     NOT_FOUND_REPORT(40419, HttpStatus.NOT_FOUND, "신고가 존재하지 않습니다"),
     NOT_FOUND_COUPLE_QUESTION(40420, HttpStatus.NOT_FOUND, "해당 커플의 랜덤질문이 존재하지 않습니다"),
     NOT_FOUND_LOGINHISTORY(40421, HttpStatus.NOT_FOUND, "로그인 이력이 존재하지 않습니다"),
+    NOT_FOUND_FOLDER(40422, HttpStatus.NOT_FOUND, "해당 폴더가 존재하지 않습니다"),
 
     // 429: 요청 과다 (Too Many Requests)
     TOO_MANY_REQUESTS(42900, HttpStatus.TOO_MANY_REQUESTS, "요청 횟수가 너무 많습니다. 잠시 후 다시 시도해 주세요."),
