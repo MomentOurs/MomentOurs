@@ -24,32 +24,41 @@ public class RQAnswerQueryServiceImpl implements RQAnswerQueryService {
 
     @Override
     public ResponseRQAnswerVO getRQAnswer(Long userQuesId, CustomUserDetails user) {
-
         Long memberId = user.getMemberId();
 
+        // 특정 질문에 대한 모든 답변 가져오기
         List<RQAnswerDTO> rqAnswerList = rqAnswerMapper.findByQuesAnswerId(userQuesId);
 
         ResponseRQAnswerVO response = new ResponseRQAnswerVO();
+        String myAnswer = null;
+        String otherAnswer = null;
 
-        if (rqAnswerList.isEmpty()) {
-            response.setMessage("이곳을 눌러서 답변을 입력해 주세요.");
-        } else {
-            for (RQAnswerDTO rqAnswerDTO : rqAnswerList) {
-                if (rqAnswerDTO.getMemberId().equals(memberId)) {
-                    response.setMyAnswer(rqAnswerDTO.getQuesAnsContent());
-                } else {
-                    response.setOtherAnswer(rqAnswerDTO.getQuesAnsContent());
-                }
+        // 응답 리스트를 순회하면서 내 답변과 상대방 답변 분류
+        for (RQAnswerDTO rqAnswerDTO : rqAnswerList) {
+            if (rqAnswerDTO.getMemberId().equals(memberId)) {
+                myAnswer = rqAnswerDTO.getQuesAnsContent();
+            } else {
+                otherAnswer = rqAnswerDTO.getQuesAnsContent();
             }
         }
 
-        if (response.getMessage() != null && response.getOtherAnswer() == null) {
-            response.setMessage("상대방이 아직 답변하지 않았습니다.");
-        } else if (response.getMyAnswer() == null && response.getOtherAnswer() != null) {
-            response.setMessage("상대방의 답변을 보려면 답변을 작성하세요!");
-            response.setOtherAnswer("BLURRED");
+        // 조건에 따른 메시지 설정
+        if (myAnswer == null && otherAnswer == null) {
+            // 1. 나와 상대방 모두 답변 안 했을 때
+            response.setMyAnswer("이곳을 눌러서 답변을 입력해 주세요.");
+            response.setOtherAnswer("상대방이 아직 답변하지 않았어요.");
+        } else if (myAnswer != null && otherAnswer == null) {
+            // 2. 나는 답변했고, 상대방은 안 했을 때
+            response.setMyAnswer(myAnswer);
+            response.setOtherAnswer("상대방이 아직 답변하지 않았어요.");
+        } else if (myAnswer == null && otherAnswer != null) {
+            // 3. 나는 답변 안 했고, 상대방은 답변했을 때
+            response.setMyAnswer("이곳을 눌러서 답변을 입력해 주세요.");
+            response.setOtherAnswer("상대방의 답변이 궁금한가요? 그럼 오늘 질문에 답변해 주세요!");
         } else {
-            response.setMessage("두 사람의 답변을 모두 확인할 수 있습니다.");
+            // 4. 나와 상대방 둘 다 답변했을 때
+            response.setMyAnswer(myAnswer);
+            response.setOtherAnswer(otherAnswer);
         }
 
         return response;

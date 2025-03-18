@@ -42,7 +42,7 @@ public class RQAnswerServiceImpl implements RQAnswerService {
     public void updateRQAnswer(RQAnswerDTO rqAnswerDTO, CustomUserDetails user) {
         try {
             Long memberId = user.getMemberId();
-            RQAnswer rqAnswer = rqAnswerRepository.findByQuesAnswerIdAndMemberId(rqAnswerDTO.getQuesAnswerId(), memberId);
+            RQAnswer rqAnswer = rqAnswerRepository.findByUserQuesIdAndMemberId(rqAnswerDTO.getUserQuesId(), memberId);
             if (rqAnswer == null) {
                 throw new CommonException(ErrorCode.NOT_FOUND_QUES_ANSWER);
             }
@@ -57,14 +57,14 @@ public class RQAnswerServiceImpl implements RQAnswerService {
 
     @Override
     @Transactional
-    public void deleteAnswer(Long quesAnswerId, CustomUserDetails user) {
+    public void deleteAnswer(Long userQuesId, CustomUserDetails user) {
         try {
             Long memberId = user.getMemberId();
-            RQAnswer rqAnswer = rqAnswerRepository.findByQuesAnswerIdAndMemberId(quesAnswerId, memberId);
+            RQAnswer rqAnswer = rqAnswerRepository.findByUserQuesIdAndMemberId(userQuesId, memberId);
             if (rqAnswer == null) {
                 throw new CommonException(ErrorCode.NOT_FOUND_QUES_ANSWER);
             }
-            rqAnswerRepository.deleteById(quesAnswerId);
+            rqAnswerRepository.deleteById(rqAnswer.getQuesAnswerId());
         } catch (CommonException e) {
             throw new CommonException(ErrorCode.QUES_ANSWER_DELETE_FAILURE);
         }

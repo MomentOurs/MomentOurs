@@ -1,5 +1,7 @@
 package beyond.momentours.randomquestion.command.application.service;
 
+import beyond.momentours.couple.query.service.QueryCoupleService;
+import beyond.momentours.member.command.application.dto.CustomUserDetails;
 import beyond.momentours.randomquestion.command.domain.aggregate.entity.RandomQuestion;
 import beyond.momentours.randomquestion.command.domain.aggregate.entity.UserRandomQuestion;
 import beyond.momentours.randomquestion.command.domain.repository.RandomQuestionRepository;
@@ -21,23 +23,29 @@ public class QuestionServiceImpl implements QuestionService {
     private final RandomQuestionRepository randomQuestionRepository;
     private final UserRandomQuestionRepository userRandomQuestionRepository;
     private final RandomQuestionService randomQuestionService;
+    private final QueryCoupleService queryCoupleService;
     private final ChatGptService chatGptService;
 
     @Value("${openai.min-threshold}")
     private int minThreshold;
 
     @Autowired
-    public QuestionServiceImpl(RandomQuestionRepository randomQuestionRepository, UserRandomQuestionRepository userRandomQuestionRepository, RandomQuestionService randomQuestionService, ChatGptService chatGptService) {
+    public QuestionServiceImpl(RandomQuestionRepository randomQuestionRepository, UserRandomQuestionRepository userRandomQuestionRepository, RandomQuestionService randomQuestionService, QueryCoupleService queryCoupleService, ChatGptService chatGptService) {
         this.randomQuestionRepository = randomQuestionRepository;
         this.userRandomQuestionRepository = userRandomQuestionRepository;
         this.randomQuestionService = randomQuestionService;
+        this.queryCoupleService = queryCoupleService;
         this.chatGptService = chatGptService;
     }
 
     // 사용하지 않은 질문이 3개 이하면 새로운 질문 생성 후 저장
     @Transactional
     @Override
-    public void createNewQuestion(Long coupleId) throws InterruptedException, ExecutionException, TimeoutException {
+    public void createNewQuestion(CustomUserDetails user) throws InterruptedException, ExecutionException, TimeoutException {
+
+        Long memberId = user.getMemberId();
+        Long coupleId = queryCoupleService.getCoupleIdByMemberId(memberId);
+
         // 저장된 랜덤질문 모두 조회
         List<RandomQuestion> allQuestions = randomQuestionService.findAllQuestions();
 
@@ -65,9 +73,13 @@ public class QuestionServiceImpl implements QuestionService {
         // 랜덤한 질문 하나를 커플에게 배정
         RandomQuestion assignedQuestion = assignRandomQuestionToCouple(availableQuestions);
 
+        // 해당 회원의 가장 높은 couple_ques_no 조회 (없으면 0 반환)
+        Long maxCoupleQuesNo = randomQuestionService.findQuestionsByMemberId(coupleId);
+
         UserRandomQuestion userRandomQuestion = UserRandomQuestion.builder()
                 .quesId(assignedQuestion.getQuesId())
                 .coupleId(coupleId)
+                .coupleQuesNo(maxCoupleQuesNo+1)
                 .ansStatus("NONE")
                 .build();
         userRandomQuestionRepository.save(userRandomQuestion);

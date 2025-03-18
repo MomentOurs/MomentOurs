@@ -8,5 +8,5 @@ public interface RQAnswerService {
 
     void updateRQAnswer(RQAnswerDTO rqAnswerDTO, CustomUserDetails user);
 
-    void deleteAnswer(Long quesAnswerId, CustomUserDetails user);
+    void deleteAnswer(Long userQuesId, CustomUserDetails user);
 }

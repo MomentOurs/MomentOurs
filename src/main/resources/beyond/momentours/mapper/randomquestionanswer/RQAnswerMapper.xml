@@ -15,7 +15,7 @@
 
     <select id="findByQuesAnswerId" resultMap="rqAnswerMap" parameterType="Long">
         SELECT
-             , a.ques_ans_id,
+               a.ques_ans_id
              , a.ques_ans_content
              , a.created_at
              , a.updated_at

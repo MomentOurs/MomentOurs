@@ -11,6 +11,12 @@
         <result property="used" column="used"/>
         <result property="coupleId" column="couple_id"/>
         <result property="quesId" column="ques_id"/>
+        <result property="coupleQuesNo" column="couple_ques_no"/>
+
+        <association property="randomQuestion" javaType="beyond.momentours.randomquestion.query.dto.RandomQuestionDTO">
+            <id property="quesId" column="ques_id"/>
+            <result property="quesContent" column="ques_content"/>
+        </association>
     </resultMap>
 
     <resultMap id="randomQuestionResultMap" type="beyond.momentours.randomquestion.query.dto.RandomQuestionDTO">
@@ -18,12 +24,14 @@
         <result property="quesContent" column="ques_content"/>
     </resultMap>
 
-    <select id="getRandomQuestionByMemberId" resultMap="userRandomQuestionResultMap" parameterType="long">
-        SELECT user_ques_id
-             , ans_status
-             , created_at
-             , couple_id
-          FROM tb_user_random_question
+    <select id="getRandomQuestionByMemberId" resultMap="userRandomQuestionResultMap" parameterType="Long">
+        SELECT a. user_ques_id
+             , a.ans_status
+             , a.created_at
+             , a.couple_id
+             , b.ques_id
+          FROM tb_user_random_question a
+          JOIN tb_random_question b ON a.ques_id = b.ques_id
          WHERE couple_id = (
         SELECT couple_id
           FROM TB_COUPLE_LIST
@@ -64,7 +72,7 @@
     </select>
 
     <!-- 특정 quesId에 해당하는 질문 조회 -->
-    <select id="findByQuestionId" resultMap="randomQuestionResultMap" parameterType="long">
+    <select id="findByQuestionId" resultMap="randomQuestionResultMap" parameterType="Long">
         SELECT
         ques_id,
         ques_content
@@ -76,5 +84,28 @@
         SELECT ans_status
         FROM tb_user_random_question
         WHERE user_ques_id = #{userQuesId}
+    </select>
+
+
+    <select id="findByAnsStatus" resultMap="userRandomQuestionResultMap" parameterType="Long">
+        SELECT
+               a.user_ques_id
+             , a.ans_status
+             , a.created_at
+             , a.used
+             , a.couple_id
+             , a.ques_id
+             , a.couple_ques_no
+             , b.ques_content
+          FROM tb_user_random_question a
+          JOIN tb_random_question b ON a.ques_id = b.ques_id
+         WHERE a.couple_id = #{coupleId}
+    </select>
+
+    <select id="findQuestionsByMemberId" resultType="Long" parameterType="Long">
+        SELECT
+               COALESCE(MAX(a.couple_ques_no), 0)
+          FROM tb_user_random_question a
+         WHERE a.couple_id = #{coupleId}
     </select>
 </mapper>
