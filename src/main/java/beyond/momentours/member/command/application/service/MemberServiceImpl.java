@@ -14,7 +14,6 @@ import beyond.momentours.security.JWTUtil;
 import beyond.momentours.util.RedisEmailAuthentication;
 import beyond.momentours.util.SecurityUtil;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -119,12 +118,12 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public String checkEmail(MemberDTO requestMemberDTO) {
-        Member member = memberRepository.findByMemberEmail(requestMemberDTO.getMemberEmail());
-
-        if (member== null) {
-            throw new CommonException(ErrorCode.NOT_FOUND_MEMBER);
-        }
+    public void checkEmail(MemberDTO requestMemberDTO) {
+//        Member member = memberRepository.findByMemberEmail(requestMemberDTO.getMemberEmail());
+//
+//        if (member== null) {
+//            throw new CommonException(ErrorCode.NOT_FOUND_MEMBER);
+//        }
 
         String authCode = mailService.sendMail(requestMemberDTO.getMemberEmail());
 
@@ -132,7 +131,6 @@ public class MemberServiceImpl implements MemberService {
             throw new CommonException(ErrorCode.MAIL_SEND_FAIL);
         }
 
-        return authCode;
     }
 
     @Override

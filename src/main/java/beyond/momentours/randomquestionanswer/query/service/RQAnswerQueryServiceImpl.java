@@ -23,8 +23,8 @@ public class RQAnswerQueryServiceImpl implements RQAnswerQueryService {
     }
 
     @Override
-    public ResponseRQAnswerVO getRQAnswer(Long userQuesId) {
-        Long memberId = 2L;
+    public ResponseRQAnswerVO getRQAnswer(Long userQuesId, CustomUserDetails user) {
+        Long memberId = user.getMemberId();
 
         // 특정 질문에 대한 모든 답변 가져오기
         List<RQAnswerDTO> rqAnswerList = rqAnswerMapper.findByQuesAnswerId(userQuesId);
