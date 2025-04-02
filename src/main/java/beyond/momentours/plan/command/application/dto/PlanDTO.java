@@ -1,6 +1,6 @@
 package beyond.momentours.plan.command.application.dto;
 
-import beyond.momentours.plan.command.domain.aggregate.PlanType;
+import beyond.momentours.plan.command.domain.aggregate.enums.PlanType;
 import lombok.*;
 
 import java.time.LocalDateTime;

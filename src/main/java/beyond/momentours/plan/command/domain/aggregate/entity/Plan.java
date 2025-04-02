@@ -2,7 +2,7 @@ package beyond.momentours.plan.command.domain.aggregate.entity;
 
 import beyond.momentours.common.exception.CommonException;
 import beyond.momentours.common.exception.ErrorCode;
-import beyond.momentours.plan.command.domain.aggregate.PlanType;
+import beyond.momentours.plan.command.domain.aggregate.enums.PlanType;
 import jakarta.persistence.*;
 import lombok.*;
 

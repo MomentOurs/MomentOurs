@@ -1,4 +1,4 @@
-package beyond.momentours.plan.command.domain.aggregate;
+package beyond.momentours.plan.command.domain.aggregate.enums;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
