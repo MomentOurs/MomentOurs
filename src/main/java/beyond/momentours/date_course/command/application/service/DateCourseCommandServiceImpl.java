@@ -12,7 +12,7 @@ import beyond.momentours.date_course_location.query.service.DateCourseLocationQu
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
 import beyond.momentours.plan.command.application.dto.PlanDTO;
 import beyond.momentours.plan.command.application.service.PlanCommandService;
-import beyond.momentours.plan.command.domain.aggregate.PlanType;
+import beyond.momentours.plan.command.domain.aggregate.enums.PlanType;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
