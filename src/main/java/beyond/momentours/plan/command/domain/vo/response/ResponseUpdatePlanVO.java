@@ -1,6 +1,6 @@
 package beyond.momentours.plan.command.domain.vo.response;
 
-import beyond.momentours.plan.command.domain.aggregate.PlanType;
+import beyond.momentours.plan.command.domain.aggregate.enums.PlanType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
@@ -33,6 +33,12 @@ public class ResponseUpdatePlanVO {
 
     @JsonProperty("plan_reminder_datetime")
     private LocalDateTime planReminderDatetime;
+
+    @JsonProperty("member_id")
+    private Long memberId;
+
+    @JsonProperty("couple_id")
+    private Long coupleId;
 
     @JsonProperty("updated_at")
     private LocalDateTime updatedAt;
