@@ -31,8 +31,6 @@ public class PlanCommandServiceImpl implements PlanCommandService {
             coupleId = planDAO.findByCoupleId(memberId);
             if (coupleId == null) throw new CommonException(ErrorCode.NOT_FOUND_COUPLE);
             memberId = null;
-        } else if (planDTO.getPlanType() == PlanType.PERSONAL || planDTO.getPlanType() == PlanType.PERSONAL_TRIP) {
-            coupleId = null;
         }
 
         log.info("planType: {}, memberId: {}, coupleId: {}", planDTO.getPlanType(), memberId, coupleId);
