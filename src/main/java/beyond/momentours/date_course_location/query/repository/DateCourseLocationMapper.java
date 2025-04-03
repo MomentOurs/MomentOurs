@@ -8,9 +8,9 @@ import java.util.List;
 
 @Mapper
 public interface DateCourseLocationMapper {
+    List<DateCourseLocation> findByCourseId(@Param("courseId") Long courseId);
+
     List<Long> findLocationIdsByCourseId(@Param("courseId") Long courseId);
 
     int countMomentsByLocationIds(@Param("list") List<Long> locationIds);
-
-    List<DateCourseLocation> findByCourseId(@Param("courseId") Long courseId);
 }

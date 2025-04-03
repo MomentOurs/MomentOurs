@@ -3,7 +3,7 @@ package beyond.momentours.date_course.query.controller;
 import beyond.momentours.common.exception.CommonException;
 import beyond.momentours.date_course.command.application.dto.DateCourseDTO;
 import beyond.momentours.date_course.command.application.mapper.DateCourseConverter;
-import beyond.momentours.date_course.command.domain.vo.response.ResponseDateCourseDetailVO;
+import beyond.momentours.date_course.command.domain.vo.response.ResponseDateCourseDetailWithLocationVO;
 import beyond.momentours.date_course.command.domain.vo.response.ResponseDateCourseListVO;
 import beyond.momentours.date_course.query.service.DateCourseQueryService;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
@@ -46,7 +46,8 @@ public class DateCourseQueryController {
         log.info("데이트 코스 상세 조회 요청: courseId={}, userId={}", courseId, user.getMemberId());
         try {
             DateCourseDTO dateCourseDTO = dateCourseService.getDateCourse(courseId, user);
-            return ResponseEntity.ok(dateCourseDTO);
+            ResponseDateCourseDetailWithLocationVO response = dateCourseConverter.fromDTOToDetailVO(dateCourseDTO);
+            return ResponseEntity.ok(response);
         } catch (CommonException e) {
             log.error("데이트 코스 조회 오류: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

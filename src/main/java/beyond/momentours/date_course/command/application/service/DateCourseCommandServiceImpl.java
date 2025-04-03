@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Collections;
 
 @Slf4j
 @Service
@@ -39,12 +40,13 @@ public class DateCourseCommandServiceImpl implements DateCourseCommandService {
         try {
             Long memberId = user.getMemberId();
             dateCourseDTO.setMemberId(memberId);
+            dateCourseDTO.setLocations(Collections.emptyList());
 
             DateCourse dateCourse = dateCourseConverter.fromDTOToEntity(dateCourseDTO);
             log.info("저장할 데이트 코스 : {}", dateCourse);
             DateCourse savedCourse = dateCourseRepository.save(dateCourse);
 
-            dateCourseLocationCommandService.createDateCourseLocations(savedCourse.getCourseId(), dateCourseDTO.getLocations());
+//            dateCourseLocationCommandService.createDateCourseLocations(savedCourse.getCourseId(), dateCourseDTO.getLocations());
 
             log.info("데이트 코스 등록 성공 : {}", savedCourse);
             return dateCourseConverter.fromEntityToDTO(savedCourse);
@@ -149,9 +151,9 @@ public class DateCourseCommandServiceImpl implements DateCourseCommandService {
         existingCourse.updateCourseStartDate(dateCourseDTO.getCourseStartDate());
         existingCourse.updateCourseEndDate(dateCourseDTO.getCourseEndDate());
 
-        if (dateCourseDTO.getLocations() != null) {
-            dateCourseLocationCommandService.updateDateCourseLocations(courseId, dateCourseDTO.getLocations());
-        }
+//        if (dateCourseDTO.getLocations() != null) {
+//            dateCourseLocationCommandService.updateDateCourseLocations(courseId, dateCourseDTO.getLocations());
+//        }
 
         existingCourse.updateUpdatedAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
     }

@@ -9,7 +9,6 @@ import beyond.momentours.date_course.query.repository.DateCourseMapper;
 import beyond.momentours.date_course_location.command.domain.aggregate.entity.DateCourseLocation;
 import beyond.momentours.date_course_location.command.domain.vo.DateCourseLocationVO;
 import beyond.momentours.date_course_location.query.repository.DateCourseLocationMapper;
-import beyond.momentours.location.command.application.dto.LocationDTO;
 import beyond.momentours.location.query.repository.LocationMapper;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +17,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -50,8 +50,10 @@ public class DateCourseQueryServiceImpl implements DateCourseQueryService {
 
         List<DateCourseLocation> courseLocations = dateCourseLocationDAO.findByCourseId(courseId);
         List<DateCourseLocationVO> locations = courseLocations.stream()
-                .map(loc -> locationDAO.getLocationById(loc.getLocationId()))
+                .map(loc -> locationDAO.getLocationById(loc.getLocationId(), loc.getCourseId()))
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
+
 
         DateCourseDTO dateCourseDTO = dateCourseConverter.fromEntityToDTO(dateCourse);
         dateCourseDTO.setLocations(locations);

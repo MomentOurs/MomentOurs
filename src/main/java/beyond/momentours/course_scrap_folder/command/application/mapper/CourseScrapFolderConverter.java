@@ -12,13 +12,17 @@ public class CourseScrapFolderConverter {
     public CourseScrapFolderDTO fromCreateVOToDTO(RequestCreateCourseScrapFolderVO request) {
         return CourseScrapFolderDTO.builder()
                 .folderName(request.getFolderName())
+                .folderDescription(request.getFolderDescription())
+//                .folderImage( // S3나 저장 로직 후 URL 저장 )
                 .build();
     }
 
     public ResponseCreateCourseScrapFolderVO fromDTOToCreateVO(CourseScrapFolderDTO folderDTO) {
         return ResponseCreateCourseScrapFolderVO.builder()
-                .folderId(folderDTO.getCourseScrapFolderId())
+                .courseScrapFolderId(folderDTO.getCourseScrapFolderId())
                 .folderName(folderDTO.getFolderName())
+                .folderDescription(folderDTO.getFolderDescription())
+//                .folderImage(folderDTO.getFolderImage())
                 .memberId(folderDTO.getMemberId())
                 .createdAt(folderDTO.getCreatedAt())
                 .updatedAt(folderDTO.getUpdatedAt())
@@ -28,6 +32,8 @@ public class CourseScrapFolderConverter {
     public CourseScrapFolder fromDTOToEntity(CourseScrapFolderDTO folderDTO) {
         return CourseScrapFolder.builder()
                 .folderName(folderDTO.getFolderName())
+                .folderDescription(folderDTO.getFolderDescription())
+//                .folderImage(folderDTO.getFolderImage())
                 .memberId(folderDTO.getMemberId())
                 .build();
     }
@@ -36,6 +42,7 @@ public class CourseScrapFolderConverter {
         return CourseScrapFolderDTO.builder()
                 .courseScrapFolderId(folder.getCourseScrapFolderId())
                 .folderName(folder.getFolderName())
+                .folderImage(folder.getFolderImage())
                 .memberId(folder.getMemberId())
                 .createdAt(folder.getCreatedAt())
                 .updatedAt(folder.getUpdatedAt())
@@ -44,8 +51,9 @@ public class CourseScrapFolderConverter {
 
     public ResponseCourseScrapFolderVO fromEntityToResponseVO(CourseScrapFolder folder) {
         return ResponseCourseScrapFolderVO.builder()
-                .folderId(folder.getCourseScrapFolderId())
+                .courseScrapFolderId(folder.getCourseScrapFolderId())
                 .folderName(folder.getFolderName())
+                .folderImage(folder.getFolderImage())
                 .createdAt(folder.getCreatedAt())
                 .updatedAt(folder.getUpdatedAt())
                 .build();

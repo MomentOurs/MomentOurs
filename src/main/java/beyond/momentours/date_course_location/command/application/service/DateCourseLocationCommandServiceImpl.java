@@ -22,31 +22,31 @@ public class DateCourseLocationCommandServiceImpl implements DateCourseLocationC
     private final LocationService locationService;
     private final DateCourseLocationRepository dateCourseLocationRepository;
 
-    @Transactional
-    @Override
-    public void createDateCourseLocations(Long courseId, List<DateCourseLocationVO> locations) {
-        try {
-            if (locations != null && !locations.isEmpty()) {
-                for (DateCourseLocationVO locationDTO : locations) {
-                    LocationDTO location = locationService.findOrCreateLocation(locationDTO.getLocationName(), locationDTO.getLatitude(), locationDTO.getLongitude());
-
-                    DateCourseLocation courseLocation = DateCourseLocation.builder()
-                            .courseId(courseId)
-                            .locationId(location.getLocationId())
-                            .sequence(locationDTO.getSequence())
-                            .courseLocationStatus(true)
-                            .courseMemo(locationDTO.getCourseMemo())
-                            .build();
-
-                    dateCourseLocationRepository.save(courseLocation);
-                    log.info("데이트 코스 장소 매핑 저장: {}", courseLocation);
-                }
-            }
-        } catch (Exception e) {
-            log.error("데이트 코스 장소 저장 중 오류 발생", e);
-            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
-        }
-    }
+//    @Transactional
+//    @Override
+//    public void createDateCourseLocations(Long courseId, List<DateCourseLocationVO> locations) {
+//        try {
+//            if (locations != null && !locations.isEmpty()) {
+//                for (DateCourseLocationVO locationDTO : locations) {
+//                    LocationDTO location = locationService.findOrCreateLocation(locationDTO.getLocationName(), locationDTO.getLatitude(), locationDTO.getLongitude());
+//
+//                    DateCourseLocation courseLocation = DateCourseLocation.builder()
+//                            .courseId(courseId)
+//                            .locationId(location.getLocationId())
+//                            .sequence(locationDTO.getSequence())
+//                            .courseLocationStatus(true)
+//                            .courseMemo(locationDTO.getCourseMemo())
+//                            .build();
+//
+//                    dateCourseLocationRepository.save(courseLocation);
+//                    log.info("데이트 코스 장소 매핑 저장: {}", courseLocation);
+//                }
+//            }
+//        } catch (Exception e) {
+//            log.error("데이트 코스 장소 저장 중 오류 발생", e);
+//            throw new CommonException(ErrorCode.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
     @Transactional
     @Override

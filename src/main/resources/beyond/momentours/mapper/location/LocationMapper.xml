@@ -25,6 +25,7 @@
 
     <select id="getLocationById" resultType="beyond.momentours.date_course_location.command.domain.vo.DateCourseLocationVO">
         SELECT
+        l.location_id AS locationId,
         location_name AS locationName,
         address,
         latitude,
@@ -34,6 +35,10 @@
         FROM tb_location l
         JOIN tb_date_course_location dcl ON l.location_id = dcl.location_id
         WHERE l.location_id = #{locationId}
+        AND dcl.course_id = #{courseId}
+        AND l.location_status = 'UNCHANGED'
+        AND dcl.course_location_status = true
     </select>
+
 
 </mapper>
