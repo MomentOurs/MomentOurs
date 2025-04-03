@@ -1,4 +1,4 @@
-package beyond.momentours.date_course.command.domain.vo.request;
+package beyond.momentours.date_course.command.domain.vo.response;
 
 import beyond.momentours.date_course.command.domain.aggregate.CourseType;
 import beyond.momentours.date_course_location.command.domain.vo.DateCourseLocationVO;
@@ -15,13 +15,18 @@ import java.util.List;
 @Builder
 @ToString
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class RequestCreateDateCourseVO {
+public class ResponseDateCourseDetailWithLocationVO {
+    private Long courseId;
     private String courseTitle;
     private CourseType courseType;
-    private Boolean courseDisclosure;
+    private Long courseLike;
+    private Long courseView;
+    private Boolean courseStatus;
     private LocalDateTime courseStartDate;
     private LocalDateTime courseEndDate;
-    private Long folderId;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private Long memberId;
 
-//    private List<DateCourseLocationVO> locations;
+    private List<DateCourseLocationVO> locations;
 }
