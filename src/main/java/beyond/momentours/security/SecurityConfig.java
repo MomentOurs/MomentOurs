@@ -1,7 +1,6 @@
 package beyond.momentours.security;
 
 import beyond.momentours.member.command.application.service.LoginHistoryService;
-import beyond.momentours.member.command.application.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

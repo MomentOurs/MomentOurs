@@ -1,7 +1,5 @@
 package beyond.momentours.date_course_location.command.application.service;
 
-import beyond.momentours.common.exception.CommonException;
-import beyond.momentours.common.exception.ErrorCode;
 import beyond.momentours.date_course_location.command.domain.aggregate.entity.DateCourseLocation;
 import beyond.momentours.date_course_location.command.domain.repository.DateCourseLocationRepository;
 import beyond.momentours.date_course_location.command.domain.vo.DateCourseLocationVO;
