@@ -7,11 +7,13 @@ import beyond.momentours.randomquestion.query.dto.UserRandomQuestionDTO;
 import beyond.momentours.randomquestionanswer.query.dto.RQAnswerDTO;
 import beyond.momentours.randomquestionanswer.query.repository.RQAnswerMapper;
 import beyond.momentours.randomquestionanswer.query.vo.response.ResponseRQAnswerVO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service("queryRQAnswerServiceImpl")
 public class RQAnswerQueryServiceImpl implements RQAnswerQueryService {
 
@@ -32,11 +34,14 @@ public class RQAnswerQueryServiceImpl implements RQAnswerQueryService {
         ResponseRQAnswerVO response = new ResponseRQAnswerVO();
         String myAnswer = null;
         String otherAnswer = null;
+        Long myQuesAnsId = null;
 
         // 응답 리스트를 순회하면서 내 답변과 상대방 답변 분류
         for (RQAnswerDTO rqAnswerDTO : rqAnswerList) {
             if (rqAnswerDTO.getMemberId().equals(memberId)) {
                 myAnswer = rqAnswerDTO.getQuesAnsContent();
+                myQuesAnsId = rqAnswerDTO.getQuesAnswerId();
+                log.info("myQuesAndId: {}", myQuesAnsId);
             } else {
                 otherAnswer = rqAnswerDTO.getQuesAnsContent();
             }
@@ -60,6 +65,8 @@ public class RQAnswerQueryServiceImpl implements RQAnswerQueryService {
             response.setMyAnswer(myAnswer);
             response.setOtherAnswer(otherAnswer);
         }
+
+        response.setMyQuesAnsId(myQuesAnsId);
 
         return response;
     }
