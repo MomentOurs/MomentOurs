@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class RequestRQAnswerUpdatedVO {
-    private Long quesAnswerId;
     private String quesAnsContent;
 }

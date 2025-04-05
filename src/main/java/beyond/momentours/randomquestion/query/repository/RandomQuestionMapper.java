@@ -11,7 +11,6 @@ import java.util.List;
 
 @Mapper
 public interface RandomQuestionMapper {
-    List<RandomQuestionDTO> getRandomQuestionByMemberId(Long memberId);
 
     RandomQuestionDTO getRandomQuestionByQuesId(@Param("memberId") Long memberId, @Param("quesId") Long quesId);
 
@@ -21,9 +20,17 @@ public interface RandomQuestionMapper {
 
     UserRandomQuestion findByQuestionId(@Param("quesId") Long quesId);
 
+    UserRandomQuestionDTO findByUserQuesId(@Param("userQuesId") Long userQuesId);
+
     String findAnsStatusByUserQuesId(@Param("userQuesId") Long userQuesId);
 
     UserRandomQuestionDTO findByAnsStatus(Long coupleId);
 
     Long findQuestionsByMemberId(Long coupleId);
+
+    List<UserRandomQuestionDTO> getRandomQuestionByCursor(@Param("coupleId") Long coupleId,
+                                                      @Param("lastId") Long lastId,
+                                                      @Param("keyword") String keyword,
+                                                      @Param("size") int size);
+
 }

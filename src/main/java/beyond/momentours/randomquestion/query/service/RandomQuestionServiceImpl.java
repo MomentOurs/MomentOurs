@@ -26,11 +26,11 @@ public class RandomQuestionServiceImpl implements RandomQuestionService{
     }
 
     @Override
-    public PageInfo<RandomQuestionDTO> getRandomQuestionList(int page, int size, CustomUserDetails user){
+    public List<UserRandomQuestionDTO> getRandomQuestionListByCursor(Long lastId, int size, String keyword, CustomUserDetails user) {
         Long memberId = user.getMemberId();
-        PageHelper.startPage(page, size);
-        List<RandomQuestionDTO> randomQuestions = randomQuestionMapper.getRandomQuestionByMemberId(memberId);
-        return new PageInfo<>(randomQuestions);
+        Long coupleId = queryCoupleService.getCoupleIdByMemberId(memberId);
+
+        return randomQuestionMapper.getRandomQuestionByCursor(coupleId, lastId, keyword, size);
     }
 
     @Override

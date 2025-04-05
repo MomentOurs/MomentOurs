@@ -24,6 +24,28 @@
         <result property="quesContent" column="ques_content"/>
     </resultMap>
 
+    <select id="getRandomQuestionByCursor" resultMap="userRandomQuestionResultMap">
+        SELECT
+        a.user_ques_id
+        , a.ans_status
+        , a.created_at
+        , a.couple_id
+        , b.ques_id
+        , a.couple_ques_no
+        , b.ques_content
+        FROM tb_user_random_question a
+        JOIN tb_random_question b ON a.ques_id = b.ques_id
+        WHERE a.couple_id = #{coupleId}
+        <if test="lastId != null">
+            AND a.user_ques_id &lt; #{lastId}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            AND b.ques_content LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        ORDER BY a.user_ques_id DESC
+        LIMIT #{size}
+    </select>
+
     <select id="getRandomQuestionByMemberId" resultMap="userRandomQuestionResultMap" parameterType="Long">
         SELECT a. user_ques_id
              , a.ans_status
@@ -80,11 +102,22 @@
         WHERE ques_id = #{quesId}
     </select>
 
+    <select id="findByUserQuesId" resultMap="userRandomQuestionResultMap" parameterType="Long">
+        SELECT a. user_ques_id
+        , a.ans_status
+        , a.created_at
+        , a.couple_id
+        , a.ques_id
+        FROM tb_user_random_question a
+        WHERE user_ques_id = #{userQuesId}
+    </select>
+
     <select id="findAnsStatusByUserQuesId" resultType="String">
         SELECT ans_status
         FROM tb_user_random_question
         WHERE user_ques_id = #{userQuesId}
     </select>
+
 
 
     <select id="findByAnsStatus" resultMap="userRandomQuestionResultMap" parameterType="Long">

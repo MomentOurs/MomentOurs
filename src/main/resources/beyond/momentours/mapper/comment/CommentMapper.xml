@@ -30,6 +30,6 @@
         WHERE target_id = #{userQuesId}
         AND comment_type = 'QUESTION'
         AND comment_status = true
-        ORDER BY created_at DESC
+        ORDER BY created_at ASC
     </select>
 </mapper>

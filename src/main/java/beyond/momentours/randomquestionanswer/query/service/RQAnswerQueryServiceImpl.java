@@ -45,7 +45,7 @@ public class RQAnswerQueryServiceImpl implements RQAnswerQueryService {
         // 조건에 따른 메시지 설정
         if (myAnswer == null && otherAnswer == null) {
             // 1. 나와 상대방 모두 답변 안 했을 때
-            response.setMyAnswer("이곳을 눌러서 답변을 입력해 주세요.");
+            response.setMyAnswer("");
             response.setOtherAnswer("상대방이 아직 답변하지 않았어요.");
         } else if (myAnswer != null && otherAnswer == null) {
             // 2. 나는 답변했고, 상대방은 안 했을 때
@@ -53,7 +53,7 @@ public class RQAnswerQueryServiceImpl implements RQAnswerQueryService {
             response.setOtherAnswer("상대방이 아직 답변하지 않았어요.");
         } else if (myAnswer == null && otherAnswer != null) {
             // 3. 나는 답변 안 했고, 상대방은 답변했을 때
-            response.setMyAnswer("이곳을 눌러서 답변을 입력해 주세요.");
+            response.setMyAnswer("");
             response.setOtherAnswer("상대방의 답변이 궁금한가요? 그럼 오늘 질문에 답변해 주세요!");
         } else {
             // 4. 나와 상대방 둘 다 답변했을 때
