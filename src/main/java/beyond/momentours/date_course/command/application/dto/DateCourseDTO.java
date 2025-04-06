@@ -23,6 +23,8 @@ public class DateCourseDTO {
     private Boolean courseStatus;
     private LocalDateTime courseStartDate;
     private LocalDateTime courseEndDate;
+    @Builder.Default
+    private Boolean courseCertification = false;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Long memberId;

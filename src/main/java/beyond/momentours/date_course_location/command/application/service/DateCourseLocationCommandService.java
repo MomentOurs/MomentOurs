@@ -6,7 +6,7 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 
 public interface DateCourseLocationCommandService {
-    void createDateCourseLocations(Long courseId, List<DateCourseLocationVO> locations);
+//    void createDateCourseLocations(Long courseId, List<DateCourseLocationVO> locations);
 
     @Transactional
     void updateDateCourseLocations(Long courseId, List<DateCourseLocationVO> locations);

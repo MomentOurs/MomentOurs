@@ -27,7 +27,7 @@ public class CourseScrapFolderController {
     private final CourseScrapFolderConverter courseScrapFolderConverter;
 
     @PostMapping
-    public ResponseEntity<?> createCourseScrapFolder(@RequestBody RequestCreateCourseScrapFolderVO request, @AuthenticationPrincipal CustomUserDetails user) {
+    public ResponseEntity<?> createCourseScrapFolder(@ModelAttribute RequestCreateCourseScrapFolderVO request, @AuthenticationPrincipal CustomUserDetails user) {
         log.info("데이트 코스 즐겨찾기 폴더 생성 요청: {}", request);
         try {
             CourseScrapFolderDTO folderDTO = courseScrapFolderConverter.fromCreateVOToDTO(request);

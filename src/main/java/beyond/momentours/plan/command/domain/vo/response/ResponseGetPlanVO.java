@@ -1,17 +1,17 @@
-package beyond.momentours.plan.command.application.dto;
+package beyond.momentours.plan.command.domain.vo.response;
 
 import beyond.momentours.plan.command.domain.aggregate.enums.PlanType;
-import lombok.*;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.Builder;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
-@Setter
-@ToString
 @Builder
-public class PlanDTO {
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+public class ResponseGetPlanVO {
     private Long planId;
     private PlanType planType;
     private String planTitle;
@@ -22,7 +22,5 @@ public class PlanDTO {
     private Boolean planStatus;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private Long memberId;
-    private Long coupleId;
     private Long courseId;
 }
