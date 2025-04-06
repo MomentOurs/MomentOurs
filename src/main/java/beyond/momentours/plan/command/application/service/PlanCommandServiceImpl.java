@@ -5,7 +5,7 @@ import beyond.momentours.common.exception.ErrorCode;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
 import beyond.momentours.plan.command.application.mapper.PlanConverter;
 import beyond.momentours.plan.command.application.dto.PlanDTO;
-import beyond.momentours.plan.command.domain.aggregate.PlanType;
+import beyond.momentours.plan.command.domain.aggregate.enums.PlanType;
 import beyond.momentours.plan.command.domain.aggregate.entity.Plan;
 import beyond.momentours.plan.command.domain.repository.PlanRepository;
 import beyond.momentours.plan.query.repository.PlanMapper;
@@ -31,8 +31,6 @@ public class PlanCommandServiceImpl implements PlanCommandService {
             coupleId = planDAO.findByCoupleId(memberId);
             if (coupleId == null) throw new CommonException(ErrorCode.NOT_FOUND_COUPLE);
             memberId = null;
-        } else if (planDTO.getPlanType() == PlanType.PERSONAL || planDTO.getPlanType() == PlanType.PERSONAL_TRIP) {
-            coupleId = null;
         }
 
         log.info("planType: {}, memberId: {}, coupleId: {}", planDTO.getPlanType(), memberId, coupleId);

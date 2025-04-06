@@ -1,7 +1,6 @@
 package beyond.momentours.security;
 
 import beyond.momentours.member.command.application.service.LoginHistoryService;
-import beyond.momentours.member.command.application.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -70,6 +69,9 @@ public class SecurityConfig {
                                 .requestMatchers("/", "/**", "/api/member/signup", "/api/member/email/send", "/api/member/email/verify").permitAll()
                                 .requestMatchers("/api/member/login").permitAll()
                                 .requestMatchers("/api/admin").authenticated()
+                                .requestMatchers("/api/course", "/api/course/**").permitAll()
+                                .requestMatchers("/api/course-folder", "/api/course-folder/**").permitAll()
+                                .requestMatchers("/api/course-scrap-folder", "/api/course-scrap-folder/**").permitAll()
 
 //                        .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().authenticated()

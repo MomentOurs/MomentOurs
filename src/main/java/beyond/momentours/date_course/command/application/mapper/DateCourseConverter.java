@@ -5,10 +5,7 @@ import beyond.momentours.date_course.command.domain.aggregate.entity.DateCourse;
 import beyond.momentours.date_course.command.domain.vo.request.RequestCreateDateCourseVO;
 import beyond.momentours.date_course.command.domain.vo.request.RequestUpdateDateCourseScheduleVO;
 import beyond.momentours.date_course.command.domain.vo.request.RequestUpdateDateCourseVO;
-import beyond.momentours.date_course.command.domain.vo.response.ResponseCreateDateCourseVO;
-import beyond.momentours.date_course.command.domain.vo.response.ResponseDateCourseDetailVO;
-import beyond.momentours.date_course.command.domain.vo.response.ResponseDateCourseListVO;
-import beyond.momentours.date_course.command.domain.vo.response.ResponseUpdateDateCourseVO;
+import beyond.momentours.date_course.command.domain.vo.response.*;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -22,6 +19,9 @@ public class DateCourseConverter {
                 .courseType(request.getCourseType())
                 .courseDisclosure(request.getCourseDisclosure())
                 .folderId(request.getFolderId())
+                .courseStartDate(request.getCourseStartDate())
+                .courseEndDate(request.getCourseEndDate())
+                .courseCertification(false)
                 .build();
     }
 
@@ -36,6 +36,7 @@ public class DateCourseConverter {
                 .courseStatus(saveDateCourseDTO.getCourseStatus())
                 .courseStartDate(saveDateCourseDTO.getCourseStartDate())
                 .courseEndDate(saveDateCourseDTO.getCourseEndDate())
+                .courseCertification(saveDateCourseDTO.getCourseCertification())
                 .createdAt(saveDateCourseDTO.getCreatedAt())
                 .updatedAt(saveDateCourseDTO.getUpdatedAt())
                 .memberId(saveDateCourseDTO.getMemberId())
@@ -111,8 +112,8 @@ public class DateCourseConverter {
                 .collect(Collectors.toList());
     }
 
-    public ResponseDateCourseDetailVO fromDTOToDetailVO(DateCourseDTO dateCourseDTO) {
-        return ResponseDateCourseDetailVO.builder()
+    public ResponseDateCourseDetailWithLocationVO fromDTOToDetailVO(DateCourseDTO dateCourseDTO) {
+        return ResponseDateCourseDetailWithLocationVO.builder()
                 .courseId(dateCourseDTO.getCourseId())
                 .courseTitle(dateCourseDTO.getCourseTitle())
                 .courseType(dateCourseDTO.getCourseType())
@@ -124,6 +125,7 @@ public class DateCourseConverter {
                 .createdAt(dateCourseDTO.getCreatedAt())
                 .updatedAt(dateCourseDTO.getUpdatedAt())
                 .memberId(dateCourseDTO.getMemberId())
+                .locations(dateCourseDTO.getLocations())
                 .build();
     }
 

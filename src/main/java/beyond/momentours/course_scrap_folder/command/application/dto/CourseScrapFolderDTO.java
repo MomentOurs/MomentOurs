@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 public class CourseScrapFolderDTO {
     private Long courseScrapFolderId;
     private String folderName;
+    private String folderDescription;
+    private String folderImage;
     private Long memberId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

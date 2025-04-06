@@ -22,7 +22,7 @@
 
     <select id="findActiveById" resultMap="dateCourseResultMap">
         SELECT course_id, course_title, course_type, course_disclosure, course_start_date, course_end_date, course_status, created_at, updated_at, member_id
-        FROM date_course
+        FROM tb_date_course
         WHERE course_id = #{courseId}
         AND course_status = true
     </select>
@@ -30,7 +30,7 @@
     <select id="existsActiveById" resultType="boolean">
         SELECT EXISTS (
             SELECT 1
-              FROM date_course
+              FROM tb_date_course
              WHERE course_id = #{courseId}
                AND course_status = true
         )
@@ -38,7 +38,7 @@
 
     <select id="findCoursesWithSorting" resultMap="dateCourseResultMap">
         SELECT course_id, course_title, course_type, course_disclosure, course_like, course_view, course_start_date, course_end_date, course_status, created_at, updated_at, member_id, folder_id
-          FROM date_course
+          FROM tb_date_course
          WHERE course_status = true
            AND course_disclosure = true
          ORDER BY
@@ -50,7 +50,7 @@
     </select>
 
     <update id="incrementViewCountInDB">
-        UPDATE date_course
+        UPDATE tb_date_course
            SET course_view = course_view + #{viewCount}
          WHERE course_id = #{courseId}
            AND course_status = true
@@ -58,7 +58,7 @@
 
     <select id="findCoursesByFolder_FolderId" resultMap="dateCourseResultMap">
         SELECT course_id, course_title, course_type, course_disclosure, course_like, course_view, course_start_date, course_end_date, course_status, created_at, updated_at, member_id, folder_id
-        FROM date_course
+        FROM tb_date_course
         WHERE folder_id = #{folderId}
         AND course_status = true
     </select>

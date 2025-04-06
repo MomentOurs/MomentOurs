@@ -2,6 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="beyond.momentours.date_course_location.query.repository.DateCourseLocationMapper">
+    <resultMap id="courseLocationResultMap" type="beyond.momentours.date_course_location.command.domain.aggregate.entity.DateCourseLocation">
+        <id property="courseLocationId" column="course_location_id"/>
+        <result property="courseId" column="course_id"/>
+        <result property="locationId" column="location_id"/>
+        <result property="courseLocationStatus" column="course_location_status"/>
+        <result property="sequence" column="sequence"/>
+        <result property="courseMemo" column="course_memo"/>
+    </resultMap>
 
     <select id="findLocationIdsByCourseId" parameterType="long" resultType="long">
         SELECT location_id
@@ -16,6 +24,19 @@
         <foreach item="id" collection="list" open="(" separator="," close=")">
             #{id}
         </foreach>
+    </select>
+
+    <select id="findByCourseId" parameterType="long" resultMap="courseLocationResultMap">
+        SELECT
+            course_location_id,
+            course_id,
+            location_id,
+            course_location_status,
+            sequence,
+            course_memo
+        FROM tb_date_course_location
+        WHERE course_id = #{courseId}
+          AND course_location_status = true
     </select>
 
 </mapper>

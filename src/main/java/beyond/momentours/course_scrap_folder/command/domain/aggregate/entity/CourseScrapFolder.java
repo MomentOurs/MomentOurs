@@ -21,6 +21,12 @@ public class CourseScrapFolder {
     @Column(name = "folder_name", nullable = false)
     private String folderName;
 
+    @Column(name = "folder_description")
+    private String folderDescription;
+
+    @Column(name = "folder_image")
+    private String folderImage;
+
     @Column(name = "member_id", nullable = false)
     private Long memberId;
 

@@ -10,6 +10,7 @@ public class LocationConverter {
         return LocationDTO.builder()
                 .locationId(savedLocation.getLocationId())
                 .locationName(savedLocation.getLocationName())
+                .address(savedLocation.getAddress())
                 .latitude(savedLocation.getLatitude())
                 .longitude(savedLocation.getLongitude())
                 .locationStatus(savedLocation.getLocationStatus())

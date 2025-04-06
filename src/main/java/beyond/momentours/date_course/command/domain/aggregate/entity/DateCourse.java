@@ -62,10 +62,12 @@ public class DateCourse {
 
     @PrePersist
     private void onCreate() {
-        this.courseLike = 0L;
-        this.courseView = 0L;
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
+        if (this.courseLike == null) this.courseLike = 0L;
+        if (this.courseView == null) this.courseView = 0L;
+        if (this.courseCertification == null) this.courseCertification = false;
+        if (this.courseStatus == null) this.courseStatus = true;
+        if (this.createdAt == null) this.createdAt = LocalDateTime.now();
+        if (this.updatedAt == null) this.updatedAt = LocalDateTime.now();
     }
 
     public void updateCourseTitle(String courseTitle) {

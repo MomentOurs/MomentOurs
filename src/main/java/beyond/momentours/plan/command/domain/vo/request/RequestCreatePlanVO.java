@@ -1,6 +1,6 @@
 package beyond.momentours.plan.command.domain.vo.request;
 
-import beyond.momentours.plan.command.domain.aggregate.PlanType;
+import beyond.momentours.plan.command.domain.aggregate.enums.PlanType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
@@ -29,6 +29,12 @@ public class RequestCreatePlanVO {
 
     @JsonProperty("plan_reminder_datetime")
     private LocalDateTime planReminderDatetime;
+
+    @JsonProperty("member_id")
+    private Long memberId;
+
+    @JsonProperty("couple_id")
+    private Long coupleId;
 
     @JsonProperty("course_id")
     private Long courseId;
