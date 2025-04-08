@@ -1,16 +1,15 @@
 package beyond.momentours.date_course_folder.command.domain.vo.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 public class ResponseCreateDateCourseFolderVO {
-    @JsonProperty("folder_id")
     private Long folderId;
-    @JsonProperty("folder_name")
     private String folderName;
 }
