@@ -42,6 +42,7 @@ public class CourseScrapFolderConverter {
         return CourseScrapFolderDTO.builder()
                 .courseScrapFolderId(folder.getCourseScrapFolderId())
                 .folderName(folder.getFolderName())
+                .folderDescription(folder.getFolderDescription())
                 .folderImage(folder.getFolderImage())
                 .memberId(folder.getMemberId())
                 .createdAt(folder.getCreatedAt())
@@ -49,13 +50,16 @@ public class CourseScrapFolderConverter {
                 .build();
     }
 
-    public ResponseCourseScrapFolderVO fromEntityToResponseVO(CourseScrapFolder folder) {
+    public ResponseCourseScrapFolderVO fromEntityToResponseVO(CourseScrapFolder folder, int courseCount) {
         return ResponseCourseScrapFolderVO.builder()
                 .courseScrapFolderId(folder.getCourseScrapFolderId())
                 .folderName(folder.getFolderName())
+                .folderDescription(folder.getFolderDescription())
                 .folderImage(folder.getFolderImage())
                 .createdAt(folder.getCreatedAt())
                 .updatedAt(folder.getUpdatedAt())
+                .courseCount(courseCount)
                 .build();
     }
+
 }

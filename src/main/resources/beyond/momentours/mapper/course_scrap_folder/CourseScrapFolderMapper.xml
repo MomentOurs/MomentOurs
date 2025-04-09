@@ -8,15 +8,28 @@
     <resultMap id="courseScrapFolderResultMap" type="beyond.momentours.course_scrap_folder.command.domain.aggregate.entity.CourseScrapFolder">
         <id property="courseScrapFolderId" column="course_scrap_folder_id"/>
         <result property="folderName" column="folder_name"/>
-        <result property="folderImage" column="folder_Image"/>
+        <result property="folderDescription" column="folder_description"/>
+        <result property="folderImage" column="folder_image"/>
         <result property="memberId" column="member_id"/>
         <result property="createdAt" column="created_at"/>
         <result property="updatedAt" column="updated_at"/>
     </resultMap>
 
     <select id="findByMemberId" resultMap="courseScrapFolderResultMap">
-        SELECT course_scrap_folder_id, folder_name, folder_image, member_id, created_at, updated_at
+        SELECT course_scrap_folder_id, folder_name, folder_description, folder_image, member_id, created_at, updated_at
           FROM tb_course_scrap_folder
          WHERE member_id = #{memberId}
     </select>
+
+    <select id="countCoursesByFolderIds" resultType="beyond.momentours.course_scrap_folder.command.domain.vo.CourseScrapCountVO">
+        SELECT course_scrap_folder_id AS folderId,
+        COUNT(*) AS courseCount
+        FROM tb_course_scrap
+        WHERE course_scrap_folder_id IN
+        <foreach item="id" index="index" collection="folderIds" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        GROUP BY course_scrap_folder_id
+    </select>
+
 </mapper>
