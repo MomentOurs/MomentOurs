@@ -24,4 +24,10 @@
         WHERE course_scrap_folder_id = #{folderId}
     </select>
 
+    <select id="findByCourseScrapFolderId" resultMap="courseScrapResultMap">
+        SELECT course_scrap_id, course_scrap_folder_id, course_id, created_at
+        FROM tb_course_scrap
+        WHERE course_scrap_folder_id = #{courseScrapFolderId}
+    </select>
+
 </mapper>

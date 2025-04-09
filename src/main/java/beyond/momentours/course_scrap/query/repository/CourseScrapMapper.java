@@ -1,5 +1,6 @@
 package beyond.momentours.course_scrap.query.repository;
 
+import beyond.momentours.course_scrap.command.domain.aggregate.entity.CourseScrap;
 import beyond.momentours.course_scrap.command.domain.vo.CourseScrapVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -11,4 +12,6 @@ public interface CourseScrapMapper {
     List<CourseScrapVO> findByFolderId(Long folderId);
 
     Long findFolderOwnerId(@Param("folderId") Long folderId);
+
+    List<CourseScrap> findByCourseScrapFolderId(@Param("courseScrapFolderId") Long courseScrapFolderId);
 }
