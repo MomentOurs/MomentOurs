@@ -2,6 +2,7 @@ package beyond.momentours.date_course_folder.command.application.service;
 
 import beyond.momentours.common.exception.CommonException;
 import beyond.momentours.common.exception.ErrorCode;
+import beyond.momentours.date_course.command.domain.repository.DateCourseRepository;
 import beyond.momentours.date_course_folder.command.application.dto.DateCourseFolderDTO;
 import beyond.momentours.date_course_folder.command.application.mapper.DateCourseFolderConverter;
 import beyond.momentours.date_course_folder.command.domain.aggregate.entity.DateCourseFolder;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class DateCourseFolderCommandServiceImpl implements DateCourseFolderCommandService {
 
+    private final DateCourseRepository dateCourseRepository;
     private final DateCourseFolderRepository dateCourseFolderRepository;
     private final DateCourseFolderConverter dateCourseFolderConverter;
 
@@ -36,7 +38,13 @@ public class DateCourseFolderCommandServiceImpl implements DateCourseFolderComma
         DateCourseFolder folder = dateCourseFolderRepository.findById(folderDTO.getFolderId()).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_FOLDER));
         if (!folder.getMemberId().equals(user.getMemberId())) throw new CommonException(ErrorCode.UNAUTHORIZED_ACCESS);
 
-        folder = DateCourseFolder.builder().folderName(folderDTO.getFolderName()).build();
+        folder.update(folderDTO.getFolderName(), folderDTO.getFolderDescription(), folder.getFolderImage());
+
+        if (folderDTO.getFolderImage() != null) {
+            folder.setFolderImage(folderDTO.getFolderImage());
+        }
+
+
         DateCourseFolder updatedFolder = dateCourseFolderRepository.save(folder);
 
         log.info("데이트 코스 폴더 수정 완료: {}", updatedFolder);
@@ -49,7 +57,9 @@ public class DateCourseFolderCommandServiceImpl implements DateCourseFolderComma
         DateCourseFolder folder = dateCourseFolderRepository.findById(folderId).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_FOLDER));
         if (!folder.getMemberId().equals(user.getMemberId())) throw new CommonException(ErrorCode.UNAUTHORIZED_ACCESS);
 
-        dateCourseFolderRepository.delete(folder);
+        dateCourseRepository.clearFolderByFolderId(folderId);
+        dateCourseFolderRepository.deleteById(folderId);
+
         log.info("데이트 코스 폴더 삭제 완료: folderId={}, userId={}", folderId, user.getMemberId());
     }
 }
