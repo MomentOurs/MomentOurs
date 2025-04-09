@@ -49,12 +49,11 @@ public class CourseScrapFolderController {
     }
 
     private RequestCreateCourseScrapFolderVO getRequestCreateCourseScrapFolderVO(String folderName, String folderDescription, MultipartFile folderImage) {
-        RequestCreateCourseScrapFolderVO request = RequestCreateCourseScrapFolderVO.builder()
+        return RequestCreateCourseScrapFolderVO.builder()
                 .folderName(folderName)
                 .folderDescription(folderDescription)
                 .folderImage(folderImage)
                 .build();
-        return request;
     }
 
     @DeleteMapping("/{folderId}")

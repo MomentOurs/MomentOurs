@@ -62,13 +62,12 @@ public class DateCourseFolderCommandController {
     }
 
     private DateCourseFolderDTO getDateCourseFolderDTO(Long folderId, String folderName, String folderDescription, String imageUrl) {
-        DateCourseFolderDTO folderDTO = DateCourseFolderDTO.builder()
+        return DateCourseFolderDTO.builder()
                 .folderId(folderId)
                 .folderName(folderName)
                 .folderDescription(folderDescription)
                 .folderImage(imageUrl)
                 .build();
-        return folderDTO;
     }
 
     @Operation(description = "데이트 코스 폴더 삭제")
