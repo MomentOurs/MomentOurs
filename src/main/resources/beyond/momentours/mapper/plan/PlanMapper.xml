@@ -4,8 +4,10 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="beyond.momentours.plan.query.repository.PlanMapper">
+
     <resultMap id="planResultMap" type="beyond.momentours.plan.command.domain.aggregate.entity.Plan">
         <id property="planId" column="plan_id"/>
+        <result property="planType" column="plan_type"/>
         <result property="planTitle" column="plan_title"/>
         <result property="planContent" column="plan_content"/>
         <result property="planStartDate" column="plan_start_date"/>
@@ -18,37 +20,42 @@
         <result property="courseId" column="course_id"/>
     </resultMap>
 
-    <select id="findByCoupleId" resultType="int" parameterType="int">
+    <select id="findByCoupleId" resultType="long" parameterType="long">
         SELECT couple_id
-          FROM tb_couplelist
-         WHERE (member_id = #{memberId1} OR (member_id = #{memberId2})
-           AND couple_status = 1;
+        FROM tb_couplelist
+        WHERE (member_id = #{memberId})
+        AND couple_status = 1;
     </select>
 
-    <select id="findByCourseId" resultType="int" parameterType="int">
+    <select id="findByCourseId" resultType="long" parameterType="long">
         SELECT course_id
-          FROM tb_date_course
-         WHERE course_id = #{courseId}
-           AND course_status = 1;
+        FROM tb_date_course
+        WHERE course_id = #{courseId}
+        AND course_status = 1;
     </select>
 
-    <select id="findByCoupleIdAndDateRange" resultMap="planResultMap">
-        SELECT plan_id, plan_title, plan_content, plan_start_date, plan_end_date, plan_status, created_at, updated_at, member_id, couple_id, course_id
-          FROM tb_plan
-         WHERE couple_id = #{coupleId}
-           AND plan_start_date >= #{planStartDate}
-           AND plan_end_date &lt;= #{planEndDate}
-           AND plan_status = 1;
+    <select id="findByTypeAndDateRange" resultMap="planResultMap">
+        SELECT plan_id, plan_type, plan_title, plan_content, plan_start_date, plan_end_date, plan_status, created_at, updated_at, member_id, couple_id, course_id
+        FROM tb_plan
+        WHERE (couple_id = #{coupleId} OR member_id = #{memberId})
+        AND plan_start_date &lt;= #{planEndDate}
+        AND plan_end_date >= #{planStartDate}
+        AND plan_status = 1
+        <if test="types != null and types.size() > 0">
+            AND plan_type IN
+            <foreach item="type" collection="types" open="(" separator="," close=")">
+                #{type}
+            </foreach>
+        </if>
     </select>
 
-    <select id="findByDate" resultMap="planResultMap">
-        SELECT plan_id, plan_title, plan_content, plan_start_date, plan_end_date, plan_status, created_at, updated_at, member_id, couple_id, course_id
-          FROM tb_plan
-         WHERE couple_id = #{coupleId}
-           AND plan_start_date &lt;= #{selectedDateEnd}
-           AND plan_end_date >= #{selectedDateStart}
-           AND plan_end_date &lt;= #{planEndDate}
-           AND plan_status = 1;
+    <select id="findByMemberOrCoupleIdAndDateRange" resultMap="planResultMap">
+        SELECT plan_id, plan_type, plan_title, plan_content, plan_start_date, plan_end_date, plan_status, created_at, updated_at, member_id, couple_id, course_id
+        FROM tb_plan
+        WHERE (member_id = #{memberId} OR couple_id = #{coupleId})
+        AND plan_start_date &lt;= #{planEndDate}
+        AND plan_end_date >= #{planStartDate}
+        AND plan_status = 1;
     </select>
 
 </mapper>

@@ -17,6 +17,7 @@ public class LocationDTO {
     private BigDecimal latitude;
     private BigDecimal longitude;
     private String locationName;
+    private String address;
     private LocationStatus locationStatus;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

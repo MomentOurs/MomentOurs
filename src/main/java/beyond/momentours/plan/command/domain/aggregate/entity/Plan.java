@@ -1,5 +1,8 @@
 package beyond.momentours.plan.command.domain.aggregate.entity;
 
+import beyond.momentours.common.exception.CommonException;
+import beyond.momentours.common.exception.ErrorCode;
+import beyond.momentours.plan.command.domain.aggregate.enums.PlanType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,6 +21,9 @@ public class Plan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "plan_id")
     private Long planId;
+
+    @Column(name = "plan_type", nullable = false)
+    private PlanType planType;
 
     @Column(name = "plan_title", nullable = false)
     private String planTitle;
@@ -62,6 +68,10 @@ public class Plan {
     public void register(Plan plan) {
         plan.createdAt = LocalDateTime.now();
         plan.updatedAt = LocalDateTime.now();
+
+        if (plan.getPlanType() == PlanType.COUPLE && plan.getCoupleId() == null) {
+            throw new CommonException(ErrorCode.NOT_FOUND_COUPLE);
+        }
     }
 
     public void setCourseId(Plan plan, Long courseId) {

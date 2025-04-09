@@ -24,7 +24,14 @@ public enum ErrorCode {
     INVALID_RANDOM_QUESTION_STATUS(40012, HttpStatus.BAD_REQUEST, "답변이 완료된 상태가 아닙니다."),
     INACTIVE_REPLY(40013, HttpStatus.BAD_REQUEST, "해당 대댓글은 삭제돼 있습니다."),
     EMPTY_REQUEST_INPUTSTREAM(40015, HttpStatus.BAD_REQUEST, "요청 본문이 비어 있습니다. 필수 데이터를 포함해야 합니다."),
-    MAIL_SEND_FAIL(40116, HttpStatus.BAD_REQUEST, "이메일 인증코드 발송에 실패하였습니다."),
+    MAIL_SEND_FAIL(40016, HttpStatus.BAD_REQUEST, "이메일 인증코드 발송에 실패하였습니다."),
+    REPORT_UPDATE_FAILURE(40017, HttpStatus.BAD_REQUEST, "신고 예비 블랙리스트 Id 업데이트를 실패했습니다."),
+    RANDOMQUES_ANSWER_FAILURE(40018, HttpStatus.UNAUTHORIZED, "랜덤질문 답변 등록에 실패했습니다."), // 블랙리스트 등록 실패
+    QUES_ANSWER_UPDATE_FAILURE(40019, HttpStatus.UNAUTHORIZED, "랜덤질문 답변 수정에 실패했습니다."), // 랜덤질문 답변 수정 실패
+    QUES_ANSWER_DELETE_FAILURE(40020, HttpStatus.UNAUTHORIZED, "랜덤질문 답변 삭제에 실패했습니다."), // 랜덤질문 답변 삭제 실패
+    EMAIL_ALREADY_EXISTS(40021, HttpStatus.UNAUTHORIZED, "이미 존재하는 이메일입니다."),
+
+    // 403: 권한 부족 (Forbidden)
 
     // 401: 인증 실패 (Unauthorized)
     INVALID_HEADER_VALUE(40100, HttpStatus.UNAUTHORIZED, "올바르지 않은 헤더값입니다."), // 헤더 값이 잘못되었거나 누락된 경우
@@ -46,10 +53,17 @@ public enum ErrorCode {
     EMAIL_AUTH_CODE_EXPIRED(40117, HttpStatus.UNAUTHORIZED, "인증 번호가 만료되었습니다. 다시 요청해주세요."),
     EMAIL_AUTH_CODE_INVALID(40118, HttpStatus.UNAUTHORIZED, "인증 번호가 올바르지 않습니다. 다시 요청해주세요."),
     LOGIN_HISTORY_FAILURE(40119, HttpStatus.UNAUTHORIZED, "로그인 이력 저장에 실패했습니다."), // 로그인 이력 기록 실패
+    BLACKLIST_FAILURE(40120, HttpStatus.UNAUTHORIZED, "블랙리스트 등록에 실패했습니다."), // 블랙리스트 등록 실패
+    PREBLACKLIST_FAILURE(40121, HttpStatus.UNAUTHORIZED, "예비 블랙리스트 등록에 실패했습니다."), // 블랙리스트 등록 실패
+    LOGGED_OUT(40122, HttpStatus.UNAUTHORIZED, "로그아웃된 토큰입니다."), // 로그아웃된 토큰인 경우
+    WITHDRAW_FAILURE(40123, HttpStatus.UNAUTHORIZED, "회원 탈퇴에 실패했습니다."), // 회원 탈퇴 실패
+
+
 
     // 403: 권한 부족 (Forbidden)
     FORBIDDEN_ROLE(40300, HttpStatus.FORBIDDEN, "요청한 리소스에 대한 권한이 없습니다."), // 사용자가 요청한 리소스에 대한 권한이 없는 경우
     ACCESS_DENIED(40301, HttpStatus.FORBIDDEN, "접근 권한이 거부되었습니다."), // 권한 부족으로 접근이 거부된 경우
+    INACTIVE_ACCOUNT(40302, HttpStatus.FORBIDDEN, "비활성화된 계정입니다."), // 비활성화된 계정인 경우
 
     // 404: 리소스를 찾을 수 없음 (Not Found)
     NOT_FOUND_MEMBER(40401, HttpStatus.NOT_FOUND, "회원이 존재하지 않습니다."),
@@ -66,6 +80,14 @@ public enum ErrorCode {
     NOT_FOUND_PLAN(40412, HttpStatus.NOT_FOUND, "일정이 존재하지 않습니다."),
     NOT_FOUND_CODE(40413, HttpStatus.NOT_FOUND, "매칭코드가 존재하지 않습니다"),
     NOT_FOUND_REPLY(40414, HttpStatus.NOT_FOUND, "해당 대댓글이 존재하지 않습니다"),
+    NOT_FOUND_DATE_COURSE_SCRAP_FOLDER(40415, HttpStatus.NOT_FOUND, "해당 데이트 코스 즐겨찾기 폴더가 존재하지 않습니다"),
+    NOT_FOUND_COURSE_SCRAP(40416, HttpStatus.NOT_FOUND, "즐겨찾기 된 해당 데이트 코스가 존재하지 않습니다"),
+    NOT_FOUND_PREBLACKLIST(40417, HttpStatus.NOT_FOUND, "해당 예비블랙리스트가 존재하지 않습니다"),
+    NOT_FOUND_BLACKLIST(40418, HttpStatus.NOT_FOUND, "블랙리스트가 존재하지 않습니다"),
+    NOT_FOUND_REPORT(40419, HttpStatus.NOT_FOUND, "신고가 존재하지 않습니다"),
+    NOT_FOUND_COUPLE_QUESTION(40420, HttpStatus.NOT_FOUND, "해당 커플의 랜덤질문이 존재하지 않습니다"),
+    NOT_FOUND_LOGINHISTORY(40421, HttpStatus.NOT_FOUND, "로그인 이력이 존재하지 않습니다"),
+    NOT_FOUND_FOLDER(40422, HttpStatus.NOT_FOUND, "해당 폴더가 존재하지 않습니다"),
 
     // 429: 요청 과다 (Too Many Requests)
     TOO_MANY_REQUESTS(42900, HttpStatus.TOO_MANY_REQUESTS, "요청 횟수가 너무 많습니다. 잠시 후 다시 시도해 주세요."),

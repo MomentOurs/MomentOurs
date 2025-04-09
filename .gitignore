@@ -19,9 +19,6 @@ bin/
 .springBeans
 .sts4-cache
 
-# IntelliJ IDEA
-application-test.yml
-
 # VS Code
 .vscode/
 

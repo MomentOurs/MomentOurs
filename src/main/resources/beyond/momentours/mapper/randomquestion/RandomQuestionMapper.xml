@@ -4,21 +4,34 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="beyond.momentours.randomquestion.query.repository.RandomQuestionMapper">
+    <resultMap id="userRandomQuestionResultMap" type="beyond.momentours.randomquestion.query.dto.UserRandomQuestionDTO">
+        <id property="userQuesId" column="user_ques_id"/>
+        <result property="ansStatus" column="ans_status"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="used" column="used"/>
+        <result property="coupleId" column="couple_id"/>
+        <result property="quesId" column="ques_id"/>
+        <result property="coupleQuesNo" column="couple_ques_no"/>
+
+        <association property="randomQuestion" javaType="beyond.momentours.randomquestion.query.dto.RandomQuestionDTO">
+            <id property="quesId" column="ques_id"/>
+            <result property="quesContent" column="ques_content"/>
+        </association>
+    </resultMap>
+
     <resultMap id="randomQuestionResultMap" type="beyond.momentours.randomquestion.query.dto.RandomQuestionDTO">
         <id property="quesId" column="ques_id"/>
         <result property="quesContent" column="ques_content"/>
-        <result property="ansStatus" column="ans_status"/>
-        <result property="createdAt" column="created_at"/>
-        <result property="coupleId" column="couple_id"/>
     </resultMap>
 
-    <select id="getRandomQuestionByMemberId" resultMap="randomQuestionResultMap" parameterType="long">
-        SELECT ques_id
-             , ques_content
-             , ans_status
-             , created_at
-             , couple_id
-          FROM TB_RANDOM_QUESTION
+    <select id="getRandomQuestionByMemberId" resultMap="userRandomQuestionResultMap" parameterType="Long">
+        SELECT a. user_ques_id
+             , a.ans_status
+             , a.created_at
+             , a.couple_id
+             , b.ques_id
+          FROM tb_user_random_question a
+          JOIN tb_random_question b ON a.ques_id = b.ques_id
          WHERE couple_id = (
         SELECT couple_id
           FROM TB_COUPLE_LIST
@@ -27,20 +40,72 @@
         )
     </select>
 
-    <select id="getRandomQuestionByQuesId" resultMap="randomQuestionResultMap">
-        SELECT ques_id
-             , ques_content
+    <select id="getRandomQuestionByQuesId" resultMap="userRandomQuestionResultMap">
+        SELECT user_ques_id
              , ans_status
              , created_at
              , couple_id
-          FROM TB_RANDOM_QUESTION
+          FROM tb_user_random_question
          WHERE couple_id = (
         SELECT couple_id
           FROM TB_COUPLE_LIST
          WHERE member_id1 = #{memberId}
             OR member_id2 = #{memberId}
         )
-           AND ques_id = #{quesId}
+           AND user_ques_id = #{userQuesIdx}
+    </select>
+    
+    <!-- 모든 질문 조회 -->
+    <select id="findAllQuestions" resultMap="randomQuestionResultMap">
+        SELECT
+               a.ques_id
+             , a.ques_content
+          FROM tb_random_question a
+    </select>
+    
+    <!-- 특정 커플이 사용한 질문 목록 조회 -->
+    <select id="findUsedQuestionsByCoupleId" resultType="Long">
+        SELECT
+               a.ques_id
+          FROM tb_user_random_question a
+         WHERE a.couple_id = #{coupleId}
     </select>
 
+    <!-- 특정 quesId에 해당하는 질문 조회 -->
+    <select id="findByQuestionId" resultMap="randomQuestionResultMap" parameterType="Long">
+        SELECT
+        ques_id,
+        ques_content
+        FROM tb_random_question
+        WHERE ques_id = #{quesId}
+    </select>
+
+    <select id="findAnsStatusByUserQuesId" resultType="String">
+        SELECT ans_status
+        FROM tb_user_random_question
+        WHERE user_ques_id = #{userQuesId}
+    </select>
+
+
+    <select id="findByAnsStatus" resultMap="userRandomQuestionResultMap" parameterType="Long">
+        SELECT
+               a.user_ques_id
+             , a.ans_status
+             , a.created_at
+             , a.used
+             , a.couple_id
+             , a.ques_id
+             , a.couple_ques_no
+             , b.ques_content
+          FROM tb_user_random_question a
+          JOIN tb_random_question b ON a.ques_id = b.ques_id
+         WHERE a.couple_id = #{coupleId}
+    </select>
+
+    <select id="findQuestionsByMemberId" resultType="Long" parameterType="Long">
+        SELECT
+               COALESCE(MAX(a.couple_ques_no), 0)
+          FROM tb_user_random_question a
+         WHERE a.couple_id = #{coupleId}
+    </select>
 </mapper>

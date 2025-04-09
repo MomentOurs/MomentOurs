@@ -17,16 +17,18 @@ public class DateCourseDTO {
     private Long courseId;
     private String courseTitle;
     private CourseType courseType;
-    private String courseMemo;
     private Boolean courseDisclosure;
     private Long courseLike;
     private Long courseView;
     private Boolean courseStatus;
     private LocalDateTime courseStartDate;
     private LocalDateTime courseEndDate;
+    @Builder.Default
+    private Boolean courseCertification = false;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Long memberId;
+    private Long folderId;
 
     private List<DateCourseLocationVO> locations;
 }

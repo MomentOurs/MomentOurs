@@ -1,18 +1,16 @@
 package beyond.momentours.moment.command.domain.aggregate.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@Table(name = "tb_moment")
 @Entity
+@Table(name = "tb_moment")
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 @Builder
 public class Moment {
 
@@ -56,4 +54,18 @@ public class Moment {
 
     @Column(name = "member_id")
     private Long memberId;
+
+    // 상태 변경 method
+
+    /* 추억 생성 시 초기 정보 설정 */
+    public void createMoment(Long locationId, Long memberId) {
+        this.locationId = locationId;
+        this.memberId = memberId;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+        this.momentStatus = true;
+        this.momentLike = 0;
+        this.momentView = 0;
+    }
+
 }

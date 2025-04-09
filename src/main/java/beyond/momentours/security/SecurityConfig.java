@@ -1,10 +1,10 @@
 package beyond.momentours.security;
 
 import beyond.momentours.member.command.application.service.LoginHistoryService;
-import beyond.momentours.member.command.application.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -29,13 +29,15 @@ public class SecurityConfig {
     private final JWTUtil jwtUtil;
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
     private final LoginHistoryService loginHistoryService;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Autowired
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, JwtAuthenticationProvider jwtAuthenticationProvider, LoginHistoryService loginHistoryService) {
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil jwtUtil, JwtAuthenticationProvider jwtAuthenticationProvider, LoginHistoryService loginHistoryService, RedisTemplate<String, String> redisTemplate) {
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtUtil = jwtUtil;
         this.jwtAuthenticationProvider = jwtAuthenticationProvider;
         this.loginHistoryService = loginHistoryService;
+        this.redisTemplate = redisTemplate;
     }
 
     //AuthenticationManager Bean 등록
@@ -65,10 +67,15 @@ public class SecurityConfig {
 
         // 인증 및 권한 설정
         http.authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/", "/api/member/signup").permitAll()
-                        .requestMatchers("/api/member/login").permitAll()
                         .requestMatchers("/api/oauth/**").permitAll()  // 명확하게 경로 지정
-                        .requestMatchers("/api/member").authenticated()
+                                .requestMatchers("/", "/**", "/api/member/signup", "/api/member/email/send", "/api/member/email/verify").permitAll()
+                                .requestMatchers("/api/member/login").permitAll()
+                                .requestMatchers("/api/admin").authenticated()
+                                .requestMatchers("/api/course", "/api/course/**").permitAll()
+                                .requestMatchers("/api/course-folder", "/api/course-folder/**").permitAll()
+                                .requestMatchers("/api/course-scrap-folder", "/api/course-scrap-folder/**").permitAll()
+
+//                        .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
 
@@ -84,7 +91,7 @@ public class SecurityConfig {
 
         // JWT 관련 필터 추가
         http.addFilterAt(new AuthenticationFilter(authenticationManager(authenticationConfiguration), jwtUtil, loginHistoryService), UsernamePasswordAuthenticationFilter.class);
-        http.addFilterBefore(new JWTFilter(jwtUtil, jwtAuthenticationProvider), AuthenticationFilter.class);
+        http.addFilterBefore(new JWTFilter(jwtUtil, jwtAuthenticationProvider, redisTemplate), AuthenticationFilter.class);
 
         return http.build();
     }
@@ -92,17 +99,27 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:5173"));
+
+        // 도메인 구매 시 변경
+//        configuration.setAllowedOrigins(Arrays.asList(
+//                "http://momentours.com"
+//        ));
+
+        // 모든 도메인을 허용 (개발용)
+        configuration.setAllowedOriginPatterns(Collections.singletonList("*"));
+
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
-        configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-XSRF-TOKEN"));
         configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+        configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
 
+        // 적용할 URL 패턴 설정
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
-        return source;
 
+        return source;
     }
+
 }
 

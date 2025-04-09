@@ -44,4 +44,12 @@
         WHERE c.couple_status = 1
         AND (member_id1 = #{memberId} OR member_id2 = #{memberId})
     </select>
+    
+    <select id="getCoupleIdByMemberId" resultType="long" parameterType="long">
+        SELECT
+               c.couple_id
+          FROM tb_couple_list c
+         WHERE c.couple_status = 1
+           AND (c.member_id1 = #{memberId} OR c.member_id2 = #{memberId})
+    </select>
 </mapper>

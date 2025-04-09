@@ -34,25 +34,9 @@ public class MailServiceImpl implements MailService {
         Random random = new Random();
         StringBuffer key = new StringBuffer();
 
-        for(int i = 0; i < 8; i++) {    // 총 8자리 인증 번호 생성
-            int idx = random.nextInt(3); // 0~2 사이의 값을 랜덤하게 받아와 idx에 집어넣는다.
-
-            // 0,1,2 값을 switchcase를 통해 꼬아버린다.
-            // 숫자와 아스키코드를 이용한다.
-            switch (idx) {
-                case 0 :
-                    // 0일 때, a~z 까지 랜덤 생성 후 key에 추가
-                    key.append((char) (random.nextInt(26) + 97));
-                    break;
-                case 1 :
-                    // 1일 때, A~Z 까지 랜덤 생성 후 key에 추가
-                    key.append((char) (random.nextInt(26) + 65));
-                    break;
-                case 2 :
-                    // 2일 때, 0~9 까지 랜덤 생성 후 key에 추가
-                    key.append((char) (random.nextInt(9)));
-                    break;
-            }
+        for (int i = 0; i < 4; i++) {    // 4자리 인증 번호 생성
+            // 0~9 사이의 값을 랜덤하게 받아와 key에 추가
+            key.append(random.nextInt(10));  // 0부터 9까지의 숫자를 랜덤하게 생성
         }
         code = key.toString();
     }

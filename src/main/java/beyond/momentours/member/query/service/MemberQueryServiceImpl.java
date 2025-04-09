@@ -5,9 +5,12 @@ import beyond.momentours.common.exception.ErrorCode;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
 import beyond.momentours.member.query.dto.MemberDTO;
 import beyond.momentours.member.query.repository.MemberMapper;
+import beyond.momentours.member.query.vo.response.ResponseMemberSearchVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Slf4j
 @Service("queryMemberService")
@@ -21,7 +24,7 @@ public class MemberQueryServiceImpl implements MemberQueryService {
     }
 
     @Override
-    public Long findByMemberId(String memberId) {
+    public Long findByMemberId(Long memberId) {
 
         Long memId = memberMapper.findByMemberId(memberId);
 
@@ -48,4 +51,27 @@ public class MemberQueryServiceImpl implements MemberQueryService {
 
         return member;
     }
+
+    @Override
+    public List<ResponseMemberSearchVO> getMemberSearch(String memberNickname, String memberEmail) {
+        List<ResponseMemberSearchVO> response = memberMapper.findMemberSearch(memberNickname, memberEmail);
+
+        if (response == null) {
+            throw new CommonException(ErrorCode.NOT_FOUND_MEMBER);
+        }
+        return response;
+    }
+
+    @Override
+    public boolean emailCheck(String memberEmail) {
+        String email = memberMapper.findByMemberEmail(memberEmail);
+        return email != null;
+    }
+
+    @Override
+    public boolean nicknameCheck(String memberNickname) {
+        String nickname = memberMapper.findByMemberNickname(memberNickname);
+        return nickname != null;
+    }
+
 }

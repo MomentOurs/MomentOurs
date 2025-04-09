@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="beyond.momentours.randomquestionanswer.query.repository.RQAnswerMapper">
+    <resultMap id="rqAnswerMap" type="beyond.momentours.randomquestionanswer.query.dto.RQAnswerDTO">
+        <id property="quesAnswerId" column="ques_ans_id"/>
+        <result property="quesAnsContent" column="ques_ans_content"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="userQuesId" column="user_ques_id"/>
+        <result property="memberId" column="member_id"/>
+    </resultMap>
+
+    <select id="findByQuesAnswerId" resultMap="rqAnswerMap" parameterType="Long">
+        SELECT
+               a.ques_ans_id
+             , a.ques_ans_content
+             , a.created_at
+             , a.updated_at
+             , a.user_ques_id
+             , a.member_id
+          FROM tb_ques_answer a
+         INNER JOIN tb_user_random_question b ON a.user_ques_id = b.user_ques_id
+         WHERE a.user_ques_id = #{userQuesId}
+    </select>
+</mapper>

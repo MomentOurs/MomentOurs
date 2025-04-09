@@ -6,4 +6,6 @@ public interface QueryCoupleService {
     CoupleListDTO getCoupleByCoupleId(Long coupleId);
 
     CoupleListDTO getCoupleByMemberId(Long memberId);
+
+    Long getCoupleIdByMemberId(Long memberId);
 }

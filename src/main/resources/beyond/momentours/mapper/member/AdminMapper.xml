@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="beyond.momentours.member.query.repository.AdminMapper">
+    <resultMap id="loginHistorytMap" type="beyond.momentours.member.query.dto.LoginHistoryDTO">
+        <id property="loginHistoryId" column="login_history_id"/>
+        <result property="memberEmail" column="login_history_date"/>
+        <result property="loginHistoryIp" column="login_history_ip"/>
+        <result property="memberId" column="member_id"/>
+
+        <!-- 회원 정보 추가 -->
+        <association property="member" javaType="beyond.momentours.member.query.dto.MemberDTO">
+            <id property="memberId" column="member_id"/>
+            <result property="memberName" column="member_name"/>
+        </association>
+    </resultMap>
+
+    <select id="findLoginHistoryAll" resultMap="loginHistorytMap">
+        SELECT
+               a.login_history_id
+               a.login_history_date
+               a.login_history_ip
+               b.member_id
+          FROM tb_login_history a
+          JOIN tb_member b ON a.member_id = b.member_id
+    </select>
+</mapper>

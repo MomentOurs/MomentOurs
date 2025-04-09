@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="beyond.momentours.course_scrap.query.repository.CourseScrapMapper">
+
+    <resultMap id="courseScrapResultMap" type="beyond.momentours.course_scrap.command.domain.aggregate.entity.CourseScrap">
+        <id property="courseScrapId" column="course_scrap_id"/>
+        <result property="courseScrapFolderId" column="course_scrap_folder_id"/>
+        <result property="courseId" column="course_id"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <select id="findByFolderId" resultMap="courseScrapResultMap">
+        SELECT course_scrap_id, course_scrap_folder_id, course_id, created_at, deleted_at
+        FROM tb_course_scrap
+        WHERE course_scrap_folder_id = #{folderId}
+    </select>
+
+    <select id="findFolderOwnerId" resultType="java.lang.Long">
+        SELECT member_id
+        FROM tb_course_scrap_folder
+        WHERE course_scrap_folder_id = #{folderId}
+    </select>
+
+</mapper>

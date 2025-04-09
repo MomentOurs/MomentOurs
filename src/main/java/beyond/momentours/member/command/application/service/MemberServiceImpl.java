@@ -1,7 +1,6 @@
 package beyond.momentours.member.command.application.service;
 
 
-import beyond.momentours.common.ResponseDTO;
 import beyond.momentours.common.exception.CommonException;
 import beyond.momentours.common.exception.ErrorCode;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
@@ -11,45 +10,74 @@ import beyond.momentours.member.command.application.mapper.MemberConverter;
 import beyond.momentours.member.command.domain.aggregate.entity.Member;
 import beyond.momentours.member.command.domain.repository.MemberRepository;
 import beyond.momentours.member.query.service.MemberQueryService;
+import beyond.momentours.security.JWTUtil;
 import beyond.momentours.util.RedisEmailAuthentication;
+import beyond.momentours.util.SecurityUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
 @Slf4j
-@Service("commandAuthServiceImpl")
+@Service("commandMemberServiceImpl")
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
     private final MemberConverter memberConverter;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final MemberQueryService memberQueryService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final MailService mailService;
     private final RedisEmailAuthentication redisEmailAuthentication;
+    private final RedisTemplate<String, String> redisTemplate;
+    private final JWTUtil jwtUtil;
 
     @Autowired
-    public MemberServiceImpl(MemberRepository memberRepository, MemberConverter memberConverter, BCryptPasswordEncoder bCryptPasswordEncoder, MemberQueryService memberQueryService, MailService mailService, RedisEmailAuthentication redisEmailAuthentication) {
+    public MemberServiceImpl(MemberRepository memberRepository, MemberConverter memberConverter, MemberQueryService memberQueryService, BCryptPasswordEncoder bCryptPasswordEncoder, MailService mailService, RedisEmailAuthentication redisEmailAuthentication, RedisTemplate<String, String> redisTemplate, JWTUtil jwtUtil) {
         this.memberRepository = memberRepository;
         this.memberConverter = memberConverter;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.memberQueryService = memberQueryService;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.mailService = mailService;
         this.redisEmailAuthentication = redisEmailAuthentication;
+        this.redisTemplate = redisTemplate;
+        this.jwtUtil = jwtUtil;
     }
 
     @Override
     @Transactional
     public MemberDTO signup(MemberDTO memberDTO) {
-
+        if (memberQueryService.emailCheck(memberDTO.getMemberEmail())) {
+            throw new CommonException(ErrorCode.EMAIL_ALREADY_EXISTS);
+        }
         memberDTO.encodedPwd(bCryptPasswordEncoder.encode(memberDTO.getMemberPassword()));
         Member member = memberConverter.fromDTOToEntity(memberDTO);
         memberRepository.save(member);
-        MemberDTO reponseMemberDTO = memberConverter.fromEntityToDTO(member);
 
-        return reponseMemberDTO;
+        return memberConverter.fromEntityToDTO(member);
+    }
+
+    /* 회원탈퇴 */
+    @Override
+    @Transactional
+    public void withdraw(CustomUserDetails user) {
+        try {
+            Member member = memberRepository.findById(user.getMemberId())
+                    .orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_MEMBER));
+
+            Member updatedMember = member.toBuilder()
+                    .memberStatus(false) // 회원 상태만 변경
+                    .build();
+            memberRepository.save(updatedMember);
+        } catch (CommonException e) {
+            throw new CommonException(ErrorCode.WITHDRAW_FAILURE);
+        }
     }
 
     @Override
@@ -61,6 +89,11 @@ public class MemberServiceImpl implements MemberService {
         // 사용자 데이터가 없으면 예외 발생
         if (member == null) {
             throw new CommonException(ErrorCode.NOT_FOUND_MEMBER);
+        }
+
+        // 비활성화된 회원 로그인 차단
+        if (!member.getMemberStatus()) {
+            throw new CommonException(ErrorCode.INACTIVE_ACCOUNT);
         }
 
         // 사용자 데이터를 기반으로 CustomUserDetails 생성
@@ -85,12 +118,12 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public String checkEmail(MemberDTO requestMemberDTO) {
-        Member member = memberRepository.findByMemberEmail(requestMemberDTO.getMemberEmail());
-
-        if (member== null) {
-            throw new CommonException(ErrorCode.NOT_FOUND_MEMBER);
-        }
+    public void checkEmail(MemberDTO requestMemberDTO) {
+//        Member member = memberRepository.findByMemberEmail(requestMemberDTO.getMemberEmail());
+//
+//        if (member== null) {
+//            throw new CommonException(ErrorCode.NOT_FOUND_MEMBER);
+//        }
 
         String authCode = mailService.sendMail(requestMemberDTO.getMemberEmail());
 
@@ -98,7 +131,6 @@ public class MemberServiceImpl implements MemberService {
             throw new CommonException(ErrorCode.MAIL_SEND_FAIL);
         }
 
-        return authCode;
     }
 
     @Override
@@ -124,5 +156,29 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberConverter.fromPasswordDTOToMember(memberDTO);
         memberRepository.updatePasswordByEmail(member.getMemberEmail(), member.getMemberPassword());
     }
+
+    // 로그아웃 처리
+    @Override
+    @Transactional
+    public void logout(HttpServletRequest request) {
+        // SecurityUtil에서 토큰 추출
+        String token = SecurityUtil.extractToken(request);
+        if (token == null || !jwtUtil.validateToken(token)) {
+            throw new CommonException(ErrorCode.INVALID_TOKEN_ERROR);
+        }
+
+        // 만료 시간 가져오기
+        Date expiration = jwtUtil.getExpirationDateFromToken(token);
+
+        // 현재 시간 기준 남은 시간 계산
+        long expirationMillis = expiration.getTime() - System.currentTimeMillis();
+
+        // Redis에 로그아웃된 토큰 저장
+        redisTemplate.opsForValue().set("로그아웃_" + token, "logout", expirationMillis, TimeUnit.MILLISECONDS);
+    }
+
+//    @Override
+//    @Transactional
+//    public void changeMemberRole(Long memberId, String)
 
 }
