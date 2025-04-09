@@ -14,7 +14,9 @@ import java.time.LocalDateTime;
 public class ResponseCourseScrapFolderVO {
     private Long courseScrapFolderId;
     private String folderName;
+    private String folderDescription;
     private String folderImage;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private int courseCount;
 }

@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RequestCreateDateCourseFolderVO {
     private String folderName;
+    private String folderDescription;
 }

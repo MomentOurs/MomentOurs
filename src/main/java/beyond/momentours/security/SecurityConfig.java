@@ -74,6 +74,7 @@ public class SecurityConfig {
                                 .requestMatchers("/api/course", "/api/course/**").permitAll()
                                 .requestMatchers("/api/course-folder", "/api/course-folder/**").permitAll()
                                 .requestMatchers("/api/course-scrap-folder", "/api/course-scrap-folder/**").permitAll()
+                                .requestMatchers("/api/course-scrap", "/api/course-scrap/**").permitAll()
 
 //                        .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().authenticated()

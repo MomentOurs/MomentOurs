@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class ResponseCreateDateCourseFolderVO {
     private Long folderId;
     private String folderName;
+    private String folderDescription;
 }
