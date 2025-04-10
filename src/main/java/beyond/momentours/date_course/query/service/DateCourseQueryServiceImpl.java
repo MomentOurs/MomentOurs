@@ -68,4 +68,21 @@ public class DateCourseQueryServiceImpl implements DateCourseQueryService {
                 .map(dateCourseConverter::fromEntityToDTO)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<DateCourseDTO> getCoursesByScrapFolderId(Long courseScrapFolderId) {
+        List<DateCourse> courses = dateCourseDAO.findCoursesByScrapFolderId(courseScrapFolderId);
+        return courses.stream()
+                .map(dateCourseConverter::fromEntityToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DateCourseDTO> getCoursesWithoutFolder(Long memberId) {
+        List<DateCourse> courses = dateCourseDAO.findCoursesWithoutFolder(memberId);
+        return courses.stream()
+                .map(dateCourseConverter::fromEntityToDTO)
+                .collect(Collectors.toList());
+    }
+
 }

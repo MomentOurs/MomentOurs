@@ -14,5 +14,7 @@ public interface DateCourseMapper {
     List<DateCourse> findCoursesWithSorting(@Param("sortBy") String sortBy);
     void incrementViewCountInDB(@Param("courseId") Long courseId, @Param("viewCount") Long viewCount);
     List<DateCourse> findCoursesByFolder_FolderId(@Param("folderId") Long folderId);
-}
+    List<DateCourse> findCoursesByScrapFolderId(@Param("courseScrapFolderId") Long courseScrapFolderId);
 
+    List<DateCourse> findCoursesWithoutFolder(@Param("memberId")Long memberId);
+}

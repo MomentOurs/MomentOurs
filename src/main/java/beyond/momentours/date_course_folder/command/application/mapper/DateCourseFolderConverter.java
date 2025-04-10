@@ -18,19 +18,22 @@ public class DateCourseFolderConverter {
     public DateCourseFolderDTO fromCreateVOToDTO(RequestCreateDateCourseFolderVO vo, Long memberId) {
         return DateCourseFolderDTO.builder()
                 .folderName(vo.getFolderName())
+                .folderDescription(vo.getFolderDescription())
                 .memberId(memberId)
                 .build();
     }
 
-    public DateCourseFolderDTO fromUpdateVOToDTO(RequestUpdateDateCourseFolderVO vo, Long folderId) {
+    public DateCourseFolderDTO fromUpdateVOToDTO(RequestUpdateDateCourseFolderVO vo, Long folderId, String imageUrl) {
         return DateCourseFolderDTO.builder()
                 .folderId(folderId)
                 .folderName(vo.getFolderName())
+                .folderDescription(vo.getFolderDescription())
+                .folderImage(imageUrl)
                 .build();
     }
 
     public ResponseCreateDateCourseFolderVO fromDTOToCreateVO(DateCourseFolderDTO dto) {
-        return new ResponseCreateDateCourseFolderVO(dto.getFolderId(), dto.getFolderName());
+        return new ResponseCreateDateCourseFolderVO(dto.getFolderId(), dto.getFolderName(), dto.getFolderDescription());
     }
 
     public ResponseUpdateDateCourseFolderVO fromDTOToUpdateVO(DateCourseFolderDTO dto) {
@@ -41,6 +44,7 @@ public class DateCourseFolderConverter {
         return DateCourseFolderDTO.builder()
                 .folderId(entity.getFolderId())
                 .folderName(entity.getFolderName())
+                .folderDescription(entity.getFolderDescription())
                 .memberId(entity.getMemberId())
                 .build();
     }
@@ -49,6 +53,7 @@ public class DateCourseFolderConverter {
         return DateCourseFolder.builder()
                 .folderId(dto.getFolderId())
                 .folderName(dto.getFolderName())
+                .folderDescription(dto.getFolderDescription())
                 .memberId(dto.getMemberId())
                 .build();
     }

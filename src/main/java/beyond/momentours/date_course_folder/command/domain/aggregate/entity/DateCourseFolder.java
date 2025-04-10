@@ -28,4 +28,16 @@ public class DateCourseFolder {
 
     @Column(name = "member_id", nullable = false)
     private Long memberId;
+
+    public void update(String folderName, String folderDescription, String folderImage) {
+        this.folderName = folderName;
+        this.folderDescription = folderDescription;
+        if (folderImage != null) {
+            this.folderImage = folderImage;
+        }
+    }
+
+    public void setFolderImage(String folderImage) {
+        this.folderImage = folderImage;
+    }
 }

@@ -29,11 +29,11 @@ public class CourseScrapServiceImpl implements CourseScrapService {
     @Transactional
     public CourseScrapDTO createCourseScrap(CourseScrapDTO scrapDTO, CustomUserDetails user) {
         try {
-            CourseScrap scrapEntity = courseScrapConverter.fromDTOToEntity(scrapDTO);
-            log.info("저장할 스크랩 데이터: {}", scrapEntity);
-            CourseScrap savedScrap = courseScrapRepository.save(scrapEntity);
-            log.info("스크랩 저장 성공: {}", savedScrap);
+            boolean exists = courseScrapRepository.existsByCourseIdAndCourseScrapFolderId(scrapDTO.getCourseId(), scrapDTO.getCourseScrapFolderId());
+            if (exists) throw new CommonException(ErrorCode.ALREADY_SCRAPPED);
 
+            CourseScrap scrapEntity = courseScrapConverter.fromDTOToEntity(scrapDTO);
+            CourseScrap savedScrap = courseScrapRepository.save(scrapEntity);
             return courseScrapConverter.fromEntityToDTO(savedScrap);
         } catch (Exception e) {
             log.error("스크랩 저장 중 오류 발생", e);

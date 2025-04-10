@@ -2,10 +2,14 @@ package beyond.momentours.course_scrap_folder.command.application.service;
 
 import beyond.momentours.common.exception.CommonException;
 import beyond.momentours.common.exception.ErrorCode;
+import beyond.momentours.course_scrap.command.domain.aggregate.entity.CourseScrap;
+import beyond.momentours.course_scrap.query.repository.CourseScrapMapper;
 import beyond.momentours.course_scrap_folder.command.application.dto.CourseScrapFolderDTO;
 import beyond.momentours.course_scrap_folder.command.application.mapper.CourseScrapFolderConverter;
 import beyond.momentours.course_scrap_folder.command.domain.aggregate.entity.CourseScrapFolder;
 import beyond.momentours.course_scrap_folder.command.domain.repository.CourseScrapFolderRepository;
+import beyond.momentours.course_scrap_folder.command.domain.vo.CourseScrapCountVO;
+import beyond.momentours.course_scrap_folder.command.domain.vo.FolderWithCourseIdsVO;
 import beyond.momentours.course_scrap_folder.command.domain.vo.response.ResponseCourseScrapFolderVO;
 import beyond.momentours.course_scrap_folder.query.repository.CourseScrapFolderMapper;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
@@ -15,6 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service("commandDateCourseScrapFolderService")
@@ -24,6 +30,7 @@ public class CourseScrapFolderServiceImpl implements CourseScrapFolderService {
     private final CourseScrapFolderRepository courseScrapFolderRepository;
     private final CourseScrapFolderConverter courseScrapFolderConverter;
     private final CourseScrapFolderMapper courseScrapFolderDAO;
+    private final CourseScrapMapper courseScrapDAO;
 
     @Override
     @Transactional
@@ -58,8 +65,42 @@ public class CourseScrapFolderServiceImpl implements CourseScrapFolderService {
     @Transactional
     public List<ResponseCourseScrapFolderVO> getFoldersByMemberId(Long memberId) {
         List<CourseScrapFolder> folders = courseScrapFolderDAO.findByMemberId(memberId);
-        return folders.stream()
-                .map(courseScrapFolderConverter::fromEntityToResponseVO)
+        List<Long> folderIds = folders.stream()
+                .map(CourseScrapFolder::getCourseScrapFolderId)
                 .toList();
+
+        List<CourseScrapCountVO> counts = courseScrapFolderDAO.countCoursesByFolderIds(folderIds);
+        Map<Long, Integer> folderIdToCount = counts.stream()
+                .collect(Collectors.toMap(CourseScrapCountVO::getFolderId, CourseScrapCountVO::getCourseCount));
+
+        return folders.stream()
+                .map(folder -> {
+                    int count = folderIdToCount.getOrDefault(folder.getCourseScrapFolderId(), 0);
+                    return courseScrapFolderConverter.fromEntityToResponseVO(folder, count);
+                })
+                .toList();
+    }
+
+
+    @Override
+    public List<FolderWithCourseIdsVO> getFoldersWithCourses(Long memberId) {
+        List<CourseScrapFolder> folders = courseScrapFolderDAO.findByMemberId(memberId);
+
+        return folders.stream()
+                .map(folder -> {
+                    List<Long> courseIds = courseScrapDAO.findByCourseScrapFolderId(folder.getCourseScrapFolderId())
+                            .stream()
+                            .map(CourseScrap::getCourseId)
+                            .collect(Collectors.toList());
+
+                    return FolderWithCourseIdsVO.builder()
+                            .courseScrapFolderId(folder.getCourseScrapFolderId())
+                            .folderName(folder.getFolderName())
+                            .folderDescription(folder.getFolderDescription())
+                            .folderImageUrl(folder.getFolderImage())
+                            .courseIds(courseIds)
+                            .build();
+                })
+                .collect(Collectors.toList());
     }
 }

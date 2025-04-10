@@ -2,9 +2,10 @@ package beyond.momentours.date_course.command.domain.vo.request;
 
 import beyond.momentours.date_course.command.domain.aggregate.CourseType;
 import beyond.momentours.date_course_location.command.domain.vo.DateCourseLocationVO;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -12,8 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class RequestUpdateDateCourseVO {
     private String courseTitle;
     private CourseType courseType;
