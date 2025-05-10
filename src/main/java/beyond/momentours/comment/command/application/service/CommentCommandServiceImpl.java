@@ -84,21 +84,13 @@ public class CommentCommandServiceImpl implements CommentCommandService {
             throw new CommonException(ErrorCode.ACCESS_DENIED);
         }
 
-        log.info("아아아아1111");
-
         CommentDTO commentDTO = commentConverter.fromEntityToDTO(existingComment);
         validateCommentTypeStatus(commentDTO);
-
-        log.info("아아아아22222");
 
         existingComment.updateStatus(false);
         log.info("상태 변경 후 Comment : {}", existingComment);
 
-        log.info("아아아아33333");
-
         commentRepository.save(existingComment);
-
-        log.info("아아아아44444");
 
         return commentConverter.fromEntityToDTO(existingComment);
     }
