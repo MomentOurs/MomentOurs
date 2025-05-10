@@ -17,9 +17,9 @@ public class RQAnswerConverter {
                 .build();
     }
 
-    public RQAnswerDTO updateVoToDTO(RequestRQAnswerUpdatedVO requestRQAnswerUpdatedVO) {
+    public RQAnswerDTO updateVoToDTO(RequestRQAnswerUpdatedVO requestRQAnswerUpdatedVO, Long quesAnswerId) {
         return RQAnswerDTO.builder()
-                .quesAnswerId(requestRQAnswerUpdatedVO.getQuesAnswerId())
+                .quesAnswerId(quesAnswerId)
                 .quesAnsContent(requestRQAnswerUpdatedVO.getQuesAnsContent())
                 .build();
     }

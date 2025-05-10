@@ -9,6 +9,7 @@ import beyond.momentours.common.exception.CommonException;
 import beyond.momentours.common.exception.ErrorCode;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
 import beyond.momentours.randomquestion.command.domain.aggregate.entity.UserRandomQuestion;
+import beyond.momentours.randomquestion.query.dto.UserRandomQuestionDTO;
 import beyond.momentours.randomquestion.query.repository.RandomQuestionMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -76,6 +77,7 @@ public class CommentCommandServiceImpl implements CommentCommandService {
         log.info("삭제 요청된 Comment 데이터: {}", existingComment);
 
         Long memberId = user.getMemberId();
+        log.info("삭제 요청된 Comment 데이터: {}", memberId);
 
         if (!existingComment.getMemberId().equals(memberId)) {
             log.error("삭제 권한 없음: 요청한 사용자 ID: {}, 댓글 작성자 ID: {}", memberId, existingComment.getMemberId());
@@ -126,9 +128,9 @@ public class CommentCommandServiceImpl implements CommentCommandService {
 //                break;
 //
             case QUESTION:
-                UserRandomQuestion randomQuestion = randomQuestionMapper.findByQuestionId(commentDTO.getTargetId());
+                UserRandomQuestionDTO randomQuestion = randomQuestionMapper.findByUserQuesId(commentDTO.getTargetId());
                 if (randomQuestion == null) throw new CommonException(ErrorCode.NOT_FOUND_RANDOM_QUESTION);
-                if (!"All".equals(randomQuestion.getAnsStatus())) {
+                if (!"ALL".equals(randomQuestion.getAnsStatus())) {
                     throw new CommonException(ErrorCode.INVALID_RANDOM_QUESTION_STATUS);
                 }
                 break;

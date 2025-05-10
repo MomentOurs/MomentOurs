@@ -42,7 +42,7 @@ public class RQAnswerServiceImpl implements RQAnswerService {
     public void updateRQAnswer(RQAnswerDTO rqAnswerDTO, CustomUserDetails user) {
         try {
             Long memberId = user.getMemberId();
-            RQAnswer rqAnswer = rqAnswerRepository.findByUserQuesIdAndMemberId(rqAnswerDTO.getUserQuesId(), memberId);
+            RQAnswer rqAnswer = rqAnswerRepository.findByQuesAnswerIdAndMemberId(rqAnswerDTO.getQuesAnswerId(), memberId);
             if (rqAnswer == null) {
                 throw new CommonException(ErrorCode.NOT_FOUND_QUES_ANSWER);
             }

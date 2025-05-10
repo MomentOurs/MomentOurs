@@ -9,7 +9,7 @@ import com.github.pagehelper.PageInfo;
 import java.util.List;
 
 public interface RandomQuestionService {
-    PageInfo<RandomQuestionDTO> getRandomQuestionList(int page, int size, CustomUserDetails user);
+    List<UserRandomQuestionDTO> getRandomQuestionListByCursor(Long lastId, int size, String keyword, CustomUserDetails user);
 
     RandomQuestionDTO getRandomQuestionDetail(Long quesId, CustomUserDetails user);
 

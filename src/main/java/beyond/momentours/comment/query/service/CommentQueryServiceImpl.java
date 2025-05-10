@@ -7,6 +7,7 @@ import beyond.momentours.comment.query.repository.CommentMapper;
 import beyond.momentours.common.exception.CommonException;
 import beyond.momentours.common.exception.ErrorCode;
 import beyond.momentours.randomquestion.command.domain.aggregate.entity.UserRandomQuestion;
+import beyond.momentours.randomquestion.query.dto.UserRandomQuestionDTO;
 import beyond.momentours.randomquestion.query.repository.RandomQuestionMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +40,7 @@ public class CommentQueryServiceImpl implements CommentQueryService {
         String ansStatus = randomQuestionMapper.findAnsStatusByUserQuesId(userQuesId);
         log.info("랜덤 질문의 ansStatus: {}", ansStatus);
 
-        if (!"All".equals(ansStatus)) throw new CommonException(ErrorCode.INVALID_RANDOM_QUESTION_STATUS);
+        if (!"ALL".equals(ansStatus)) throw new CommonException(ErrorCode.INVALID_RANDOM_QUESTION_STATUS);
 
         List<Comment> comments = commentDAO.findCommentsByQuestionId(userQuesId);
         log.info("조회된 질문 댓글 목록: {}", comments);
@@ -56,9 +57,9 @@ public class CommentQueryServiceImpl implements CommentQueryService {
 //                break;
 
             case QUESTION:
-                UserRandomQuestion randomQuestion = randomQuestionMapper.findByQuestionId(commentDTO.getTargetId());
+                UserRandomQuestionDTO randomQuestion = randomQuestionMapper.findByUserQuesId(commentDTO.getTargetId());
                 if (randomQuestion == null) throw new CommonException(ErrorCode.NOT_FOUND_RANDOM_QUESTION);
-                if (!"All".equals(randomQuestion.getAnsStatus())) {
+                if (!"ALL".equals(randomQuestion.getAnsStatus())) {
                     throw new CommonException(ErrorCode.INVALID_RANDOM_QUESTION_STATUS);
                 }
                 break;

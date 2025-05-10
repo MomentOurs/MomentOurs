@@ -32,6 +32,7 @@ public class CommentConverter {
                 .commentType(commentDTO.getCommentType())
                 .memberId(commentDTO.getMemberId())
                 .targetId(commentDTO.getTargetId())
+                .commentStatus(true)
                 .build();
     }
 

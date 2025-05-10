@@ -36,10 +36,11 @@ public class RQAnswerController {
         return ResponseDTO.ok("답변이 성공적으로 작성되었습니다.");
     }
 
-    @PatchMapping("")
-    public ResponseDTO<?> updateRQAnswer(@RequestBody RequestRQAnswerUpdatedVO requestRQAnswerUpdatedVO,
+    @PatchMapping("{quesAnswerId}")
+    public ResponseDTO<?> updateRQAnswer(@PathVariable Long quesAnswerId,
+                                         @RequestBody RequestRQAnswerUpdatedVO requestRQAnswerUpdatedVO,
                                          @AuthenticationPrincipal CustomUserDetails user) {
-        RQAnswerDTO rqAnswerDTO = rqAnswerConverter.updateVoToDTO(requestRQAnswerUpdatedVO);
+        RQAnswerDTO rqAnswerDTO = rqAnswerConverter.updateVoToDTO(requestRQAnswerUpdatedVO, quesAnswerId);
         rqAnswerService.updateRQAnswer(rqAnswerDTO, user);
         return ResponseDTO.ok("답변이 성공적으로 수정되었습니다.");
     }
