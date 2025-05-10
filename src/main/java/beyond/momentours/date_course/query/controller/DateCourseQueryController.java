@@ -57,11 +57,16 @@ public class DateCourseQueryController {
         }
     }
 
-    @GetMapping("/folder/{folderId}")
-    public ResponseEntity<?> getDateCoursesByFolder(@PathVariable Long folderId) {
-        log.info("폴더 내 데이트 코스 조회 요청: folderId={}", folderId);
+    @GetMapping("/folder")
+    public ResponseEntity<?> getDateCoursesByFolder(@RequestParam(required = false) Long folderId, @AuthenticationPrincipal CustomUserDetails user) {
+        log.info("폴더 내 데이트 코스 조회 요청: folderId={} (nullable)", folderId);
         try {
-            List<DateCourseDTO> courses = dateCourseService.getCoursesByFolderId(folderId);
+            List<DateCourseDTO> courses;
+            if (folderId == null) {
+                courses = dateCourseService.getCoursesWithoutFolder(user.getMemberId());
+            } else {
+                courses = dateCourseService.getCoursesByFolderId(folderId);
+            }
             List<ResponseDateCourseListVO> response = dateCourseConverter.fromDTOToListVO(courses);
             return ResponseEntity.ok(response);
         } catch (CommonException e) {
@@ -73,4 +78,19 @@ public class DateCourseQueryController {
         }
     }
 
+    @GetMapping("/{courseScrapFolderId}/courses")
+    public ResponseEntity<?> getCoursesInScrapFolder(@PathVariable Long courseScrapFolderId) {
+        log.info("즐겨찾기 폴더 내 데이트 코스 조회 요청: scrapFolderId={}", courseScrapFolderId);
+        try {
+            List<DateCourseDTO> courses = dateCourseService.getCoursesByScrapFolderId(courseScrapFolderId);
+            List<ResponseDateCourseListVO> response = dateCourseConverter.fromDTOToListVO(courses);
+            return ResponseEntity.ok(response);
+        } catch (CommonException e) {
+            log.error("즐겨찾기 폴더 코스 조회 오류: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            log.error("예상치 못한 오류", e);
+            return ResponseEntity.status(500).body("서버 오류 발생");
+        }
+    }
 }

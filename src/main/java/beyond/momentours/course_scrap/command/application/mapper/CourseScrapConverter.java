@@ -36,10 +36,9 @@ public class CourseScrapConverter {
 
     public CourseScrap fromDTOToEntity(CourseScrapDTO scrapDTO) {
         return CourseScrap.builder()
-                .courseScrapId(scrapDTO.getCourseId())
+                .courseScrapId(scrapDTO.getCourseScrapId())
                 .courseScrapFolderId(scrapDTO.getCourseScrapFolderId())
                 .courseId(scrapDTO.getCourseId())
-                .createdAt(scrapDTO.getCreatedAt())
                 .build();
     }
 }

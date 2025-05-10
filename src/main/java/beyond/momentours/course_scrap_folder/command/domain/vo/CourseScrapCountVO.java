@@ -1,4 +1,4 @@
-package beyond.momentours.date_course_folder.command.domain.vo.response;
+package beyond.momentours.course_scrap_folder.command.domain.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,10 +6,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResponseUpdateDateCourseFolderVO {
+@Builder
+public class CourseScrapCountVO {
     private Long folderId;
-    private String folderName;
+    private int courseCount;
 }

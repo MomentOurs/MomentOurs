@@ -1,17 +1,16 @@
 package beyond.momentours.date_course_location.command.domain.vo;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
 @Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-@ToString
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class DateCourseLocationVO {
     private Long locationId;
     private String locationName;

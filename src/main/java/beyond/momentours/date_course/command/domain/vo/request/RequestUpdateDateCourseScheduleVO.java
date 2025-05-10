@@ -1,8 +1,9 @@
 package beyond.momentours.date_course.command.domain.vo.request;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -10,8 +11,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class RequestUpdateDateCourseScheduleVO {
     private LocalDateTime courseStartDate;
     private LocalDateTime courseEndDate;

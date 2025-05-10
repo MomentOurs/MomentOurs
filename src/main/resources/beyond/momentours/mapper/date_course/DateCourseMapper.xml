@@ -58,8 +58,29 @@
 
     <select id="findCoursesByFolder_FolderId" resultMap="dateCourseResultMap">
         SELECT course_id, course_title, course_type, course_disclosure, course_like, course_view, course_start_date, course_end_date, course_status, created_at, updated_at, member_id, folder_id
-        FROM tb_date_course
-        WHERE folder_id = #{folderId}
-        AND course_status = true
+          FROM tb_date_course
+         WHERE folder_id = #{folderId}
+           AND course_status = true
     </select>
+
+    <select id="findCoursesByScrapFolderId" resultMap="dateCourseResultMap">
+        SELECT dc.course_id, dc.course_title, dc.course_type, dc.course_disclosure,
+               dc.course_like, dc.course_view, dc.course_start_date, dc.course_end_date,
+               dc.course_status, dc.created_at, dc.updated_at, dc.member_id, dc.folder_id
+          FROM tb_date_course dc
+          JOIN tb_course_scrap cs ON dc.course_id = cs.course_id
+         WHERE cs.course_scrap_folder_id = #{courseScrapFolderId}
+           AND dc.course_status = true
+    </select>
+
+    <select id="findCoursesWithoutFolder" resultMap="dateCourseResultMap">
+        SELECT course_id, course_title, course_type, course_disclosure, course_like, course_view,
+               course_start_date, course_end_date, course_status, created_at, updated_at, member_id, folder_id
+          FROM tb_date_course
+         WHERE folder_id IS NULL
+           AND member_id = #{memberId}
+           AND course_status = true
+    </select>
+
+
 </mapper>

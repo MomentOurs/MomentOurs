@@ -4,4 +4,5 @@ import beyond.momentours.course_scrap.command.domain.aggregate.entity.CourseScra
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CourseScrapRepository extends JpaRepository<CourseScrap, Long> {
+    boolean existsByCourseIdAndCourseScrapFolderId(Long courseId, Long courseScrapFolderId);
 }
