@@ -10,7 +10,6 @@ import beyond.momentours.member.command.domain.vo.reponse.ResponseSignupMemberVO
 import beyond.momentours.member.command.domain.vo.reponse.ResponseUpdateProfileMemberVO;
 import beyond.momentours.member.command.domain.vo.request.*;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.constraints.Email;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

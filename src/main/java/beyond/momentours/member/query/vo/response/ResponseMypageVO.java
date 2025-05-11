@@ -18,9 +18,6 @@ public class ResponseMypageVO {
     @JsonProperty("member_nickname")
     private String memberNickname;
 
-    @JsonProperty("member_phone")
-    private String memberPhone;
-
     @JsonProperty("member_birth")
     private String memberBirth;
 
