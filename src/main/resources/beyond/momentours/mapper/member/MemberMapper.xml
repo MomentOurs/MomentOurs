@@ -10,7 +10,6 @@
         <result property="memberPassword" column="member_password"/>
         <result property="memberName" column="member_name"/>
         <result property="memberNickname" column="member_nickname"/>
-        <result property="memberPhone" column="member_phone"/>
         <result property="memberBirth" column="member_birth"/>
         <result property="memberGender" column="member_gender"/>
         <result property="memberMbti" column="member_mbti"/>
@@ -41,7 +40,6 @@
                a.member_email,
                a.member_nickname,
                a.member_name,
-               a.member_phone,
                a.member_birth,
                a.member_gender,
                a.member_mbti

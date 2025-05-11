@@ -31,9 +31,6 @@ public class Member {
     @Column(name = "member_nickname", nullable = false)
     private String memberNickname;
 
-    @Column(name = "member_phone", nullable = false)
-    private String memberPhone;
-
     @Column(name = "member_birth", nullable = false)
     private String memberBirth;
 

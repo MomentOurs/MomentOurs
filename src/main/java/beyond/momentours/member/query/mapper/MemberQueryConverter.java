@@ -12,7 +12,6 @@ public class MemberQueryConverter {
                 .memberEmail(memberDTO.getMemberEmail())
                 .memberName(memberDTO.getMemberName())
                 .memberNickname(memberDTO.getMemberNickname())
-                .memberPhone(memberDTO.getMemberPhone())
                 .memberBirth(memberDTO.getMemberBirth())
                 .memberGender(memberDTO.getMemberGender())
                 .memberMbti(memberDTO.getMemberMbti())
