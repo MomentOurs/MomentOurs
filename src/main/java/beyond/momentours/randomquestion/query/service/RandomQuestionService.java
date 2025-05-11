@@ -21,4 +21,6 @@ public interface RandomQuestionService {
 
     // 커플에 배정된 랜덤질문의 가장 높은 couple_ques_no 조회
     Long findQuestionsByMemberId(Long coupleId);
+
+    boolean existsByCoupleIdAndCoupleQuesNoAndAnsStatus(Long coupleId, Long coupleQuesNo, String ansStatus);
 }

@@ -71,4 +71,10 @@ public class RandomQuestionServiceImpl implements RandomQuestionService{
         return randomQuestionMapper.findQuestionsByMemberId(coupleId);
     }
 
+    // 특정 커플의 특정 질문 번호에 대해 상태가 'ALL'이 있는지 확인
+    @Override
+    public boolean existsByCoupleIdAndCoupleQuesNoAndAnsStatus(Long coupleId, Long coupleQuesNo, String ansStatus) {
+        return randomQuestionMapper.existsByCoupleIdAndCoupleQuesNoAndAnsStatus(coupleId, coupleQuesNo, ansStatus);
+    }
+
 }

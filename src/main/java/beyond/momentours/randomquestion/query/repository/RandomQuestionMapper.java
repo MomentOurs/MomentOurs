@@ -33,4 +33,8 @@ public interface RandomQuestionMapper {
                                                       @Param("keyword") String keyword,
                                                       @Param("size") int size);
 
+    boolean existsByCoupleIdAndCoupleQuesNoAndAnsStatus(@Param("coupleId") Long coupleId,
+                                                        @Param("coupleQuesNo") Long coupleQuesNo,
+                                                        @Param("ansStatus") String ansStatus);
+
 }

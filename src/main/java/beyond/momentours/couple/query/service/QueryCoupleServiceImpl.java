@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Slf4j
 @Transactional
@@ -48,6 +50,20 @@ public class QueryCoupleServiceImpl implements QueryCoupleService {
         if (coupleId == null) {
             throw new CommonException(ErrorCode.NOT_FOUND_COUPLE);
         }
-        return  coupleId;
+        return coupleId;
+    }
+
+    @Override
+    public List<Long> getAllCoupleIds() {
+        List<Long> couples = coupleMapper.getAllCoupleIds();
+        if (couples == null) {
+            throw new CommonException(ErrorCode.NOT_FOUND_COUPLE);
+        }
+        return couples;
+    }
+
+    @Override
+    public List<Long> getMemberIdsByCoupleId(Long coupleId) {
+        return coupleMapper.getMemberIdsByCoupleId(coupleId);
     }
 }
