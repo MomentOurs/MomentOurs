@@ -1,9 +1,6 @@
 package beyond.momentours.randomquestionanswer.query.service;
 
-import beyond.momentours.common.exception.CommonException;
-import beyond.momentours.common.exception.ErrorCode;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
-import beyond.momentours.randomquestion.query.dto.UserRandomQuestionDTO;
 import beyond.momentours.randomquestionanswer.query.dto.RQAnswerDTO;
 import beyond.momentours.randomquestionanswer.query.repository.RQAnswerMapper;
 import beyond.momentours.randomquestionanswer.query.vo.response.ResponseRQAnswerVO;
@@ -41,8 +38,7 @@ public class RQAnswerQueryServiceImpl implements RQAnswerQueryService {
             if (rqAnswerDTO.getMemberId().equals(memberId)) {
                 myAnswer = rqAnswerDTO.getQuesAnsContent();
                 myQuesAnsId = rqAnswerDTO.getQuesAnswerId();
-                log.info("myQuesAndId: {}", myQuesAnsId);
-            } else {
+            } else if (otherAnswer == null) {
                 otherAnswer = rqAnswerDTO.getQuesAnsContent();
             }
         }

@@ -7,16 +7,19 @@ import beyond.momentours.randomquestion.command.domain.aggregate.entity.UserRand
 import beyond.momentours.randomquestion.command.domain.repository.RandomQuestionRepository;
 import beyond.momentours.randomquestion.command.domain.repository.UserRandomQuestionRepository;
 import beyond.momentours.randomquestion.query.service.RandomQuestionService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
+@Slf4j
 @Service("commandQuestionServiceImpl")
 public class QuestionServiceImpl implements QuestionService {
 
@@ -43,46 +46,70 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public void createNewQuestion(CustomUserDetails user) throws InterruptedException, ExecutionException, TimeoutException {
 
-        Long memberId = user.getMemberId();
-        Long coupleId = queryCoupleService.getCoupleIdByMemberId(memberId);
+        Long coupleId = queryCoupleService.getCoupleIdByMemberId(user.getMemberId());
+        assignNewQuestionToCouple(coupleId);
+    }
 
-        // 저장된 랜덤질문 모두 조회
-        List<RandomQuestion> allQuestions = randomQuestionService.findAllQuestions();
+    @Transactional
+    @Override
+    public void checkAndAssignToAllCouples() throws ExecutionException, InterruptedException, TimeoutException {
+        List<Long> coupleIds = queryCoupleService.getAllCoupleIds();
 
-        // 특정 커플이 사용한 질문 목록 조회
+        for (Long coupleId : coupleIds) {
+            Long latestQuesNo = randomQuestionService.findQuestionsByMemberId(coupleId);
+            if (latestQuesNo <= 0L) continue;
+
+            boolean bothAnswered = randomQuestionService.existsByCoupleIdAndCoupleQuesNoAndAnsStatus(coupleId, latestQuesNo, "ALL");
+
+            if (bothAnswered) {
+                assignNewQuestionToCouple(coupleId);
+            }
+        }
+    }
+
+    @Transactional
+    @Override
+    public void assignNewQuestionToCouple(Long coupleId) throws InterruptedException, ExecutionException, TimeoutException {
+        List<RandomQuestion> allQuestions = randomQuestionRepository.findAll();
         List<Long> usedQuestionIds = randomQuestionService.findUsedQuestionsByCoupleId(coupleId);
 
-        // 사용 가능한 질문 필터링
-        List<RandomQuestion> availableQuestions = allQuestions.stream()
-                .filter(question -> !usedQuestionIds.contains(question.getQuesId()))
-                .toList();
+        List<RandomQuestion> availableQuestions = new ArrayList<>(
+                allQuestions.stream()
+                        .filter(q -> !usedQuestionIds.contains(q.getQuesId()))
+                        .toList()
+        );
 
-        // 사용 가능한 질문이 minThreshold보다 적으면 추가 질문 생성
         if (availableQuestions.size() < minThreshold) {
             List<String> newQuestions = chatGptService.fetchQuestionsFromChatGPT();
-            for (String question : newQuestions) {
-                RandomQuestion randomQuestion = RandomQuestion.builder()
-                        .quesContent(question)
-                        .build();
-                randomQuestionRepository.save(randomQuestion);
+            for (String content : newQuestions) {
+                randomQuestionRepository.save(RandomQuestion.builder().quesContent(content).build());
             }
-            // 방금 추가된 질문 조회
-            availableQuestions = randomQuestionService.findAllQuestions();
+
+            // 질문 다시 불러오기
+            allQuestions = randomQuestionService.findAllQuestions();
+            availableQuestions = new ArrayList<>(
+                    allQuestions.stream()
+                            .filter(q -> !usedQuestionIds.contains(q.getQuesId()))
+                            .toList()
+            );
         }
 
-        // 랜덤한 질문 하나를 커플에게 배정
-        RandomQuestion assignedQuestion = assignRandomQuestionToCouple(availableQuestions);
+        if (availableQuestions.isEmpty()) {
+            throw new IllegalStateException("사용 가능한 질문이 없습니다.");
+        }
 
-        // 해당 회원의 가장 높은 couple_ques_no 조회 (없으면 0 반환)
-        Long maxCoupleQuesNo = randomQuestionService.findQuestionsByMemberId(coupleId);
+        RandomQuestion selected = assignRandomQuestionToCouple(availableQuestions);
+        Long maxQuesNo = randomQuestionService.findQuestionsByMemberId(coupleId);
 
-        UserRandomQuestion userRandomQuestion = UserRandomQuestion.builder()
-                .quesId(assignedQuestion.getQuesId())
+        UserRandomQuestion urq = UserRandomQuestion.builder()
+                .quesId(selected.getQuesId())
                 .coupleId(coupleId)
-                .coupleQuesNo(maxCoupleQuesNo+1)
+                .coupleQuesNo(maxQuesNo + 1)
                 .ansStatus("NONE")
+                .used(false)
                 .build();
-        userRandomQuestionRepository.save(userRandomQuestion);
+
+        userRandomQuestionRepository.save(urq);
     }
 
     private RandomQuestion assignRandomQuestionToCouple(List<RandomQuestion> availableQuestions) {

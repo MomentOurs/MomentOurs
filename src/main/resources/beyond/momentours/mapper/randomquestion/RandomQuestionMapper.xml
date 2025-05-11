@@ -118,8 +118,6 @@
         WHERE user_ques_id = #{userQuesId}
     </select>
 
-
-
     <select id="findByAnsStatus" resultMap="userRandomQuestionResultMap" parameterType="Long">
         SELECT
                a.user_ques_id
@@ -133,6 +131,11 @@
           FROM tb_user_random_question a
           JOIN tb_random_question b ON a.ques_id = b.ques_id
          WHERE a.couple_id = #{coupleId}
+            AND a.couple_ques_no = (
+            SELECT MAX(couple_ques_no)
+            FROM tb_user_random_question
+            WHERE couple_id = #{coupleId}
+            )
     </select>
 
     <select id="findQuestionsByMemberId" resultType="Long" parameterType="Long">
@@ -140,5 +143,29 @@
                COALESCE(MAX(a.couple_ques_no), 0)
           FROM tb_user_random_question a
          WHERE a.couple_id = #{coupleId}
+    </select>
+
+    <select id="existsByCoupleIdAndCoupleQuesNoAndAnsStatus" resultType="boolean" parameterType="map">
+        SELECT EXISTS (
+            SELECT 1 FROM tb_user_random_question a
+            WHERE a.couple_id = #{coupleId}
+            AND a.couple_ques_no = #{coupleQuesNo}
+            AND a.ans_status = #{ansStatus}
+            LIMIT 1
+        )
+    </select>
+
+    <select id="getRandomQuestionByUserQuesId" resultMap="userRandomQuestionResultMap">
+        SELECT a.user_ques_id,
+        a.ans_status,
+        a.created_at,
+        a.couple_id,
+        a.couple_ques_no,
+        b.ques_id,
+        b.ques_content
+        FROM tb_user_random_question a
+        JOIN tb_random_question b ON a.ques_id = b.ques_id
+        WHERE a.couple_id = #{coupleId}
+        AND a.user_ques_id = #{userQuesId}
     </select>
 </mapper>
