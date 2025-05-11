@@ -47,9 +47,7 @@ public class QuestionServiceImpl implements QuestionService {
     public void createNewQuestion(CustomUserDetails user) throws InterruptedException, ExecutionException, TimeoutException {
 
         Long coupleId = queryCoupleService.getCoupleIdByMemberId(user.getMemberId());
-        Long memberId = user.getMemberId();
-
-        assignNewQuestionToCouple(coupleId, List.of(memberId)); // 1명만 배정
+        assignNewQuestionToCouple(coupleId);
     }
 
     @Transactional
@@ -72,11 +70,6 @@ public class QuestionServiceImpl implements QuestionService {
     @Transactional
     @Override
     public void assignNewQuestionToCouple(Long coupleId) throws InterruptedException, ExecutionException, TimeoutException {
-        List<Long> memberIds = queryCoupleService.getMemberIdsByCoupleId(coupleId); // 두 명
-        assignNewQuestionToCouple(coupleId, memberIds);
-    }
-
-    private void assignNewQuestionToCouple(Long coupleId, List<Long> memberIds) throws InterruptedException, ExecutionException, TimeoutException {
         List<RandomQuestion> allQuestions = randomQuestionRepository.findAll();
         List<Long> usedQuestionIds = randomQuestionService.findUsedQuestionsByCoupleId(coupleId);
 
@@ -88,11 +81,6 @@ public class QuestionServiceImpl implements QuestionService {
 
         if (availableQuestions.size() < minThreshold) {
             List<String> newQuestions = chatGptService.fetchQuestionsFromChatGPT();
-
-            if (newQuestions == null || newQuestions.isEmpty()) {
-                throw new IllegalStateException("ChatGPT로부터 질문을 받아오지 못했습니다.");
-            }
-
             for (String content : newQuestions) {
                 randomQuestionRepository.save(RandomQuestion.builder().quesContent(content).build());
             }
@@ -111,21 +99,17 @@ public class QuestionServiceImpl implements QuestionService {
         }
 
         RandomQuestion selected = assignRandomQuestionToCouple(availableQuestions);
-        Long maxQuesNo = randomQuestionService.findQuestionsByMemberId(coupleId); // COALESCE → null 방지
+        Long maxQuesNo = randomQuestionService.findQuestionsByMemberId(coupleId);
 
-        log.info("[질문 배정] coupleId={}, memberIds={}, assignedQuesId={}", coupleId, memberIds, selected.getQuesId());
+        UserRandomQuestion urq = UserRandomQuestion.builder()
+                .quesId(selected.getQuesId())
+                .coupleId(coupleId)
+                .coupleQuesNo(maxQuesNo + 1)
+                .ansStatus("NONE")
+                .used(false)
+                .build();
 
-        for (Long memberId : memberIds) {
-            UserRandomQuestion urq = UserRandomQuestion.builder()
-                    .quesId(selected.getQuesId())
-                    .coupleId(coupleId)
-                    .coupleQuesNo(maxQuesNo + 1)
-                    .ansStatus("NONE") // 트리거가 이후 상태 관리
-                    .used(false)
-                    .build();
-
-            userRandomQuestionRepository.save(urq);
-        }
+        userRandomQuestionRepository.save(urq);
     }
 
     private RandomQuestion assignRandomQuestionToCouple(List<RandomQuestion> availableQuestions) {

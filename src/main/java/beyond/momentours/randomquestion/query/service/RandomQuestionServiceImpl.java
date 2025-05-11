@@ -1,19 +1,16 @@
 package beyond.momentours.randomquestion.query.service;
 
-import beyond.momentours.common.exception.CommonException;
-import beyond.momentours.common.exception.ErrorCode;
 import beyond.momentours.couple.query.service.QueryCoupleService;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
 import beyond.momentours.randomquestion.command.domain.aggregate.entity.RandomQuestion;
-import beyond.momentours.randomquestion.query.dto.RandomQuestionDTO;
 import beyond.momentours.randomquestion.query.dto.UserRandomQuestionDTO;
 import beyond.momentours.randomquestion.query.repository.RandomQuestionMapper;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service("RandomQuestionQueryService")
 public class RandomQuestionServiceImpl implements RandomQuestionService{
 
@@ -34,9 +31,10 @@ public class RandomQuestionServiceImpl implements RandomQuestionService{
     }
 
     @Override
-    public RandomQuestionDTO getRandomQuestionDetail(Long quesId, CustomUserDetails user) {
+    public UserRandomQuestionDTO getRandomQuestionDetail(Long userQuesId, CustomUserDetails user) {
         Long memberId = user.getMemberId();
-        return randomQuestionMapper.getRandomQuestionByQuesId(memberId, quesId);
+        Long coupleId = queryCoupleService.getCoupleIdByMemberId(memberId);
+        return randomQuestionMapper.getRandomQuestionByUserQuesId(coupleId, userQuesId);
     }
 
     @Override
@@ -46,23 +44,7 @@ public class RandomQuestionServiceImpl implements RandomQuestionService{
 
     @Override
     public List<Long> findUsedQuestionsByCoupleId(Long coupleId) {
-        List<Long> usedQuestions = randomQuestionMapper.findUsedQuestionsByCoupleId(coupleId);
-        if (usedQuestions.isEmpty()) {
-            throw new CommonException(ErrorCode.NOT_FOUND_COUPLE_QUESTION);
-        }
-        return usedQuestions;
-    }
-
-    // 처음 랜덤질문 조회 화면
-    @Override
-    public UserRandomQuestionDTO getRandomQuestion(CustomUserDetails user) {
-        Long memberId = user.getMemberId();
-        Long coupleId = queryCoupleService.getCoupleIdByMemberId(memberId);
-        UserRandomQuestionDTO result = randomQuestionMapper.findByAnsStatus(coupleId);
-        if (result == null) {
-            throw new CommonException(ErrorCode.NOT_FOUND_COUPLE_QUESTION);
-        }
-        return result;
+        return randomQuestionMapper.findUsedQuestionsByCoupleId(coupleId);
     }
 
     // 커플에 배정된 랜덤질문의 가장 높은 couple_ques_no 조회

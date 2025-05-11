@@ -37,4 +37,7 @@ public interface RandomQuestionMapper {
                                                         @Param("coupleQuesNo") Long coupleQuesNo,
                                                         @Param("ansStatus") String ansStatus);
 
+    UserRandomQuestionDTO getRandomQuestionByUserQuesId(@Param("coupleId") Long coupleId,
+                                                @Param("userQuesId") Long userQuesId);
+
 }

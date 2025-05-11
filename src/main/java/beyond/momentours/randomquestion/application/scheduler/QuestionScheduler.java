@@ -1,4 +1,4 @@
-package beyond.momentours.randomquestion.command.application.scheduler;
+package beyond.momentours.randomquestion.application.scheduler;
 
 import beyond.momentours.randomquestion.command.application.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -154,4 +154,18 @@
             LIMIT 1
         )
     </select>
+
+    <select id="getRandomQuestionByUserQuesId" resultMap="userRandomQuestionResultMap">
+        SELECT a.user_ques_id,
+        a.ans_status,
+        a.created_at,
+        a.couple_id,
+        a.couple_ques_no,
+        b.ques_id,
+        b.ques_content
+        FROM tb_user_random_question a
+        JOIN tb_random_question b ON a.ques_id = b.ques_id
+        WHERE a.couple_id = #{coupleId}
+        AND a.user_ques_id = #{userQuesId}
+    </select>
 </mapper>
