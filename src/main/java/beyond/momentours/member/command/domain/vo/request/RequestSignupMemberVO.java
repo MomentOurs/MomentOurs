@@ -3,6 +3,8 @@ package beyond.momentours.member.command.domain.vo.request;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,7 +25,7 @@ public class RequestSignupMemberVO {
     private String memberNickname;
 
     @JsonProperty("member_birth")
-    private String memberBirth;
+    private LocalDate memberBirth;
 
     @JsonProperty("member_gender")
     private String memberGender;

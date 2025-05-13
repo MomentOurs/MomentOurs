@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -22,7 +23,7 @@ public class RequestUpdateProfileMemberVO {
     private String memberNickname;
 
     @JsonProperty("member_birth")
-    private String memberBirth;
+    private LocalDate memberBirth;
 
     @JsonProperty("member_gender")
     private String memberGender;

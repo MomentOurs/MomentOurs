@@ -37,7 +37,7 @@ public class MemberQueryServiceImpl implements MemberQueryService {
 
     @Override
     public String findByMemberEmail(MemberDTO memberDTO) {
-        String memberEmail = memberMapper.findByMemberEmail(memberDTO.getMemberEmail());
+        String memberEmail = memberMapper.findMemberEmailByInfo(memberDTO);
         if (memberEmail == null)
             throw new CommonException(ErrorCode.NOT_FOUND_MEMBER);
         return memberEmail;

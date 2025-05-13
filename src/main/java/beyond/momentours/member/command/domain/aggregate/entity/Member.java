@@ -3,6 +3,7 @@ package beyond.momentours.member.command.domain.aggregate.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -32,7 +33,7 @@ public class Member {
     private String memberNickname;
 
     @Column(name = "member_birth", nullable = false)
-    private String memberBirth;
+    private LocalDate memberBirth;
 
     @Column(name = "member_gender", nullable = false)
     private String memberGender;

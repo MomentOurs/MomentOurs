@@ -29,11 +29,13 @@ public class MemberController {
         this.memberQueryConverter = memberQueryConverter;
     }
 
-    /* 아이디 찾기 */
-    @GetMapping("id")
+    /* 이메일 찾기 */
+    @PostMapping("id")
     public ResponseDTO<?> getMemberEmail(@RequestBody RequestIdVO requestIdVO) {
         MemberDTO memberDTO = MemberDTO.builder()
                 .memberEmail(requestIdVO.getMemberEmail())
+                .memberName(requestIdVO.getMemberName())
+                .memberBirth(requestIdVO.getMemberBirth())
                .build();
         String email = memberQueryService.findByMemberEmail(memberDTO);
         return ResponseDTO.ok(email);
