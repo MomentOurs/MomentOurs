@@ -4,7 +4,7 @@ import beyond.momentours.date_course_location.command.domain.aggregate.entity.Da
 import beyond.momentours.date_course_location.command.domain.repository.DateCourseLocationRepository;
 import beyond.momentours.date_course_location.command.domain.vo.DateCourseLocationVO;
 import beyond.momentours.location.command.application.dto.LocationDTO;
-import beyond.momentours.location.command.application.service.LocationService;
+import beyond.momentours.location.command.application.service.LocationCommandService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DateCourseLocationCommandServiceImpl implements DateCourseLocationCommandService {
 
-    private final LocationService locationService;
+    private final LocationCommandService locationCommandService;
     private final DateCourseLocationRepository dateCourseLocationRepository;
 
 //    @Transactional
@@ -52,7 +52,7 @@ public class DateCourseLocationCommandServiceImpl implements DateCourseLocationC
         dateCourseLocationRepository.deleteByCourseId(courseId);
 
         for (DateCourseLocationVO locationDTO : locations) {
-            LocationDTO location = locationService.findOrCreateLocation(locationDTO.getLocationName(), locationDTO.getLatitude(), locationDTO.getLongitude());
+            LocationDTO location = locationCommandService.findOrCreateLocation(locationDTO.getLocationName(), locationDTO.getLatitude(), locationDTO.getLongitude());
 
             DateCourseLocation courseLocation = DateCourseLocation.builder()
                     .courseId(courseId)

@@ -4,6 +4,6 @@ import beyond.momentours.location.command.application.dto.LocationDTO;
 
 import java.math.BigDecimal;
 
-public interface LocationService {
+public interface LocationCommandService {
     LocationDTO findOrCreateLocation(String locationName, BigDecimal latitude, BigDecimal longitude);
 }

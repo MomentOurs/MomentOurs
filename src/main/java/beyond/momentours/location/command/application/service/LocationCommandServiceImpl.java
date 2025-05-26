@@ -15,9 +15,9 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 @Slf4j
-@Service("commandLocationService")
+@Service
 @RequiredArgsConstructor
-public class LocationServiceImpl implements LocationService {
+public class LocationCommandServiceImpl implements LocationCommandService {
 
     private final LocationRepository locationRepository;
     private final LocationConverter locationConverter;
