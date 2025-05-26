@@ -16,9 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
-@Service("commandMomentService")
+@Service
 @RequiredArgsConstructor
-public class MomentServiceImpl implements MomentService {
+public class MomentCommandServiceImpl implements MomentCommandService {
 
     private final MomentRepository momentRepository;
     private final LocationCommandService locationCommandService;
@@ -44,8 +44,15 @@ public class MomentServiceImpl implements MomentService {
         return momentConverter.fromEntityToDTO(saved);
     }
 
+    @Transactional
     @Override
-    public MomentDTO updateMoment(MomentDTO momentDTO, CustomUserDetails user) {
-        return null;
+    public MomentDTO updateMoment(MomentDTO dto, CustomUserDetails user) {
+        Moment moment = momentRepository.findById(dto.getMomentId()).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_MOMENT));
+
+        if (!moment.getMemberId().equals(user.getMember().getMemberId())) throw new CommonException(ErrorCode.UNAUTHORIZED_ACCESS);
+
+        moment.updateMoment(dto);
+        Moment updated = momentRepository.save(moment);
+        return momentConverter.fromEntityToDTO(updated);
     }
 }

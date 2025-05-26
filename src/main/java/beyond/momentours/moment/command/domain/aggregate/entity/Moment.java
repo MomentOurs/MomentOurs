@@ -1,5 +1,6 @@
 package beyond.momentours.moment.command.domain.aggregate.entity;
 
+import beyond.momentours.moment.command.application.dto.MomentDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -61,5 +62,14 @@ public class Moment {
         this.momentStatus = true;
         this.momentLike = 0L;
         this.momentView = 0L;
+    }
+
+    public void updateMoment(MomentDTO dto) {
+        this.momentTitle = dto.getMomentTitle();
+        this.momentCategory = dto.getMomentCategory();
+        this.momentContent = dto.getMomentContent();
+        this.momentDisclosure = dto.isMomentDisclosure();
+        this.momentCommentStatus = dto.isMomentCommentStatus();
+        this.updatedAt = LocalDateTime.now();
     }
 }

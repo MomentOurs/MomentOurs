@@ -3,6 +3,9 @@ package beyond.momentours.moment.common.converter;
 import beyond.momentours.moment.command.application.dto.MomentDTO;
 import beyond.momentours.moment.command.domain.aggregate.entity.Moment;
 import beyond.momentours.moment.command.domain.aggregate.vo.request.RequestCreateMomentVO;
+import beyond.momentours.moment.command.domain.aggregate.vo.request.RequestUpdateMomentVO;
+import beyond.momentours.moment.command.domain.aggregate.vo.response.ResponseCreateMomentVO;
+import beyond.momentours.moment.command.domain.aggregate.vo.response.ResponseUpdateMomentVO;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -55,6 +58,32 @@ public class MomentConverter {
                 .locationName(createMomentVO.getLocationName())
                 .latitude(createMomentVO.getLatitude())
                 .longitude(createMomentVO.getLongitude())
+                .build();
+    }
+
+    public MomentDTO fromUpdateVOToDTO(RequestUpdateMomentVO vo) {
+        return MomentDTO.builder()
+                .momentId(vo.getMomentId())
+                .momentTitle(vo.getMomentTitle())
+                .momentCategory(vo.getMomentCategory())
+                .momentContent(vo.getMomentContent())
+                .momentCommentStatus(vo.isMomentCommentStatus())
+                .build();
+    }
+
+    public ResponseCreateMomentVO fromDTOToCreateVO(MomentDTO dto) {
+        return ResponseCreateMomentVO.builder()
+                .momentId(dto.getMomentId())
+                .momentTitle(dto.getMomentTitle())
+                .createdAt(dto.getCreatedAt())
+                .build();
+    }
+
+    public ResponseUpdateMomentVO fromDTOToUpdateVO(MomentDTO dto) {
+        return ResponseUpdateMomentVO.builder()
+                .momentId(dto.getMomentId())
+                .momentTitle(dto.getMomentTitle())
+                .updatedAt(dto.getUpdatedAt())
                 .build();
     }
 }
