@@ -47,4 +47,14 @@
         AND location_status = 'UNCHANGED'
     </select>
 
+    <select id="findLocationsInBounds" resultType="beyond.momentours.location.query.vo.ResponseLocationMapVO">
+        SELECT l.location_id AS locationId, l.location_name AS locationName, l.latitude, l.longitude, COUNT(m.moment_id) AS momentCount
+          FROM tb_location l
+          LEFT JOIN tb_moment m ON l.location_id = m.location_id AND m.moment_status = true
+         WHERE l.latitude BETWEEN #{latitudeMin} AND #{latitudeMax}
+           AND l.longitude BETWEEN #{longitudeMin} AND #{longitudeMax}
+         GROUP BY l.location_id
+    </select>
+
+
 </mapper>

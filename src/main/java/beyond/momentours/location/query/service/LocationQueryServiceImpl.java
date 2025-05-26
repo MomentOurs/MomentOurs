@@ -6,9 +6,13 @@ import beyond.momentours.location.command.application.dto.LocationDTO;
 import beyond.momentours.location.command.application.mapper.LocationConverter;
 import beyond.momentours.location.command.domain.aggregate.entity.Location;
 import beyond.momentours.location.query.repository.LocationMapper;
+import beyond.momentours.location.query.vo.ResponseLocationMapVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -28,5 +32,10 @@ public class LocationQueryServiceImpl implements LocationQueryService {
         }
 
         return locationConverter.fromEntityToDTO(location);
+    }
+
+    @Override
+    public List<ResponseLocationMapVO> getLocationsInBounds(BigDecimal latitudeMin, BigDecimal latitudeMax, BigDecimal longitudeMin, BigDecimal longitudeMax) {
+        return locationMapper.findLocationsInBounds(latitudeMin, latitudeMax, longitudeMin, longitudeMax);
     }
 }
