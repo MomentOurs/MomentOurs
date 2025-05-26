@@ -7,4 +7,6 @@ public interface MomentCommandService {
     MomentDTO createMoment(MomentDTO momentDTO, Long memberId);
 
     MomentDTO updateMoment(MomentDTO momentDTO, CustomUserDetails user);
+
+    void deleteMoment(Long momentId, CustomUserDetails user);
 }

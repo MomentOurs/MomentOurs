@@ -55,4 +55,16 @@ public class MomentCommandServiceImpl implements MomentCommandService {
         Moment updated = momentRepository.save(moment);
         return momentConverter.fromEntityToDTO(updated);
     }
+
+    @Transactional
+    @Override
+    public void deleteMoment(Long momentId, CustomUserDetails user) {
+        Moment moment = momentRepository.findById(momentId).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_MOMENT));
+
+        if (!moment.getMemberId().equals(user.getMember().getMemberId())) throw new CommonException(ErrorCode.UNAUTHORIZED_ACCESS);
+
+        moment.deactivate();
+        momentRepository.save(moment);
+    }
+
 }

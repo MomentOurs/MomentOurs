@@ -37,4 +37,12 @@ public class MomentCommandController {
         MomentDTO responseMomentDTO = momentCommandService.updateMoment(dto, user);
         return ResponseDTO.ok(momentConverter.fromDTOToUpdateVO(responseMomentDTO));
     }
+
+    @PatchMapping("/{momentId}/deactivate")
+    public ResponseDTO<?> deleteMoment(@PathVariable Long momentId, @AuthenticationPrincipal CustomUserDetails user) {
+        log.info("추억 삭제 요청: momentId={}, userId={}", momentId, user.getMember().getMemberId());
+        momentCommandService.deleteMoment(momentId, user);
+        return ResponseDTO.ok("삭제되었습니다.");
+    }
+
 }

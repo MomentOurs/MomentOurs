@@ -72,4 +72,9 @@ public class Moment {
         this.momentCommentStatus = dto.isMomentCommentStatus();
         this.updatedAt = LocalDateTime.now();
     }
+
+    public void deactivate() {
+        this.momentStatus = false;
+        this.updatedAt = LocalDateTime.now();
+    }
 }
