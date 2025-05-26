@@ -35,10 +35,10 @@ public class Moment {
     private boolean momentCommentStatus;
 
     @Column(name = "moment_like")
-    private int momentLike;
+    private Long momentLike;
 
     @Column(name = "moment_view")
-    private int momentView;
+    private Long momentView;
 
     @Column(name = "moment_status")
     private boolean momentStatus;
@@ -55,17 +55,11 @@ public class Moment {
     @Column(name = "member_id")
     private Long memberId;
 
-    // 상태 변경 method
-
-    /* 추억 생성 시 초기 정보 설정 */
-    public void createMoment(Long locationId, Long memberId) {
-        this.locationId = locationId;
-        this.memberId = memberId;
+    public void createMoment() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
         this.momentStatus = true;
-        this.momentLike = 0;
-        this.momentView = 0;
+        this.momentLike = 0L;
+        this.momentView = 0L;
     }
-
 }

@@ -1,13 +1,15 @@
 package beyond.momentours.moment.command.application.service;
 
+import beyond.momentours.common.exception.CommonException;
+import beyond.momentours.common.exception.ErrorCode;
 import beyond.momentours.location.command.application.dto.LocationDTO;
-import beyond.momentours.location.command.application.service.LocationService;
+import beyond.momentours.location.command.application.service.LocationCommandService;
+import beyond.momentours.location.query.service.LocationQueryService;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
-import beyond.momentours.moment.command.application.dto.RequestMomentDTO;
-import beyond.momentours.moment.command.application.dto.ResponseMomentDTO;
-import beyond.momentours.moment.command.application.mapper.MomentConverter;
+import beyond.momentours.moment.command.application.dto.MomentDTO;
+import beyond.momentours.moment.common.converter.MomentConverter;
 import beyond.momentours.moment.command.domain.aggregate.entity.Moment;
-import beyond.momentours.moment.command.domain.repository.MomentRepository;
+import beyond.momentours.moment.command.domain.aggregate.repository.MomentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,35 +21,31 @@ import org.springframework.transaction.annotation.Transactional;
 public class MomentServiceImpl implements MomentService {
 
     private final MomentRepository momentRepository;
-    private final LocationService locationService;
+    private final LocationCommandService locationCommandService;
+    private final LocationQueryService locationQueryService;
     private final MomentConverter momentConverter;
 
-
-    // 추억 등록
     @Transactional
     @Override
-    public ResponseMomentDTO createMoment(RequestMomentDTO requestMomentDTO,
-                                          Long memberId) {
+    public MomentDTO createMoment(MomentDTO dto, Long memberId) {
+        LocationDTO location;
 
-        // 장소 조회 또는 생성
-        LocationDTO location = locationService.findOrCreateLocation(
-                requestMomentDTO.getLocationName(),
-                requestMomentDTO.getLatitude(),
-                requestMomentDTO.getLongitude()
-        );
+        if (dto.getLocationId() != null) {
+            location = locationQueryService.getLocationById(dto.getLocationId());
+        } else if (dto.getLocationName() != null && dto.getLatitude() != null && dto.getLongitude() != null) {
+            location = locationCommandService.findOrCreateLocation(dto.getLocationName(), dto.getLatitude(), dto.getLongitude());
+        } else {
+            throw new CommonException(ErrorCode.INVALID_LOCATION_DATA);
+        }
 
-        // DTO → Entity 변환
-        Moment moment = momentConverter.fromDTOToEntity(requestMomentDTO, memberId, location.getLocationId());
-
-        // DB 저장
-        Moment savedMoment = momentRepository.save(moment);
-
-        // Entity → ResponseDTO 변환 후 반환
-        return momentConverter.fromEntityToDTO(savedMoment);
+        Moment moment = momentConverter.fromDTOToEntity(dto, memberId, location.getLocationId());
+        moment.createMoment();
+        Moment saved = momentRepository.save(moment);
+        return momentConverter.fromEntityToDTO(saved);
     }
 
     @Override
-    public ResponseMomentDTO updateMoment(RequestMomentDTO requestMomentDTO, CustomUserDetails user) {
+    public MomentDTO updateMoment(MomentDTO momentDTO, CustomUserDetails user) {
         return null;
     }
 }

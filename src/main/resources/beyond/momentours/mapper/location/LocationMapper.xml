@@ -40,5 +40,11 @@
         AND dcl.course_location_status = true
     </select>
 
+    <select id="findById" resultMap="locationResultMap">
+        SELECT location_id, latitude, longitude, location_name, address, location_status, created_at, updated_at
+        FROM tb_location
+        WHERE location_id = #{locationId}
+        AND location_status = 'UNCHANGED'
+    </select>
 
 </mapper>

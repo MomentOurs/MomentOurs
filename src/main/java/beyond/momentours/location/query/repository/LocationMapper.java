@@ -12,4 +12,6 @@ public interface LocationMapper {
     Location findByLatitudeAndLongitudeAndLocationName(@Param("latitude") BigDecimal latitude, @Param("longitude") BigDecimal longitude, @Param("locationName") String locationName);
 
     DateCourseLocationVO getLocationById(@Param("locationId") Long locationId, @Param("courseId") Long courseId);
+
+    Location findById(Long locationId);
 }
