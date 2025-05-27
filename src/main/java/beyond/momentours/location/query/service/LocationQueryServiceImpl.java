@@ -8,10 +8,12 @@ import beyond.momentours.location.command.application.service.LocationCommandSer
 import beyond.momentours.location.command.domain.aggregate.entity.Location;
 import beyond.momentours.location.common.util.LocationFilterUtil;
 import beyond.momentours.location.common.util.LocationGeoUtil;
+import beyond.momentours.location.common.util.LocationTextUtil;
 import beyond.momentours.location.query.external.NaverMapSearchClient;
 import beyond.momentours.location.query.external.dto.NaverPlaceDTO;
 import beyond.momentours.location.query.repository.LocationMapper;
 import beyond.momentours.location.query.vo.*;
+import beyond.momentours.moment.common.MomentFilterCondition;
 import beyond.momentours.moment.query.repository.MomentMapper;
 import beyond.momentours.moment.query.vo.ResponseMomentCursorListVO;
 import beyond.momentours.moment.query.vo.ResponseMomentListItemVO;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -57,14 +60,14 @@ public class LocationQueryServiceImpl implements LocationQueryService {
     }
 
     @Override
-    public ResponseLocationMomentPageVO getLocationWithMoments(Long locationId, Long cursor, int size) {
-        Location location = locationMapper.findById(locationId);
+    public ResponseLocationMomentPageVO getLocationWithMoments(MomentFilterCondition condition) {
+        Location location = locationMapper.findById(condition.getLocationId());
         if (location == null) throw new CommonException(ErrorCode.NOT_FOUND_LOCATION);
 
-        List<ResponseMomentListItemVO> moments = momentMapper.findMomentsByLocationIdWithCursor(locationId, cursor, size);
+        List<ResponseMomentListItemVO> moments = getMomentsByLocationIdWithFilter(condition);
 
         Long nextCursor = moments.isEmpty() ? null : moments.get(moments.size() - 1).getMomentId();
-        boolean hasNext = moments.size() == size;
+        boolean hasNext = moments.size() == condition.getSize();
 
         return ResponseLocationMomentPageVO.builder()
                 .locationId(location.getLocationId())
@@ -80,6 +83,18 @@ public class LocationQueryServiceImpl implements LocationQueryService {
                 .build();
     }
 
+    private List<ResponseMomentListItemVO> getMomentsByLocationIdWithFilter(MomentFilterCondition condition) {
+        return momentMapper.findMomentsByLocationIdWithFilter(
+                condition.getLocationId(),
+                condition.getCursor(),
+                condition.getSize(),
+                condition.getSort(),
+                condition.getOnlyMine(),
+                condition.getCertifiedOnly(),
+                condition.getMemberId()
+        );
+    }
+
     @Override
     public List<ResponseLocationClusterGroupVO> getGroupedLocationClustersByZoom(int zoom) {
         int round;
@@ -93,7 +108,7 @@ public class LocationQueryServiceImpl implements LocationQueryService {
 
     @Override
     public List<ResponseLocationSearchVO> searchLocation(String keyword) {
-        String normalized = keyword.replaceAll("\\s+", "").toLowerCase();
+        String normalized = LocationTextUtil.normalizeKeyword(keyword);
 
         List<ResponseLocationSearchVO> results = locationMapper.findLocationByKeyword(normalized);
 
@@ -120,7 +135,24 @@ public class LocationQueryServiceImpl implements LocationQueryService {
             return valid;
         }
 
-        return results;
+        List<ResponseLocationSearchVO> top3 = results.subList(0, Math.min(3, results.size()));
+
+        List<ResponseLocationSearchVO> remaining = new ArrayList<>();
+        if (results.size() > 3) {
+            remaining.addAll(results.subList(3, results.size()));
+            Collections.shuffle(remaining);
+        }
+
+        List<ResponseLocationSearchVO> random7 = new ArrayList<>();
+        if (!remaining.isEmpty()) {
+            random7 = remaining.subList(0, Math.min(7, remaining.size()));
+        }
+
+        List<ResponseLocationSearchVO> finalList = new ArrayList<>();
+        finalList.addAll(top3);
+        finalList.addAll(random7);
+
+        return finalList;
     }
 
     @Override
@@ -144,5 +176,17 @@ public class LocationQueryServiceImpl implements LocationQueryService {
     @Override
     public List<ResponseLocationMapVO> findNearby(BigDecimal latitude, BigDecimal longitude, int radiusMeters) {
         return locationMapper.findNearbyLocations(latitude, longitude, radiusMeters);
+    }
+
+    @Override
+    public List<ResponseLocationMapVO> findRecommendedNearby(BigDecimal latitude, BigDecimal longitude, int radiusMeters, int limit) {
+        return locationMapper.findRecommendedNearbyLocations(latitude, longitude, radiusMeters, limit);
+    }
+
+    @Override
+    public ResponseLocationDetailVO getLocationDetail(Long locationId) {
+        ResponseLocationDetailVO result = locationMapper.getLocationDetail(locationId);
+        if (result == null) throw new CommonException(ErrorCode.NOT_FOUND_LOCATION);
+        return result;
     }
 }

@@ -19,4 +19,10 @@ public class NaverMapSearchClientImpl implements NaverMapSearchClient {
         // 임시 Mock 반환 (실제 구현 전까지)
         return Collections.emptyList();
     }
+
+    @Override
+    public NaverPlaceDTO searchPlaceFirstMatch(String keyword) {
+        List<NaverPlaceDTO> list = searchPlaces(keyword);
+        return list.isEmpty() ? null : list.get(0);
+    }
 }

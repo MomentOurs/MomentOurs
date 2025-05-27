@@ -1,4 +1,7 @@
 spring:
+  jackson:
+    time-zone: Asia/Seoul
+
   datasource:
     url: jdbc:mariadb://${DATABASE_HOST}:${MARIA_DATABASE_PORT}/${MARIA_DATABASE_NAME}
     username: ${DB_USERNAME}

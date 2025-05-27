@@ -5,17 +5,30 @@
 
 <mapper namespace="beyond.momentours.moment.query.repository.MomentMapper">
 
-    <select id="findMomentsByLocationIdWithCursor" resultType="beyond.momentours.moment.query.vo.ResponseMomentListItemVO">
+    <select id="findMomentsByLocationIdWithFilter" resultType="beyond.momentours.moment.query.vo.ResponseMomentListItemVO">
         SELECT m.moment_id AS momentId, m.moment_title AS momentTitle, m.moment_category AS momentCategory, l.location_name AS locationName
           FROM tb_moment m
           JOIN tb_location l ON m.location_id = l.location_id
          WHERE m.moment_status = true
            AND m.location_id = #{locationId}
-           <if test="cursor != null">
-               AND m.moment_id &lt; #{cursor}
-           </if>
-         ORDER BY m.moment_id DESC
-         LIMIT #{size}
+        <if test="cursor != null">
+            AND m.moment_id &lt; #{cursor}
+        </if>
+        <if test="onlyMine != null and onlyMine == true">
+            AND m.member_id = #{memberId}
+        </if>
+        <if test="certifiedOnly != null and certifiedOnly == true">
+            AND m.moment_certified = true
+        </if>
+        <choose>
+            <when test="sort == 'likes'">
+                ORDER BY m.moment_like DESC, m.moment_id DESC
+            </when>
+            <otherwise>
+                ORDER BY m.moment_id DESC
+            </otherwise>
+        </choose>
+           LIMIT #{size}
     </select>
 
     <select id="findMomentDetailById" resultType="beyond.momentours.moment.query.vo.ResponseMomentDetailVO">

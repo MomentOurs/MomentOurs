@@ -7,4 +7,5 @@ import java.util.List;
 public interface NaverMapSearchClient {
     List<NaverPlaceDTO> searchPlaces(String keyword);
 
+    NaverPlaceDTO searchPlaceFirstMatch(String keyword);
 }

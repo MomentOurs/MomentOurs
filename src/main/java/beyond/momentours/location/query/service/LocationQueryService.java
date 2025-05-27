@@ -2,6 +2,7 @@ package beyond.momentours.location.query.service;
 
 import beyond.momentours.location.command.application.dto.LocationDTO;
 import beyond.momentours.location.query.vo.*;
+import beyond.momentours.moment.common.MomentFilterCondition;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -13,7 +14,7 @@ public interface LocationQueryService {
 
     List<ResponseLocationClusterItemVO> getClusteredLocations(BigDecimal lat, BigDecimal lng);
 
-    ResponseLocationMomentPageVO getLocationWithMoments(Long locationId, Long cursor, int size);
+    ResponseLocationMomentPageVO getLocationWithMoments(MomentFilterCondition condition);
 
     List<ResponseLocationClusterGroupVO> getGroupedLocationClustersByZoom(int zoom);
 
@@ -21,6 +22,10 @@ public interface LocationQueryService {
 
     List<ResponseLocationMapVO> findByGeoHashPrefix(BigDecimal latitude, BigDecimal longitude, int zoom);
 
-
     List<ResponseLocationMapVO> findNearby(BigDecimal latitude, BigDecimal longitude, int radiusMeters);
+
+    List<ResponseLocationMapVO> findRecommendedNearby(BigDecimal latitude, BigDecimal longitude, int radiusMeters, int limit);
+
+    ResponseLocationDetailVO getLocationDetail(Long locationId);
+
 }

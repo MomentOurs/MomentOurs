@@ -2,10 +2,7 @@ package beyond.momentours.location.query.repository;
 
 import beyond.momentours.date_course_location.command.domain.vo.DateCourseLocationVO;
 import beyond.momentours.location.command.domain.aggregate.entity.Location;
-import beyond.momentours.location.query.vo.ResponseLocationClusterGroupVO;
-import beyond.momentours.location.query.vo.ResponseLocationClusterItemVO;
-import beyond.momentours.location.query.vo.ResponseLocationMapVO;
-import beyond.momentours.location.query.vo.ResponseLocationSearchVO;
+import beyond.momentours.location.query.vo.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -31,5 +28,9 @@ public interface LocationMapper {
     List<ResponseLocationMapVO> findByGeoHashPrefix(@Param("prefix") String prefix);
 
     List<ResponseLocationMapVO> findNearbyLocations(@Param("latitude") BigDecimal latitude, @Param("longitude") BigDecimal longitude, @Param("radiusMeters") int radiusMeters);
+
+    List<ResponseLocationMapVO> findRecommendedNearbyLocations(@Param("latitude") BigDecimal latitude, @Param("longitude") BigDecimal longitude, @Param("radiusMeters") int radiusMeters, @Param("limit") int limit);
+
+    ResponseLocationDetailVO getLocationDetail(@Param("locationId") Long locationId);
 
 }
