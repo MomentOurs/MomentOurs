@@ -77,4 +77,9 @@ public class Moment {
         this.momentStatus = false;
         this.updatedAt = LocalDateTime.now();
     }
+
+    public void changeCommentStatus(boolean enabled) {
+        this.momentCommentStatus = enabled;
+        this.updatedAt = LocalDateTime.now();
+    }
 }

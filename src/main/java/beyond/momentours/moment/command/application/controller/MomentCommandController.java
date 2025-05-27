@@ -45,4 +45,10 @@ public class MomentCommandController {
         return ResponseDTO.ok("삭제되었습니다.");
     }
 
+    @PatchMapping("/{momentId}/comment-status")
+    public ResponseDTO<?> toggleCommentStatus(@PathVariable Long momentId, @RequestParam boolean enabled, @AuthenticationPrincipal CustomUserDetails user) {
+        log.info("댓글 허용 상태 변경 요청: momentId={}, enabled={}, userId={}", momentId, enabled, user.getMember().getMemberId());
+        momentCommandService.toggleCommentStatus(momentId, enabled, user);
+        return ResponseDTO.ok("댓글 허용 상태가 변경되었습니다.");
+    }
 }

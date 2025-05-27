@@ -9,4 +9,6 @@ public interface MomentCommandService {
     MomentDTO updateMoment(MomentDTO momentDTO, CustomUserDetails user);
 
     void deleteMoment(Long momentId, CustomUserDetails user);
+
+    void toggleCommentStatus(Long momentId, boolean enabled, CustomUserDetails user);
 }

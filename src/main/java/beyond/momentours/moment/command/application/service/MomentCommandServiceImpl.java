@@ -67,4 +67,16 @@ public class MomentCommandServiceImpl implements MomentCommandService {
         momentRepository.save(moment);
     }
 
+    @Override
+    public void toggleCommentStatus(Long momentId, boolean enabled, CustomUserDetails user) {
+        Moment moment = momentRepository.findById(momentId)
+                .orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_MOMENT));
+
+        if (!moment.getMemberId().equals(user.getMember().getMemberId())) {
+            throw new CommonException(ErrorCode.ACCESS_DENIED);
+        }
+
+        moment.changeCommentStatus(enabled);
+        momentRepository.save(moment);
+    }
 }
