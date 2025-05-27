@@ -26,8 +26,8 @@ public class MomentDTO {
     @JsonProperty("moment_content")
     private String momentContent;
 
-    @JsonProperty("moment_disclosure")
-    private boolean momentDisclosure;
+    @JsonProperty("moment_certified")
+    private boolean momentCertified;
 
     @JsonProperty("moment_comment_status")
     private boolean momentCommentStatus;

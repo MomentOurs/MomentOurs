@@ -29,8 +29,8 @@ public class Moment {
     @Column(name = "moment_content")
     private String momentContent;
 
-    @Column(name = "moment_disclosure")
-    private boolean momentDisclosure;
+    @Column(name = "moment_certified")
+    private boolean momentCertified;
 
     @Column(name = "moment_comment_status")
     private boolean momentCommentStatus;
@@ -68,7 +68,7 @@ public class Moment {
         this.momentTitle = dto.getMomentTitle();
         this.momentCategory = dto.getMomentCategory();
         this.momentContent = dto.getMomentContent();
-        this.momentDisclosure = dto.isMomentDisclosure();
+        this.momentCertified = dto.isMomentCertified();
         this.momentCommentStatus = dto.isMomentCommentStatus();
         this.updatedAt = LocalDateTime.now();
     }
