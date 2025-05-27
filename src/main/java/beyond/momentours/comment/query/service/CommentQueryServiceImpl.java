@@ -6,7 +6,6 @@ import beyond.momentours.comment.command.domain.aggregate.entity.Comment;
 import beyond.momentours.comment.query.repository.CommentMapper;
 import beyond.momentours.common.exception.CommonException;
 import beyond.momentours.common.exception.ErrorCode;
-import beyond.momentours.randomquestion.command.domain.aggregate.entity.UserRandomQuestion;
 import beyond.momentours.randomquestion.query.dto.UserRandomQuestionDTO;
 import beyond.momentours.randomquestion.query.repository.RandomQuestionMapper;
 import lombok.RequiredArgsConstructor;
@@ -26,9 +25,9 @@ public class CommentQueryServiceImpl implements CommentQueryService {
     private final RandomQuestionMapper randomQuestionMapper;
 
     @Override
-    public List<CommentDTO> getCommentsByCoupleLogId(Long coupleLogId) {
-        List<Comment> comments = commentDAO.findCommentsByCoupleLogId(coupleLogId);
-        log.info("조회된 커플로그 댓글 목록: {}", comments);
+    public List<CommentDTO> getCommentsByMomentId(Long momentId) {
+        List<Comment> comments = commentDAO.findCommentsByMomentId(momentId);
+        log.info("조회된 추억 댓글 목록: {}", comments);
 
         return comments.stream()
                 .map(commentConverter::fromEntityToDTO)

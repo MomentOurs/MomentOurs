@@ -103,8 +103,8 @@ public class CommentCommandServiceImpl implements CommentCommandService {
 
     private CommentDTO setCommentTypeFields(CommentDTO commentDTO) {
         switch (commentDTO.getCommentType()) {
-            case COUPLE_LOG:
-                log.info("COUPLE_LOG 타입의 댓글 처리");
+            case MOMENT:
+                log.info("MOMENT 타입의 댓글 처리");
                 commentDTO.setTargetId(commentDTO.getTargetId());
                 break;
 

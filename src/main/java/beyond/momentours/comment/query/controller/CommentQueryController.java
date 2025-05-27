@@ -24,14 +24,14 @@ public class CommentQueryController {
 
     private final CommentQueryService commentQueryService;
 
-    @GetMapping("/couple-log/{coupleLogId}")
-    public ResponseEntity<?> getCommentsByCoupleLog(@PathVariable Long coupleLogId) {
-        log.info("조회 요청 - 커플로그 ID: {}", coupleLogId);
+    @GetMapping("/moment/{momentId}")
+    public ResponseEntity<?> getCommentsByMoment(@PathVariable Long momentId) {
+        log.info("댓글 조회 요청 - 추억 ID: {}", momentId);
         try {
-            List<CommentDTO> comments = commentQueryService.getCommentsByCoupleLogId(coupleLogId);
+            List<CommentDTO> comments = commentQueryService.getCommentsByMomentId(momentId);
             return ResponseEntity.ok(comments);
         } catch (CommonException e) {
-            log.error("커플로그 댓글 조회 오류: {}", e.getMessage());
+            log.error("추억 댓글 조회 오류: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
             log.error("예상치 못한 오류 발생", e);
