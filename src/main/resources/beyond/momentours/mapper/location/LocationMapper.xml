@@ -56,5 +56,23 @@
          GROUP BY l.location_id
     </select>
 
+    <select id="findLocationsNearCoordinates" resultType="beyond.momentours.location.query.vo.ResponseLocationClusterItemVO">
+        SELECT l.location_id AS locationId, l.location_name AS locationName, l.latitude, l.longitude, COUNT(m.moment_id) AS momentCount
+          FROM tb_location l
+          LEFT JOIN tb_moment m ON l.location_id = m.location_id AND m.moment_status = true
+         WHERE ROUND(l.latitude, 2) = ROUND(#{lat}, 2)
+           AND ROUND(l.longitude, 2) = ROUND(#{lng}, 2)
+         GROUP BY l.location_id
+    </select>
+
+    <select id="findGroupedLocationClusters" resultType="beyond.momentours.location.query.vo.ResponseLocationClusterGroupVO">
+        SELECT
+        ROUND(latitude, #{round}) AS latitude,
+        ROUND(longitude, #{round}) AS longitude,
+        COUNT(*) AS count
+        FROM tb_location
+        WHERE location_status = 'UNCHANGED'
+        GROUP BY ROUND(latitude, #{round}), ROUND(longitude, #{round})
+    </select>
 
 </mapper>
