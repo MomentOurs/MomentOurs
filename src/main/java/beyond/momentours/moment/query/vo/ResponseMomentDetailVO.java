@@ -14,7 +14,7 @@ public class ResponseMomentDetailVO {
     private String momentTitle;
     private String momentCategory;
     private String momentContent;
-    private Boolean momentDisclosure;
+    private Boolean momentCertified;
     private Boolean momentCommentStatus;
     private Long momentLike;
     private Long momentView;
