@@ -1,6 +1,7 @@
 package beyond.momentours.location.command.domain.aggregate.entity;
 
 import beyond.momentours.location.command.domain.aggregate.LocationStatus;
+import org.locationtech.jts.geom.Point;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -35,6 +36,12 @@ public class Location {
 
     @Column(name = "location_status")
     private LocationStatus locationStatus;
+
+    @Column(name = "geohash")
+    private String geohash;
+
+    @Column(name = "location_point", columnDefinition = "POINT", nullable = false)
+    private Point locationPoint;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
