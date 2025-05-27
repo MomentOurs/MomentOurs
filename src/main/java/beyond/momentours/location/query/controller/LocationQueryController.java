@@ -2,10 +2,7 @@ package beyond.momentours.location.query.controller;
 
 import beyond.momentours.common.ResponseDTO;
 import beyond.momentours.location.query.service.LocationQueryService;
-import beyond.momentours.location.query.vo.ResponseLocationClusterGroupVO;
-import beyond.momentours.location.query.vo.ResponseLocationClusterItemVO;
-import beyond.momentours.location.query.vo.ResponseLocationMapVO;
-import beyond.momentours.location.query.vo.ResponseLocationMomentPageVO;
+import beyond.momentours.location.query.vo.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,4 +40,21 @@ public class LocationQueryController {
         return ResponseDTO.ok(result);
     }
 
+    @GetMapping("/search")
+    public ResponseDTO<List<ResponseLocationSearchVO>> searchLocation(@RequestParam String keyword) {
+        List<ResponseLocationSearchVO> result = locationQueryService.searchLocation(keyword);
+        return ResponseDTO.ok(result);
+    }
+
+    @GetMapping("/geohash")
+    public ResponseDTO<List<ResponseLocationMapVO>> getByGeoHashPrefix(@RequestParam BigDecimal latitude, @RequestParam BigDecimal longitude, @RequestParam int zoom) {
+        List<ResponseLocationMapVO> result = locationQueryService.findByGeoHashPrefix(latitude, longitude, zoom);
+        return ResponseDTO.ok(result);
+    }
+
+    @GetMapping("/near")
+    public ResponseDTO<List<ResponseLocationMapVO>> getNearbyLocations(@RequestParam BigDecimal latitude, @RequestParam BigDecimal longitude, @RequestParam(defaultValue = "1000") int radiusMeters) {
+        List<ResponseLocationMapVO> result = locationQueryService.findNearby(latitude, longitude, radiusMeters);
+        return ResponseDTO.ok(result);
+    }
 }

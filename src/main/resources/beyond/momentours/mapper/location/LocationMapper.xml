@@ -75,4 +75,29 @@
         GROUP BY ROUND(latitude, #{round}), ROUND(longitude, #{round})
     </select>
 
+    <select id="findLocationByKeyword" resultType="beyond.momentours.location.query.vo.ResponseLocationSearchVO">
+        SELECT location_id AS locationId, location_name AS locationName, latitude, longitude, address
+        FROM tb_location
+        WHERE REPLACE(LOWER(location_name), ' ', '') LIKE CONCAT('%', #{keyword}, '%')
+        AND location_status = 'UNCHANGED'
+    </select>
+
+    <select id="findByGeoHashPrefix" resultType="beyond.momentours.location.query.vo.ResponseLocationMapVO">
+        SELECT l.location_id AS locationId, l.location_name AS locationName, l.latitude, l.longitude, COUNT(m.moment_id) AS momentCount
+          FROM tb_location l
+          LEFT JOIN tb_moment m ON m.location_id = l.location_id AND m.moment_status = true
+         WHERE l.geohash LIKE CONCAT(#{prefix}, '%')
+         GROUP BY l.location_id
+    </select>
+
+    <select id="findNearbyLocations" resultType="beyond.momentours.location.query.vo.ResponseLocationMapVO">
+        SELECT location_id AS locationId, location_name AS locationName, latitude, longitude,
+               (SELECT COUNT(*)
+                  FROM tb_moment m
+                 WHERE m.location_id = l.location_id
+                   AND m.moment_status = true) AS momentCount
+          FROM tb_location l
+         WHERE ST_Distance_Sphere(l.location_point, ST_GeomFromText(CONCAT('POINT(', #{longitude}, ' ', #{latitude}, ')'))) &lt;= #{radiusMeters}
+    </select>
+
 </mapper>

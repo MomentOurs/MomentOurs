@@ -5,9 +5,11 @@ import beyond.momentours.location.command.application.mapper.LocationConverter;
 import beyond.momentours.location.command.domain.aggregate.LocationStatus;
 import beyond.momentours.location.command.domain.aggregate.entity.Location;
 import beyond.momentours.location.command.domain.repository.LocationRepository;
+import beyond.momentours.location.common.util.LocationGeoUtil;
 import beyond.momentours.location.query.repository.LocationMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -50,5 +52,28 @@ public class LocationCommandServiceImpl implements LocationCommandService {
                 .createdAt(nowKST.toLocalDateTime())
                 .updatedAt(nowKST.toLocalDateTime())
                 .build();
+    }
+
+    @Override
+    public LocationDTO createLocationWithAddress(String locationName, BigDecimal latitude, BigDecimal longitude, String address) {
+        ZonedDateTime nowKST = ZonedDateTime.now(ZoneId.of("Asia/Seoul"));
+
+        Point locationPoint = LocationGeoUtil.createPoint(latitude, longitude);
+        String geohash = LocationGeoUtil.generateGeoHash(latitude, longitude, 8);
+
+        Location location = Location.builder()
+                .locationName(locationName)
+                .latitude(latitude)
+                .longitude(longitude)
+                .address(address)
+                .geohash(geohash)
+                .locationPoint(locationPoint)
+                .locationStatus(LocationStatus.UNCHANGED)
+                .createdAt(nowKST.toLocalDateTime())
+                .updatedAt(nowKST.toLocalDateTime())
+                .build();
+
+        Location saved = locationRepository.save(location);
+        return locationConverter.fromEntityToDTO(saved);
     }
 }
