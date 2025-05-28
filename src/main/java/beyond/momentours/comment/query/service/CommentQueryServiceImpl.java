@@ -6,6 +6,7 @@ import beyond.momentours.comment.command.domain.aggregate.entity.Comment;
 import beyond.momentours.comment.query.repository.CommentMapper;
 import beyond.momentours.common.exception.CommonException;
 import beyond.momentours.common.exception.ErrorCode;
+import beyond.momentours.moment.command.domain.aggregate.repository.MomentRepository;
 import beyond.momentours.randomquestion.query.dto.UserRandomQuestionDTO;
 import beyond.momentours.randomquestion.query.repository.RandomQuestionMapper;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ public class CommentQueryServiceImpl implements CommentQueryService {
     private final CommentConverter commentConverter;
     private final CommentMapper commentDAO;
     private final RandomQuestionMapper randomQuestionMapper;
+    private final MomentRepository momentRepository;
 
     @Override
     public List<CommentDTO> getCommentsByMomentId(Long momentId) {
@@ -51,9 +53,9 @@ public class CommentQueryServiceImpl implements CommentQueryService {
 
     private void validateCommentTypeStatus(CommentDTO commentDTO) {
         switch (commentDTO.getCommentType()) {
-//            case COUPLE_LOG:
-//                CoupleLog = coupleLogRepository.findById(commentDTO.getCoupleLogId()).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_COUPLE_LOG));
-//                break;
+            case MOMENT:
+                momentRepository.findById(commentDTO.getTargetId()).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_MOMENT));
+                break;
 
             case QUESTION:
                 UserRandomQuestionDTO randomQuestion = randomQuestionMapper.findByUserQuesId(commentDTO.getTargetId());

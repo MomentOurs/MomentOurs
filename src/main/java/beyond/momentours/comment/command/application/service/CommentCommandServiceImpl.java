@@ -8,7 +8,8 @@ import beyond.momentours.comment.query.repository.CommentMapper;
 import beyond.momentours.common.exception.CommonException;
 import beyond.momentours.common.exception.ErrorCode;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
-import beyond.momentours.randomquestion.command.domain.aggregate.entity.UserRandomQuestion;
+import beyond.momentours.moment.command.domain.aggregate.entity.Moment;
+import beyond.momentours.moment.command.domain.aggregate.repository.MomentRepository;
 import beyond.momentours.randomquestion.query.dto.UserRandomQuestionDTO;
 import beyond.momentours.randomquestion.query.repository.RandomQuestionMapper;
 import jakarta.transaction.Transactional;
@@ -25,6 +26,7 @@ public class CommentCommandServiceImpl implements CommentCommandService {
     private final CommentConverter commentConverter;
     private final CommentMapper commentDAO;
     private final RandomQuestionMapper randomQuestionMapper;
+    private final MomentRepository momentRepository;
 
     @Transactional
     @Override
@@ -122,11 +124,10 @@ public class CommentCommandServiceImpl implements CommentCommandService {
 
     private void validateCommentTypeStatus(CommentDTO commentDTO) {
         switch (commentDTO.getCommentType()) {
-//            case COUPLE_LOG:
-//                CoupleLog coupleLog = coupleLogRepository.findById(commentDTO.getCoupleLogId())
-//                        .orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_COUPLE_LOG));
-//                break;
-//
+            case MOMENT:
+                momentRepository.findById(commentDTO.getTargetId()).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_MOMENT));
+                break;
+
             case QUESTION:
                 UserRandomQuestionDTO randomQuestion = randomQuestionMapper.findByUserQuesId(commentDTO.getTargetId());
                 if (randomQuestion == null) throw new CommonException(ErrorCode.NOT_FOUND_RANDOM_QUESTION);

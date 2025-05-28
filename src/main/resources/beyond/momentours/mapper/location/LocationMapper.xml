@@ -122,7 +122,7 @@
           FROM tb_location l
           LEFT JOIN tb_moment m ON m.location_id = l.location_id AND m.moment_status = true
           LEFT JOIN tb_moment_like ml ON ml.moment_id = m.moment_id
-         WHERE ST_Distance_Sphere(l.location_point, ST_GeomFromText(CONCAT('POINT(', #{longitude}, ' ', #{latitude}, ')'))) <= #{radiusMeters}
+         WHERE ST_Distance_Sphere(l.location_point, ST_GeomFromText(CONCAT('POINT(', #{longitude}, ' ', #{latitude}, ')'))) &lt;= #{radiusMeters}
            AND l.location_status = 'UNCHANGED'
          GROUP BY l.location_id
          ORDER BY score DESC, l.location_id

@@ -54,7 +54,7 @@ public class LocationQueryController {
     }
 
     private MomentFilterCondition getMomentFilterCondition(Long locationId, Long cursor, int size, String sort, Boolean onlyMine, Boolean certifiedOnly, Long memberId) {
-        MomentFilterCondition condition = MomentFilterCondition.builder()
+        return MomentFilterCondition.builder()
                 .locationId(locationId)
                 .cursor(cursor)
                 .size(size)
@@ -63,7 +63,6 @@ public class LocationQueryController {
                 .certifiedOnly(certifiedOnly)
                 .memberId(memberId)
                 .build();
-        return condition;
     }
 
     @GetMapping("/cluster/grouped")

@@ -1,7 +1,5 @@
 package beyond.momentours.moment.query.repository;
 
-import beyond.momentours.location.query.vo.ResponseLocationMomentPageVO;
-import beyond.momentours.moment.common.MomentFilterCondition;
 import beyond.momentours.moment.query.vo.ResponseMomentDetailVO;
 import beyond.momentours.moment.query.vo.ResponseMomentListItemVO;
 import org.apache.ibatis.annotations.Mapper;
