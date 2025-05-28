@@ -20,4 +20,6 @@ public interface MemberMapper {
                                                   @Param("memberEmail") String memberEmail);
 
     String findByMemberNickname(String memberNickname);
+
+    String findMemberEmailByInfo(MemberDTO memberDTO);
 }

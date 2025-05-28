@@ -3,6 +3,8 @@ package beyond.momentours.member.query.vo.response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,7 +21,7 @@ public class ResponseMypageVO {
     private String memberNickname;
 
     @JsonProperty("member_birth")
-    private String memberBirth;
+    private LocalDate memberBirth;
 
     @JsonProperty("member_gender")
     private String memberGender;

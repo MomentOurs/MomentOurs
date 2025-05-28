@@ -66,8 +66,8 @@ public class SecurityConfig {
         http.httpBasic(https -> https.disable());
 
         http.authorizeHttpRequests(authz -> authz
-                                .requestMatchers("/", "/**", "/api/member/signup", "/api/member/email/send", "/api/member/email/verify").permitAll()
-                                .requestMatchers("/api/member/login").permitAll()
+                                .requestMatchers("/", "/api/member/signup", "/api/member/email/send", "/api/member/email/verify").permitAll()
+                                .requestMatchers("/api/member/login", "/api/member/id").permitAll()
                                 .requestMatchers("/api/admin").authenticated()
                                 .requestMatchers("/api/course", "/api/course/**").permitAll()
                                 .requestMatchers("/api/course-folder", "/api/course-folder/**").permitAll()
