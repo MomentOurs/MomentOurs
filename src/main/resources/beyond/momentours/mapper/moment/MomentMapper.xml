@@ -40,4 +40,13 @@
            AND m.moment_status = true
     </select>
 
+    <select id="existsActiveById" resultType="boolean">
+        SELECT EXISTS (
+            SELECT 1
+              FROM tb_moment
+             WHERE moment_id = #{momentId}
+               AND moment_status = true
+        )
+    </select>
+
 </mapper>
