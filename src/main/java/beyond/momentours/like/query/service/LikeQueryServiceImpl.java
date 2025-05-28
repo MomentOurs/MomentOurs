@@ -1,7 +1,7 @@
 package beyond.momentours.like.query.service;
 
 import beyond.momentours.like.command.domain.aggregate.LikeType;
-import beyond.momentours.like.query.mapper.LikeMapper;
+import beyond.momentours.like.query.repository.LikeMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

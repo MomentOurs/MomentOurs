@@ -1,4 +1,4 @@
-package beyond.momentours.like.query.mapper;
+package beyond.momentours.like.query.repository;
 
 import beyond.momentours.like.command.domain.aggregate.LikeType;
 import org.apache.ibatis.annotations.Mapper;
