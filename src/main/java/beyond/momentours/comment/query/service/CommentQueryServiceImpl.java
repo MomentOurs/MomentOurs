@@ -51,22 +51,22 @@ public class CommentQueryServiceImpl implements CommentQueryService {
                 .collect(Collectors.toList());
     }
 
-    private void validateCommentTypeStatus(CommentDTO commentDTO) {
-        switch (commentDTO.getCommentType()) {
-            case MOMENT:
-                momentRepository.findById(commentDTO.getTargetId()).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_MOMENT));
-                break;
-
-            case QUESTION:
-                UserRandomQuestionDTO randomQuestion = randomQuestionMapper.findByUserQuesId(commentDTO.getTargetId());
-                if (randomQuestion == null) throw new CommonException(ErrorCode.NOT_FOUND_RANDOM_QUESTION);
-                if (!"ALL".equals(randomQuestion.getAnsStatus())) {
-                    throw new CommonException(ErrorCode.INVALID_RANDOM_QUESTION_STATUS);
-                }
-                break;
-
-            default:
-                throw new CommonException(ErrorCode.INVALID_COMMENT_TYPE);
-        }
-    }
+//    private void validateCommentTypeStatus(CommentDTO commentDTO) {
+//        switch (commentDTO.getCommentType()) {
+//            case MOMENT:
+//                momentRepository.findById(commentDTO.getTargetId()).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_MOMENT));
+//                break;
+//
+//            case QUESTION:
+//                UserRandomQuestionDTO randomQuestion = randomQuestionMapper.findByUserQuesId(commentDTO.getTargetId());
+//                if (randomQuestion == null) throw new CommonException(ErrorCode.NOT_FOUND_RANDOM_QUESTION);
+//                if (!"ALL".equals(randomQuestion.getAnsStatus())) {
+//                    throw new CommonException(ErrorCode.INVALID_RANDOM_QUESTION_STATUS);
+//                }
+//                break;
+//
+//            default:
+//                throw new CommonException(ErrorCode.INVALID_COMMENT_TYPE);
+//        }
+//    }
 }
