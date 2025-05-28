@@ -72,6 +72,8 @@ dependencies {
 
     implementation 'org.locationtech.jts:jts-core:1.19.0'
     implementation 'ch.hsr:geohash:1.4.0'
+
+    implementation 'org.redisson:redisson-spring-boot-starter:3.23.4'
 }
 
 test {
