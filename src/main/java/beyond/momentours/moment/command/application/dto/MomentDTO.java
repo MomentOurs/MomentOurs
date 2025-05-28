@@ -1,18 +1,18 @@
 package beyond.momentours.moment.command.application.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@NoArgsConstructor
 @AllArgsConstructor
-@Data
+@NoArgsConstructor
+@Getter
+@Setter
+@ToString
 @Builder
-public class ResponseMomentDTO {
+public class MomentDTO {
 
     @JsonProperty("moment_id")
     private Long momentId;
@@ -26,17 +26,17 @@ public class ResponseMomentDTO {
     @JsonProperty("moment_content")
     private String momentContent;
 
-    @JsonProperty("moment_disclosure")
-    private boolean momentDisclosure;
+    @JsonProperty("moment_certified")
+    private boolean momentCertified;
 
     @JsonProperty("moment_comment_status")
     private boolean momentCommentStatus;
 
     @JsonProperty("moment_like")
-    private int momentLike;
+    private Long momentLike;
 
     @JsonProperty("moment_view")
-    private int momentView;
+    private Long momentView;
 
     @JsonProperty("moment_status")
     private boolean momentStatus;
@@ -53,4 +53,12 @@ public class ResponseMomentDTO {
     @JsonProperty("member_id")
     private Long memberId;
 
+    @JsonProperty("location_name")
+    private String locationName;
+
+    @JsonProperty("latitude")
+    private BigDecimal latitude;
+
+    @JsonProperty("longitude")
+    private BigDecimal longitude;
 }

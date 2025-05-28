@@ -18,8 +18,8 @@
     <select id="findCommentsByCoupleLogId" resultMap="commentResultMap">
         SELECT comment_id, comment_content, comment_type, target_id, comment_status, created_at, updated_at, member_id
         FROM tb_comment
-        WHERE target_id = #{coupleLogId}
-        AND comment_type = 'COUPLE_LOG'
+        WHERE target_id = #{momentId}
+        AND comment_type = 'MOMENT'
         AND comment_status = true
         ORDER BY created_at DESC
     </select>

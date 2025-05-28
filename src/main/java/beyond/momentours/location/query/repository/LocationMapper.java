@@ -2,14 +2,35 @@ package beyond.momentours.location.query.repository;
 
 import beyond.momentours.date_course_location.command.domain.vo.DateCourseLocationVO;
 import beyond.momentours.location.command.domain.aggregate.entity.Location;
+import beyond.momentours.location.query.vo.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Mapper
 public interface LocationMapper {
     Location findByLatitudeAndLongitudeAndLocationName(@Param("latitude") BigDecimal latitude, @Param("longitude") BigDecimal longitude, @Param("locationName") String locationName);
 
     DateCourseLocationVO getLocationById(@Param("locationId") Long locationId, @Param("courseId") Long courseId);
+
+    Location findById(Long locationId);
+
+    List<ResponseLocationMapVO> findLocationsInBounds(@Param("latitudeMin") BigDecimal latitudeMin, @Param("latitudeMax") BigDecimal latitudeMax, @Param("longitudeMin") BigDecimal longitudeMin, @Param("longitudeMax") BigDecimal longitudeMax);
+
+    List<ResponseLocationClusterItemVO> findLocationsNearCoordinates(@Param("latitude") BigDecimal latitude, @Param("longitude") BigDecimal longitude);
+
+    List<ResponseLocationClusterGroupVO> findGroupedLocationClusters(@Param("round") int round);
+
+    List<ResponseLocationSearchVO> findLocationByKeyword(@Param("keyword") String keyword);
+
+    List<ResponseLocationMapVO> findByGeoHashPrefix(@Param("prefix") String prefix);
+
+    List<ResponseLocationMapVO> findNearbyLocations(@Param("latitude") BigDecimal latitude, @Param("longitude") BigDecimal longitude, @Param("radiusMeters") int radiusMeters);
+
+    List<ResponseLocationMapVO> findRecommendedNearbyLocations(@Param("latitude") BigDecimal latitude, @Param("longitude") BigDecimal longitude, @Param("radiusMeters") int radiusMeters, @Param("limit") int limit);
+
+    ResponseLocationDetailVO getLocationDetail(@Param("locationId") Long locationId);
+
 }

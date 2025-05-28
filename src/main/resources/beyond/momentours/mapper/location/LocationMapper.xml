@@ -40,5 +40,107 @@
         AND dcl.course_location_status = true
     </select>
 
+    <select id="findById" resultMap="locationResultMap">
+        SELECT location_id, latitude, longitude, location_name, address, location_status, created_at, updated_at
+        FROM tb_location
+        WHERE location_id = #{locationId}
+        AND location_status = 'UNCHANGED'
+    </select>
+
+    <select id="findLocationsInBounds" resultType="beyond.momentours.location.query.vo.ResponseLocationMapVO">
+        SELECT l.location_id AS locationId, l.location_name AS locationName, l.latitude, l.longitude, COUNT(m.moment_id) AS momentCount
+          FROM tb_location l
+          LEFT JOIN tb_moment m ON l.location_id = m.location_id AND m.moment_status = true
+         WHERE l.latitude BETWEEN #{latitudeMin} AND #{latitudeMax}
+           AND l.longitude BETWEEN #{longitudeMin} AND #{longitudeMax}
+         GROUP BY l.location_id
+    </select>
+
+    <select id="findLocationsNearCoordinates" resultType="beyond.momentours.location.query.vo.ResponseLocationClusterItemVO">
+        SELECT l.location_id AS locationId, l.location_name AS locationName, l.latitude, l.longitude, COUNT(m.moment_id) AS momentCount
+          FROM tb_location l
+          LEFT JOIN tb_moment m ON l.location_id = m.location_id AND m.moment_status = true
+         WHERE ROUND(l.latitude, 2) = ROUND(#{lat}, 2)
+           AND ROUND(l.longitude, 2) = ROUND(#{lng}, 2)
+         GROUP BY l.location_id
+    </select>
+
+    <select id="findGroupedLocationClusters" resultType="beyond.momentours.location.query.vo.ResponseLocationClusterGroupVO">
+        SELECT
+        ROUND(latitude, #{round}) AS latitude,
+        ROUND(longitude, #{round}) AS longitude,
+        COUNT(*) AS count
+        FROM tb_location
+        WHERE location_status = 'UNCHANGED'
+        GROUP BY ROUND(latitude, #{round}), ROUND(longitude, #{round})
+    </select>
+
+    <select id="findLocationByKeyword" resultType="beyond.momentours.location.query.vo.ResponseLocationSearchVO">
+        SELECT l.location_id AS locationId, l.location_name AS locationName, l.latitude, l.longitude, l.address, COALESCE(SUM(m.moment_view), 0) AS viewCount, COALESCE(SUM(m.moment_like), 0) AS likeCount
+          FROM tb_location l
+          LEFT JOIN tb_moment m
+            ON l.location_id = m.location_id
+           AND m.moment_status = true
+         WHERE l.normalized_name LIKE CONCAT('%', #{keyword}, '%')
+           AND l.location_status = 'UNCHANGED'
+         GROUP BY l.location_id
+         ORDER BY
+          CASE
+               WHEN l.normalized_name = #{keyword} THEN 0
+               WHEN l.normalized_name LIKE CONCAT(#{keyword}, '%') THEN 1
+               WHEN l.normalized_name LIKE CONCAT('%', #{keyword}, '%') THEN 2
+               ELSE 3
+           END,
+           (SUM(m.moment_view) + SUM(m.moment_like) * 5) DESC,
+           LENGTH(l.normalized_name) ASC
+    </select>
+
+    <select id="findByGeoHashPrefix" resultType="beyond.momentours.location.query.vo.ResponseLocationMapVO">
+        SELECT l.location_id AS locationId, l.location_name AS locationName, l.latitude, l.longitude, COUNT(m.moment_id) AS momentCount
+          FROM tb_location l
+          LEFT JOIN tb_moment m ON m.location_id = l.location_id AND m.moment_status = true
+         WHERE l.geohash LIKE CONCAT(#{prefix}, '%')
+         GROUP BY l.location_id
+    </select>
+
+    <select id="findNearbyLocations" resultType="beyond.momentours.location.query.vo.ResponseLocationMapVO">
+        SELECT location_id AS locationId, location_name AS locationName, latitude, longitude,
+               (SELECT COUNT(*)
+                  FROM tb_moment m
+                 WHERE m.location_id = l.location_id
+                   AND m.moment_status = true) AS momentCount
+          FROM tb_location l
+         WHERE ST_Distance_Sphere(l.location_point, ST_GeomFromText(CONCAT('POINT(', #{longitude}, ' ', #{latitude}, ')'))) &lt;= #{radiusMeters}
+    </select>
+
+    <select id="findRecommendedNearbyLocations" resultType="beyond.momentours.location.query.vo.ResponseLocationMapVO">
+        SELECT l.location_id AS locationId, l.location_name AS locationName, l.latitude, l.longitude,
+               (
+               COALESCE(SUM(m.moment_view), 0) +
+               COALESCE(COUNT(ml.like_id), 0) * 5
+               ) AS score
+          FROM tb_location l
+          LEFT JOIN tb_moment m ON m.location_id = l.location_id AND m.moment_status = true
+          LEFT JOIN tb_moment_like ml ON ml.moment_id = m.moment_id
+         WHERE ST_Distance_Sphere(l.location_point, ST_GeomFromText(CONCAT('POINT(', #{longitude}, ' ', #{latitude}, ')'))) &lt;= #{radiusMeters}
+           AND l.location_status = 'UNCHANGED'
+         GROUP BY l.location_id
+         ORDER BY score DESC, l.location_id
+         LIMIT #{limit}
+    </select>
+
+    <select id="getLocationDetail" resultType="beyond.momentours.location.query.vo.ResponseLocationDetailVO">
+        SELECT l.location_id AS locationId, l.location_name AS locationName, l.address, l.latitude, l.longitude, COUNT(m.moment_id) AS momentCount, COALESCE(SUM(m.moment_view), 0) AS totalView,
+               COALESCE(SUM(
+                        (SELECT COUNT(*)
+                           FROM tb_moment_like ml
+                          WHERE ml.moment_id = m.moment_id)
+                        ), 0) AS totalLike
+          FROM tb_location l
+          LEFT JOIN tb_moment m ON l.location_id = m.location_id AND m.moment_status = true
+         WHERE l.location_id = #{locationId}
+         GROUP BY l.location_id
+    </select>
+
 
 </mapper>

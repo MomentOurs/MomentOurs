@@ -3,8 +3,7 @@ package beyond.momentours.comment.command.domain.aggregate;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum CommentType {
-
-    COUPLE_LOG("COUPLE_LOG"),
+    MOMENT("MOMENT"),      // 추가
     QUESTION("QUESTION");
 
     private final String commentType;

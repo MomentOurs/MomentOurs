@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="beyond.momentours.moment.query.repository.MomentMapper">
+
+    <select id="findMomentsByLocationIdWithFilter" resultType="beyond.momentours.moment.query.vo.ResponseMomentListItemVO">
+        SELECT m.moment_id AS momentId, m.moment_title AS momentTitle, m.moment_category AS momentCategory, l.location_name AS locationName
+          FROM tb_moment m
+          JOIN tb_location l ON m.location_id = l.location_id
+         WHERE m.moment_status = true
+           AND m.location_id = #{locationId}
+        <if test="cursor != null">
+            AND m.moment_id &lt; #{cursor}
+        </if>
+        <if test="onlyMine != null and onlyMine == true">
+            AND m.member_id = #{memberId}
+        </if>
+        <if test="certifiedOnly != null and certifiedOnly == true">
+            AND m.moment_certified = true
+        </if>
+        <choose>
+            <when test="sort == 'likes'">
+                ORDER BY m.moment_like DESC, m.moment_id DESC
+            </when>
+            <otherwise>
+                ORDER BY m.moment_id DESC
+            </otherwise>
+        </choose>
+           LIMIT #{size}
+    </select>
+
+    <select id="findMomentDetailById" resultType="beyond.momentours.moment.query.vo.ResponseMomentDetailVO">
+        SELECT m.moment_id AS momentId, m.moment_title AS momentTitle, m.moment_category AS momentCategory, m.moment_content AS momentContent, m.moment_certified AS momentCertified, m.moment_comment_status AS momentCommentStatus, m.moment_like AS momentLike, m.moment_view AS momentView, l.location_name AS locationName, l.address AS address, mem.member_nickname AS memberNickname, m.created_at AS createdAt
+          FROM tb_moment m
+          JOIN tb_location l ON m.location_id = l.location_id
+          JOIN tb_member mem ON m.member_id = mem.member_id
+         WHERE m.moment_id = #{momentId}
+           AND m.moment_status = true
+    </select>
+
+</mapper>

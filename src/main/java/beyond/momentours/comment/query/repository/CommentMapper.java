@@ -8,7 +8,7 @@ import java.util.List;
 
 @Mapper
 public interface CommentMapper {
-    List<Comment> findCommentsByCoupleLogId(@Param("coupleLogId") Long coupleLogId);
+    List<Comment> findCommentsByMomentId(@Param("momentId") Long momentId);
 
     List<Comment> findCommentsByQuestionId(@Param("userQuesId") Long userQuesId);
 }

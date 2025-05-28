@@ -1,5 +1,6 @@
 package beyond.momentours.moment.command.domain.aggregate.entity;
 
+import beyond.momentours.moment.command.application.dto.MomentDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,17 +29,17 @@ public class Moment {
     @Column(name = "moment_content")
     private String momentContent;
 
-    @Column(name = "moment_disclosure")
-    private boolean momentDisclosure;
+    @Column(name = "moment_certified")
+    private boolean momentCertified;
 
     @Column(name = "moment_comment_status")
     private boolean momentCommentStatus;
 
     @Column(name = "moment_like")
-    private int momentLike;
+    private Long momentLike;
 
     @Column(name = "moment_view")
-    private int momentView;
+    private Long momentView;
 
     @Column(name = "moment_status")
     private boolean momentStatus;
@@ -55,17 +56,30 @@ public class Moment {
     @Column(name = "member_id")
     private Long memberId;
 
-    // 상태 변경 method
-
-    /* 추억 생성 시 초기 정보 설정 */
-    public void createMoment(Long locationId, Long memberId) {
-        this.locationId = locationId;
-        this.memberId = memberId;
+    public void createMoment() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
         this.momentStatus = true;
-        this.momentLike = 0;
-        this.momentView = 0;
+        this.momentLike = 0L;
+        this.momentView = 0L;
     }
 
+    public void updateMoment(MomentDTO dto) {
+        this.momentTitle = dto.getMomentTitle();
+        this.momentCategory = dto.getMomentCategory();
+        this.momentContent = dto.getMomentContent();
+        this.momentCertified = dto.isMomentCertified();
+        this.momentCommentStatus = dto.isMomentCommentStatus();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void deactivate() {
+        this.momentStatus = false;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void changeCommentStatus(boolean enabled) {
+        this.momentCommentStatus = enabled;
+        this.updatedAt = LocalDateTime.now();
+    }
 }

@@ -6,7 +6,7 @@ import beyond.momentours.comment.command.domain.aggregate.entity.Comment;
 import beyond.momentours.comment.query.repository.CommentMapper;
 import beyond.momentours.common.exception.CommonException;
 import beyond.momentours.common.exception.ErrorCode;
-import beyond.momentours.randomquestion.command.domain.aggregate.entity.UserRandomQuestion;
+import beyond.momentours.moment.command.domain.aggregate.repository.MomentRepository;
 import beyond.momentours.randomquestion.query.dto.UserRandomQuestionDTO;
 import beyond.momentours.randomquestion.query.repository.RandomQuestionMapper;
 import lombok.RequiredArgsConstructor;
@@ -24,11 +24,12 @@ public class CommentQueryServiceImpl implements CommentQueryService {
     private final CommentConverter commentConverter;
     private final CommentMapper commentDAO;
     private final RandomQuestionMapper randomQuestionMapper;
+    private final MomentRepository momentRepository;
 
     @Override
-    public List<CommentDTO> getCommentsByCoupleLogId(Long coupleLogId) {
-        List<Comment> comments = commentDAO.findCommentsByCoupleLogId(coupleLogId);
-        log.info("조회된 커플로그 댓글 목록: {}", comments);
+    public List<CommentDTO> getCommentsByMomentId(Long momentId) {
+        List<Comment> comments = commentDAO.findCommentsByMomentId(momentId);
+        log.info("조회된 추억 댓글 목록: {}", comments);
 
         return comments.stream()
                 .map(commentConverter::fromEntityToDTO)
@@ -50,22 +51,22 @@ public class CommentQueryServiceImpl implements CommentQueryService {
                 .collect(Collectors.toList());
     }
 
-    private void validateCommentTypeStatus(CommentDTO commentDTO) {
-        switch (commentDTO.getCommentType()) {
-//            case COUPLE_LOG:
-//                CoupleLog = coupleLogRepository.findById(commentDTO.getCoupleLogId()).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_COUPLE_LOG));
+//    private void validateCommentTypeStatus(CommentDTO commentDTO) {
+//        switch (commentDTO.getCommentType()) {
+//            case MOMENT:
+//                momentRepository.findById(commentDTO.getTargetId()).orElseThrow(() -> new CommonException(ErrorCode.NOT_FOUND_MOMENT));
 //                break;
-
-            case QUESTION:
-                UserRandomQuestionDTO randomQuestion = randomQuestionMapper.findByUserQuesId(commentDTO.getTargetId());
-                if (randomQuestion == null) throw new CommonException(ErrorCode.NOT_FOUND_RANDOM_QUESTION);
-                if (!"ALL".equals(randomQuestion.getAnsStatus())) {
-                    throw new CommonException(ErrorCode.INVALID_RANDOM_QUESTION_STATUS);
-                }
-                break;
-
-            default:
-                throw new CommonException(ErrorCode.INVALID_COMMENT_TYPE);
-        }
-    }
+//
+//            case QUESTION:
+//                UserRandomQuestionDTO randomQuestion = randomQuestionMapper.findByUserQuesId(commentDTO.getTargetId());
+//                if (randomQuestion == null) throw new CommonException(ErrorCode.NOT_FOUND_RANDOM_QUESTION);
+//                if (!"ALL".equals(randomQuestion.getAnsStatus())) {
+//                    throw new CommonException(ErrorCode.INVALID_RANDOM_QUESTION_STATUS);
+//                }
+//                break;
+//
+//            default:
+//                throw new CommonException(ErrorCode.INVALID_COMMENT_TYPE);
+//        }
+//    }
 }

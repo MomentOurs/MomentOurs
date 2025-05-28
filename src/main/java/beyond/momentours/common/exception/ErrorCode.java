@@ -31,8 +31,7 @@ public enum ErrorCode {
     QUES_ANSWER_DELETE_FAILURE(40020, HttpStatus.BAD_REQUEST, "랜덤질문 답변 삭제에 실패했습니다."), // 랜덤질문 답변 삭제 실패
     EMAIL_ALREADY_EXISTS(40021, HttpStatus.BAD_REQUEST, "이미 존재하는 이메일입니다."),
     ALREADY_SCRAPPED(40022, HttpStatus.BAD_REQUEST, "이미 스크랩한 코스입니다."),
-
-    // 403: 권한 부족 (Forbidden)
+    INVALID_LOCATION_DATA(40023, HttpStatus.BAD_REQUEST, "잘못된 장소 데이터 정보입니다."),
 
     // 401: 인증 실패 (Unauthorized)
     INVALID_HEADER_VALUE(40100, HttpStatus.UNAUTHORIZED, "올바르지 않은 헤더값입니다."), // 헤더 값이 잘못되었거나 누락된 경우
