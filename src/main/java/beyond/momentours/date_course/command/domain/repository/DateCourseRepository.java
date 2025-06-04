@@ -17,4 +17,10 @@ public interface DateCourseRepository extends JpaRepository<DateCourse, Long> {
             "SET dc.folderId = null " +
             "WHERE dc.folderId = :folderId")
     void clearFolderByFolderId(@Param("folderId") Long folderId);
+
+    @Modifying
+    @Query("UPDATE Moment m " +
+            "  SET m.momentLike = :likeCount " +
+            "WHERE m.momentId = :targetId")
+    void updateLikeCount(@Param("targetId") Long targetId, @Param("likeCount") Long likeCount);
 }

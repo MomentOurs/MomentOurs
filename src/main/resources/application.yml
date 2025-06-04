@@ -72,3 +72,8 @@ mybatis:
 #      static: ap-northeast-2
 #    s3:
 #      bucket: momentours-dev-folder
+
+redisson:
+  config: |
+    singleServerConfig:
+      address: "redis://localhost:6379"

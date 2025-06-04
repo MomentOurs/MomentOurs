@@ -12,4 +12,7 @@ public interface MomentMapper {
     ResponseMomentDetailVO findMomentDetailById(@Param("momentId") Long momentId);
 
     List<ResponseMomentListItemVO> findMomentsByLocationIdWithFilter(Long locationId, Long cursor, int size, String sort, Boolean onlyMine, Boolean certifiedOnly, Long memberId);
+
+    boolean existsActiveById(@Param("momentId") Long momentId);
+
 }
