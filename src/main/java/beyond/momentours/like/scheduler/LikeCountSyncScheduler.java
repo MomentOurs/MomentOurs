@@ -2,6 +2,7 @@ package beyond.momentours.like.scheduler;
 
 import beyond.momentours.date_course.command.domain.repository.DateCourseRepository;
 import beyond.momentours.moment.command.domain.aggregate.repository.MomentRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
@@ -26,6 +27,7 @@ public class LikeCountSyncScheduler {
     private static final String PREFIX = "like::count::";
     private static final String RETRY_PREFIX = "like::retry::";
 
+    @Transactional
     @Scheduled(fixedRate = 5 * 60 * 1000)
     public void syncLikeCounts() {
         log.info("좋아요 Redis DB 동기화 시작");
@@ -68,6 +70,7 @@ public class LikeCountSyncScheduler {
         log.info("✅ 좋아요 동기화 완료");
     }
 
+    @Transactional
     @Scheduled(fixedRate = 1 * 60 * 1000)
     public void retryFailedSyncs() {
         Set<String> retryKeys = redisTemplate.keys(RETRY_PREFIX + "*");
