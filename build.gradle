@@ -74,6 +74,13 @@ dependencies {
     implementation 'ch.hsr:geohash:1.4.0'
 
     implementation 'org.redisson:redisson-spring-boot-starter:3.23.4'
+
+    // 좋아요 기능 Redis 죽는 것을 대비하기 위해 kafka 적용
+    implementation 'org.springframework.kafka:spring-kafka'
+}
+
+configurations.all {
+    exclude group: 'commons-logging', module: 'commons-logging'
 }
 
 test {
