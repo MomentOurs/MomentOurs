@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Getter
 @Builder
@@ -16,5 +17,13 @@ public class ResponseLocationMomentPageVO {
     private BigDecimal latitude;
     private BigDecimal longitude;
     private String address;
-    private ResponseMomentCursorListVO momentPage;
+    private String description;
+    private ResponseMomentCursorListVO ours;
+    private ResponseMomentCursorListVO others;
+
+    private String images;
+
+    public List<String> getImages() {
+        return images == null ? List.of() : List.of(images.split(","));
+    }
 }

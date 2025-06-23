@@ -18,6 +18,7 @@ public class RequestCreateMomentVO {
     private boolean momentCommentStatus;
     private Long momentLike;
     private Long momentView;
+    private String momentImageUrls;
     private Long locationId;
 
     // 처음 추억이 등록되는 경우에는 네이버 지도 API를 통해 정보 반환

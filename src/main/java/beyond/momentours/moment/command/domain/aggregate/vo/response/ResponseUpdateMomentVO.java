@@ -14,5 +14,6 @@ import java.time.LocalDateTime;
 public class ResponseUpdateMomentVO {
     private Long momentId;
     private String momentTitle;
+    private String momentImageUrls;
     private LocalDateTime updatedAt;
 }

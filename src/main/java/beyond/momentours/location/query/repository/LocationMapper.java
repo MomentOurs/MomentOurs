@@ -19,8 +19,6 @@ public interface LocationMapper {
 
     List<ResponseLocationMapVO> findLocationsInBounds(@Param("latitudeMin") BigDecimal latitudeMin, @Param("latitudeMax") BigDecimal latitudeMax, @Param("longitudeMin") BigDecimal longitudeMin, @Param("longitudeMax") BigDecimal longitudeMax);
 
-    List<ResponseLocationClusterItemVO> findLocationsNearCoordinates(@Param("latitude") BigDecimal latitude, @Param("longitude") BigDecimal longitude);
-
     List<ResponseLocationClusterGroupVO> findGroupedLocationClusters(@Param("round") int round);
 
     List<ResponseLocationSearchVO> findLocationByKeyword(@Param("keyword") String keyword);
@@ -33,4 +31,9 @@ public interface LocationMapper {
 
     ResponseLocationDetailVO getLocationDetail(@Param("locationId") Long locationId);
 
+    List<ResponseLocationClusterItemVO> findClusteredLocationsByZoomLevel(@Param("latRound") int latRound, @Param("lngRound") int lngRound, @Param("latitudeMin") BigDecimal latitudeMin, @Param("latitudeMax") BigDecimal latitudeMax, @Param("longitudeMin") BigDecimal longitudeMin, @Param("longitudeMax") BigDecimal longitudeMax);
+
+    List<ResponseLocationClusterItemVO> findClusteredLocationsByZoomLevelWithLimit(@Param("latRound") int latRound, @Param("lngRound") int lngRound, @Param("latitudeMin") BigDecimal latitudeMin, @Param("latitudeMax") BigDecimal latitudeMax, @Param("longitudeMin") BigDecimal longitudeMin, @Param("longitudeMax") BigDecimal longitudeMax, @Param("limit") int limit);
+
+    List<ResponseLocationMapVO> findLocationsByRoundedCoordinate(@Param("latitude") BigDecimal latitude, @Param("longitude") BigDecimal longitude, @Param("round") int round);
 }
