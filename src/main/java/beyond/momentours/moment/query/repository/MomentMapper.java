@@ -4,7 +4,6 @@ import beyond.momentours.moment.query.vo.ResponseMomentDetailVO;
 import beyond.momentours.moment.query.vo.ResponseMomentListItemVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 
