@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class MomentConverter {
 
-    public Moment fromDTOToEntity(MomentDTO dto, Long memberId, Long locationId) {
+    public Moment fromDTOToEntity(MomentDTO dto, Long memberId, Long coupleId, Long locationId) {
         return Moment.builder()
                 .momentTitle(dto.getMomentTitle())
                 .momentCategory(dto.getMomentCategory())
@@ -21,10 +21,12 @@ public class MomentConverter {
                 .momentLike(dto.getMomentLike())
                 .momentView(dto.getMomentView())
                 .momentStatus(dto.isMomentStatus())
+                .momentImageUrls(dto.getMomentImageUrls())
                 .createdAt(dto.getCreatedAt())
                 .updatedAt(dto.getUpdatedAt())
                 .locationId(locationId)
                 .memberId(memberId)
+                .coupleId(coupleId)
                 .build();
     }
 
@@ -39,6 +41,7 @@ public class MomentConverter {
                 .momentLike(moment.getMomentLike())
                 .momentView(moment.getMomentView())
                 .momentStatus(moment.isMomentStatus())
+                .momentImageUrls(moment.getMomentImageUrls())
                 .createdAt(moment.getCreatedAt())
                 .updatedAt(moment.getUpdatedAt())
                 .locationId(moment.getLocationId())
@@ -54,6 +57,7 @@ public class MomentConverter {
                 .momentCommentStatus(createMomentVO.isMomentCommentStatus())
                 .momentLike(createMomentVO.getMomentLike())
                 .momentView(createMomentVO.getMomentView())
+                .momentImageUrls(createMomentVO.getMomentImageUrls())
                 .locationId(createMomentVO.getLocationId())
                 .locationName(createMomentVO.getLocationName())
                 .latitude(createMomentVO.getLatitude())
@@ -67,6 +71,7 @@ public class MomentConverter {
                 .momentTitle(vo.getMomentTitle())
                 .momentCategory(vo.getMomentCategory())
                 .momentContent(vo.getMomentContent())
+                .momentImageUrls(vo.getMomentImageUrls())
                 .momentCommentStatus(vo.isMomentCommentStatus())
                 .build();
     }
@@ -76,6 +81,7 @@ public class MomentConverter {
                 .momentId(dto.getMomentId())
                 .momentTitle(dto.getMomentTitle())
                 .createdAt(dto.getCreatedAt())
+                .momentImageUrls(dto.getMomentImageUrls())
                 .build();
     }
 
@@ -84,6 +90,7 @@ public class MomentConverter {
                 .momentId(dto.getMomentId())
                 .momentTitle(dto.getMomentTitle())
                 .updatedAt(dto.getUpdatedAt())
+                .momentImageUrls(dto.getMomentImageUrls())
                 .build();
     }
 }

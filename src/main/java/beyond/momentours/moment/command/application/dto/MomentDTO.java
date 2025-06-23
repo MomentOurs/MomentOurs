@@ -41,6 +41,9 @@ public class MomentDTO {
     @JsonProperty("moment_status")
     private boolean momentStatus;
 
+    @JsonProperty("moment_image_urls")
+    private String momentImageUrls;
+
     @JsonProperty("created_at")
     private LocalDateTime createdAt;
 
@@ -52,6 +55,9 @@ public class MomentDTO {
 
     @JsonProperty("member_id")
     private Long memberId;
+
+    @JsonProperty("couple_id")
+    private Long coupleId;
 
     @JsonProperty("location_name")
     private String locationName;
