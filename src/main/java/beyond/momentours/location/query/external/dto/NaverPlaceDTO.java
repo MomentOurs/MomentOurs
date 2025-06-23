@@ -15,4 +15,5 @@ public class NaverPlaceDTO {
     private BigDecimal latitude;
     private BigDecimal longitude;
     private String category;
+    private String description;
 }

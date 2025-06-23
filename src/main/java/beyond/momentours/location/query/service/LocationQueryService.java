@@ -12,8 +12,6 @@ public interface LocationQueryService {
 
     List<ResponseLocationMapVO> getLocationsInBounds(BigDecimal latitudeMin, BigDecimal latitudeMax, BigDecimal longitudeMin, BigDecimal longitudeMax);
 
-    List<ResponseLocationClusterItemVO> getClusteredLocations(BigDecimal lat, BigDecimal lng);
-
     ResponseLocationMomentPageVO getLocationWithMoments(MomentFilterCondition condition);
 
     List<ResponseLocationClusterGroupVO> getGroupedLocationClustersByZoom(int zoom);
@@ -28,4 +26,7 @@ public interface LocationQueryService {
 
     ResponseLocationDetailVO getLocationDetail(Long locationId);
 
+    List<ResponseLocationClusterItemVO> getClusteredLocationsInBounds(BigDecimal latitude, BigDecimal longitude, int zoom, BigDecimal latitudeMin, BigDecimal latitudeMax, BigDecimal longitudeMin, BigDecimal longitudeMax);
+
+    List<ResponseLocationMapVO> getClusterLocations(BigDecimal latitude, BigDecimal longitude, int zoom);
 }

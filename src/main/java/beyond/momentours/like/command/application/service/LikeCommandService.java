@@ -1,6 +1,7 @@
 package beyond.momentours.like.command.application.service;
 
 import beyond.momentours.like.command.domain.aggregate.LikeType;
+import beyond.momentours.like.command.domain.dto.LikeEventDto;
 import jakarta.transaction.Transactional;
 
 public interface LikeCommandService {
@@ -11,4 +12,6 @@ public interface LikeCommandService {
     void unlike(Long memberId, LikeType type, Long targetId);
 
     Long getLikeCount(LikeType type, Long targetId);
+
+    void recoverLike(LikeEventDto event);
 }

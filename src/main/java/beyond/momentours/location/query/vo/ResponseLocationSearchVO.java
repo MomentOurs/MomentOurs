@@ -15,4 +15,5 @@ public class ResponseLocationSearchVO {
     private BigDecimal latitude;
     private BigDecimal longitude;
     private String address;
+    private String description;
 }

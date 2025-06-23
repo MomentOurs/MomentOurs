@@ -55,19 +55,12 @@ public class LocationQueryServiceImpl implements LocationQueryService {
     }
 
     @Override
-    public List<ResponseLocationClusterItemVO> getClusteredLocations(BigDecimal latitude, BigDecimal longitude) {
-        return locationMapper.findLocationsNearCoordinates(latitude, longitude);
-    }
-
-    @Override
     public ResponseLocationMomentPageVO getLocationWithMoments(MomentFilterCondition condition) {
         Location location = locationMapper.findById(condition.getLocationId());
         if (location == null) throw new CommonException(ErrorCode.NOT_FOUND_LOCATION);
 
-        List<ResponseMomentListItemVO> moments = getMomentsByLocationIdWithFilter(condition);
-
-        Long nextCursor = moments.isEmpty() ? null : moments.get(moments.size() - 1).getMomentId();
-        boolean hasNext = moments.size() == condition.getSize();
+        ResponseMomentCursorListVO ours = getCursorPagedMoments(condition, true);
+        ResponseMomentCursorListVO others = getCursorPagedMoments(condition, false);
 
         return ResponseLocationMomentPageVO.builder()
                 .locationId(location.getLocationId())
@@ -75,11 +68,22 @@ public class LocationQueryServiceImpl implements LocationQueryService {
                 .latitude(location.getLatitude())
                 .longitude(location.getLongitude())
                 .address(location.getAddress())
-                .momentPage(ResponseMomentCursorListVO.builder()
-                        .moments(moments)
-                        .nextCursor(nextCursor)
-                        .hasNext(hasNext)
-                        .build())
+                .description(location.getDescription())
+                .ours(ours)
+                .others(others)
+                .build();
+    }
+
+    private ResponseMomentCursorListVO getCursorPagedMoments(MomentFilterCondition baseCondition, boolean ours) {
+        MomentFilterCondition condition = baseCondition.toBuilder().isOurs(ours).build();
+        List<ResponseMomentListItemVO> list = getMomentsByLocationIdWithFilter(condition);
+        Long nextCursor = list.isEmpty() ? null : list.get(list.size() - 1).getMomentId();
+        boolean hasNext = list.size() == condition.getSize();
+
+        return ResponseMomentCursorListVO.builder()
+                .moments(list)
+                .nextCursor(nextCursor)
+                .hasNext(hasNext)
                 .build();
     }
 
@@ -89,9 +93,10 @@ public class LocationQueryServiceImpl implements LocationQueryService {
                 condition.getCursor(),
                 condition.getSize(),
                 condition.getSort(),
-                condition.getOnlyMine(),
+                condition.getIsOurs(),
                 condition.getCertifiedOnly(),
-                condition.getMemberId()
+                condition.getMemberId(),
+                condition.getCoupleId()
         );
     }
 
@@ -120,16 +125,13 @@ public class LocationQueryServiceImpl implements LocationQueryService {
                 String category = dto.getCategory();
                 if (category == null || LocationFilterUtil.isExcludedPlace(category)) continue;
 
-                LocationDTO saved = locationCommandService.createLocationWithAddress(
-                        dto.getTitle(), dto.getLatitude(), dto.getLongitude(), dto.getAddress()
-                );
-
                 valid.add(ResponseLocationSearchVO.builder()
-                        .locationId(saved.getLocationId())
-                        .locationName(saved.getLocationName())
-                        .latitude(saved.getLatitude())
-                        .longitude(saved.getLongitude())
-                        .address(saved.getAddress())
+                        .locationId(null)
+                        .locationName(dto.getTitle())
+                        .latitude(dto.getLatitude())
+                        .longitude(dto.getLongitude())
+                        .address(dto.getAddress())
+                        .description(dto.getDescription())
                         .build());
             }
             return valid;
@@ -188,5 +190,44 @@ public class LocationQueryServiceImpl implements LocationQueryService {
         ResponseLocationDetailVO result = locationMapper.getLocationDetail(locationId);
         if (result == null) throw new CommonException(ErrorCode.NOT_FOUND_LOCATION);
         return result;
+    }
+
+    @Override
+    public List<ResponseLocationClusterItemVO> getClusteredLocationsInBounds(
+            BigDecimal latitude, BigDecimal longitude, int zoom,
+            BigDecimal latitudeMin, BigDecimal latitudeMax,
+            BigDecimal longitudeMin, BigDecimal longitudeMax
+    ) {
+        int latRound = getRoundingScale(zoom);
+        int lngRound = getRoundingScale(zoom);
+
+        if (zoom < 13) {
+            return locationMapper.findClusteredLocationsByZoomLevelWithLimit(
+                    latRound, lngRound,
+                    latitudeMin, latitudeMax,
+                    longitudeMin, longitudeMax,
+                    30
+            );
+        } else {
+            return locationMapper.findClusteredLocationsByZoomLevel(
+                    latRound, lngRound,
+                    latitudeMin, latitudeMax,
+                    longitudeMin, longitudeMax
+            );
+        }
+    }
+
+    @Override
+    public List<ResponseLocationMapVO> getClusterLocations(BigDecimal latitude, BigDecimal longitude, int zoom) {
+        int round = getRoundingScale(zoom);
+        return locationMapper.findLocationsByRoundedCoordinate(latitude, longitude, round);
+    }
+
+    private int getRoundingScale(int zoom) {
+        if (zoom >= 16) return 4;
+        else if (zoom >= 14) return 3;
+        else if (zoom >= 12) return 2;
+        else if (zoom >= 10) return 1;
+        else return 0;
     }
 }

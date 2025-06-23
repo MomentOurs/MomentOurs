@@ -11,9 +11,14 @@ public class LocationConverter {
                 .locationId(savedLocation.getLocationId())
                 .locationName(savedLocation.getLocationName())
                 .address(savedLocation.getAddress())
+                .imageUrl(savedLocation.getImageUrls())
                 .latitude(savedLocation.getLatitude())
                 .longitude(savedLocation.getLongitude())
                 .locationStatus(savedLocation.getLocationStatus())
+                .description(savedLocation.getDescription())
+                .rating(savedLocation.getRating())
+                .isOpen(savedLocation.getIsOpen())
+                .closingTime(savedLocation.getClosingTime())
                 .build();
     }
 }

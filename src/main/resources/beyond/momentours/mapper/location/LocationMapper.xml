@@ -10,9 +10,47 @@
         <result property="longitude" column="longitude"/>
         <result property="locationName" column="location_name"/>
         <result property="address" column="address"/>
+        <result property="imageUrl" column="image_url"/>
         <result property="locationStatus" column="location_status"/>
+        <result property="description" column="description"/>
+        <result property="rating" column="rating"/>
+        <result property="isOpen" column="is_open"/>
+        <result property="closingTime" column="closing_time"/>
         <result property="createdAt" column="created_at"/>
         <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <resultMap id="ResponseLocationMapVOMap" type="beyond.momentours.location.query.vo.ResponseLocationMapVO">
+        <result property="locationId" column="locationId"/>
+        <result property="locationName" column="locationName"/>
+        <result property="latitude" column="latitude"/>
+        <result property="longitude" column="longitude"/>
+        <result property="momentCount" column="momentCount"/>
+        <result property="description" column="description"/>
+        <result property="images" column="images"/>
+    </resultMap>
+
+    <resultMap id="ClusterItemVOMap" type="beyond.momentours.location.query.vo.ResponseLocationClusterItemVO">
+        <result property="locationIds" column="locationIds"/>
+        <result property="locationId" column="locationId"/>
+        <result property="locationName" column="locationName"/>
+        <result property="latitude" column="latitude"/>
+        <result property="longitude" column="longitude"/>
+        <result property="count" column="count"/>
+        <result property="momentCount" column="momentCount"/>
+    </resultMap>
+
+    <resultMap id="LocationDetailVOMap" type="beyond.momentours.location.query.vo.ResponseLocationDetailVO">
+        <result property="locationId" column="locationId"/>
+        <result property="locationName" column="locationName"/>
+        <result property="address" column="address"/>
+        <result property="images" column="images"/>
+        <result property="description" column="description"/>
+        <result property="latitude" column="latitude"/>
+        <result property="longitude" column="longitude"/>
+        <result property="momentCount" column="momentCount"/>
+        <result property="totalView" column="totalView"/>
+        <result property="totalLike" column="totalLike"/>
     </resultMap>
 
     <select id="findByLatitudeAndLongitudeAndLocationName" resultMap="locationResultMap">
@@ -47,22 +85,86 @@
         AND location_status = 'UNCHANGED'
     </select>
 
-    <select id="findLocationsInBounds" resultType="beyond.momentours.location.query.vo.ResponseLocationMapVO">
-        SELECT l.location_id AS locationId, l.location_name AS locationName, l.latitude, l.longitude, COUNT(m.moment_id) AS momentCount
+    <select id="findLocationsInBounds" resultMap="ResponseLocationMapVOMap">
+        SELECT l.location_id AS locationId, 
+               l.location_name AS locationName, 
+               l.latitude, 
+               l.longitude, 
+               COUNT(m.moment_id) AS momentCount, 
+               l.description,
+               l.image_urls AS images
           FROM tb_location l
           LEFT JOIN tb_moment m ON l.location_id = m.location_id AND m.moment_status = true
          WHERE l.latitude BETWEEN #{latitudeMin} AND #{latitudeMax}
            AND l.longitude BETWEEN #{longitudeMin} AND #{longitudeMax}
+           AND l.location_status = 'UNCHANGED'
          GROUP BY l.location_id
     </select>
 
-    <select id="findLocationsNearCoordinates" resultType="beyond.momentours.location.query.vo.ResponseLocationClusterItemVO">
-        SELECT l.location_id AS locationId, l.location_name AS locationName, l.latitude, l.longitude, COUNT(m.moment_id) AS momentCount
+    <select id="findClusteredLocationsByZoomLevel" resultMap="ClusterItemVOMap">
+        SELECT * FROM (
+          SELECT GROUP_CONCAT(location_id) AS locationIds, NULL AS locationId, NULL AS locationName,
+                latitude, longitude, COUNT(*) AS count, NULL AS momentCount
+          FROM tb_location
+          WHERE location_status = 'UNCHANGED'
+            AND latitude BETWEEN #{latitudeMin} AND #{latitudeMax}
+            AND longitude BETWEEN #{longitudeMin} AND #{longitudeMax}
+          GROUP BY latitude, longitude
+          HAVING COUNT(*) > 1
+
+          UNION
+
+          SELECT CAST(location_id AS CHAR) AS locationIds, location_id AS locationId, location_name AS locationName,
+                latitude, longitude, 1 AS count,
+                (SELECT COUNT(*) FROM tb_moment m WHERE m.location_id = l.location_id AND m.moment_status = true) AS momentCount
           FROM tb_location l
-          LEFT JOIN tb_moment m ON l.location_id = m.location_id AND m.moment_status = true
-         WHERE ROUND(l.latitude, 2) = ROUND(#{lat}, 2)
-           AND ROUND(l.longitude, 2) = ROUND(#{lng}, 2)
-         GROUP BY l.location_id
+          WHERE location_status = 'UNCHANGED'
+            AND latitude BETWEEN #{latitudeMin} AND #{latitudeMax}
+            AND longitude BETWEEN #{longitudeMin} AND #{longitudeMax}
+          GROUP BY latitude, longitude, location_id
+          HAVING COUNT(*) = 1
+        ) AS clustered
+    </select>
+
+    <select id="findClusteredLocationsByZoomLevelWithLimit" resultMap="ClusterItemVOMap">
+        SELECT * FROM (
+          SELECT GROUP_CONCAT(location_id) AS locationIds, NULL AS locationId, NULL AS locationName,
+                latitude, longitude, COUNT(*) AS count, NULL AS momentCount
+          FROM tb_location
+          WHERE location_status = 'UNCHANGED'
+            AND latitude BETWEEN #{latitudeMin} AND #{latitudeMax}
+            AND longitude BETWEEN #{longitudeMin} AND #{longitudeMax}
+          GROUP BY latitude, longitude
+          HAVING COUNT(*) > 1
+
+          UNION
+
+          SELECT CAST(location_id AS CHAR) AS locationIds, location_id AS locationId, location_name AS locationName,
+                latitude, longitude, 1 AS count,
+                (SELECT COUNT(*) FROM tb_moment m WHERE m.location_id = l.location_id AND m.moment_status = true) AS momentCount
+          FROM tb_location l
+          WHERE location_status = 'UNCHANGED'
+            AND latitude BETWEEN #{latitudeMin} AND #{latitudeMax}
+            AND longitude BETWEEN #{longitudeMin} AND #{longitudeMax}
+          GROUP BY latitude, longitude, location_id
+          HAVING COUNT(*) = 1
+        ) AS clustered
+        LIMIT #{limit}
+    </select>
+
+    <select id="findLocationsByRoundedCoordinate" resultType="beyond.momentours.location.query.vo.ResponseLocationMapVO">
+        SELECT l.location_id AS locationId,
+        l.location_name AS locationName,
+        l.latitude,
+        l.longitude,
+        COUNT(m.moment_id) AS momentCount
+        FROM tb_location l
+        LEFT JOIN tb_moment m
+        ON l.location_id = m.location_id AND m.moment_status = true
+        WHERE l.location_status = 'UNCHANGED'
+        AND ROUND(l.latitude, #{round}) = ROUND(#{latitude}, #{round})
+        AND ROUND(l.longitude, #{round}) = ROUND(#{longitude}, #{round})
+        GROUP BY l.location_id
     </select>
 
     <select id="findGroupedLocationClusters" resultType="beyond.momentours.location.query.vo.ResponseLocationClusterGroupVO">
@@ -114,14 +216,16 @@
     </select>
 
     <select id="findRecommendedNearbyLocations" resultType="beyond.momentours.location.query.vo.ResponseLocationMapVO">
-        SELECT l.location_id AS locationId, l.location_name AS locationName, l.latitude, l.longitude,
+        SELECT l.location_id AS locationId, 
+               l.location_name AS locationName, 
+               l.latitude, 
+               l.longitude,
                (
                COALESCE(SUM(m.moment_view), 0) +
-               COALESCE(COUNT(ml.like_id), 0) * 5
+               COALESCE(SUM(m.moment_like), 0) * 5
                ) AS score
           FROM tb_location l
           LEFT JOIN tb_moment m ON m.location_id = l.location_id AND m.moment_status = true
-          LEFT JOIN tb_moment_like ml ON ml.moment_id = m.moment_id
          WHERE ST_Distance_Sphere(l.location_point, ST_GeomFromText(CONCAT('POINT(', #{longitude}, ' ', #{latitude}, ')'))) &lt;= #{radiusMeters}
            AND l.location_status = 'UNCHANGED'
          GROUP BY l.location_id
@@ -129,18 +233,21 @@
          LIMIT #{limit}
     </select>
 
-    <select id="getLocationDetail" resultType="beyond.momentours.location.query.vo.ResponseLocationDetailVO">
-        SELECT l.location_id AS locationId, l.location_name AS locationName, l.address, l.latitude, l.longitude, COUNT(m.moment_id) AS momentCount, COALESCE(SUM(m.moment_view), 0) AS totalView,
-               COALESCE(SUM(
-                        (SELECT COUNT(*)
-                           FROM tb_moment_like ml
-                          WHERE ml.moment_id = m.moment_id)
-                        ), 0) AS totalLike
+    <select id="getLocationDetail" resultMap="LocationDetailVOMap">
+        SELECT l.location_id AS locationId, 
+               l.location_name AS locationName, 
+               l.address, 
+               l.image_urls AS images,
+               l.description, 
+               l.latitude, 
+               l.longitude, 
+               COUNT(m.moment_id) AS momentCount, 
+               COALESCE(SUM(m.moment_view), 0) AS totalView,
+               COALESCE(SUM(m.moment_like), 0) AS totalLike
           FROM tb_location l
           LEFT JOIN tb_moment m ON l.location_id = m.location_id AND m.moment_status = true
          WHERE l.location_id = #{locationId}
          GROUP BY l.location_id
     </select>
-
 
 </mapper>

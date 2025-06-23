@@ -24,9 +24,8 @@ public class MomentCommandController {
     @PostMapping
     public ResponseDTO<?> createMoment(@RequestBody RequestCreateMomentVO createMomentVO, @AuthenticationPrincipal CustomUserDetails user) {
         log.info("등록 요청 데이터 : {}", createMomentVO);
-        Long memberId = user.getMember().getMemberId();
         MomentDTO momentDTO = momentConverter.fromCreateVOToDTO(createMomentVO);
-        MomentDTO responseMomentDTO = momentCommandService.createMoment(momentDTO, memberId);
+        MomentDTO responseMomentDTO = momentCommandService.createMoment(momentDTO, user);
         return ResponseDTO.ok(momentConverter.fromDTOToCreateVO(responseMomentDTO));
     }
 

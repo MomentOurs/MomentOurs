@@ -3,6 +3,7 @@ package beyond.momentours.location.query.controller;
 import beyond.momentours.common.ResponseDTO;
 import beyond.momentours.common.exception.CommonException;
 import beyond.momentours.common.exception.ErrorCode;
+import beyond.momentours.couple.query.service.QueryCoupleService;
 import beyond.momentours.location.query.external.NaverMapSearchClient;
 import beyond.momentours.location.query.external.dto.NaverPlaceDTO;
 import beyond.momentours.location.query.service.LocationQueryService;
@@ -10,6 +11,7 @@ import beyond.momentours.location.query.vo.*;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
 import beyond.momentours.moment.common.MomentFilterCondition;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,10 +21,12 @@ import java.util.List;
 @RestController
 @RequestMapping("api/location")
 @RequiredArgsConstructor
+@Slf4j
 public class LocationQueryController {
 
     private final LocationQueryService locationQueryService;
     private final NaverMapSearchClient naverMapSearchClient;
+    private final QueryCoupleService queryCoupleService;
 
     @GetMapping("/map")
     public ResponseDTO<List<ResponseLocationMapVO>> getLocationsOnMap(@RequestParam BigDecimal latitudeMin, @RequestParam BigDecimal latitudeMax, @RequestParam BigDecimal longitudeMin, @RequestParam BigDecimal longitudeMax) {
@@ -30,9 +34,29 @@ public class LocationQueryController {
         return ResponseDTO.ok(result);
     }
 
-    @GetMapping("/cluster")
-    public ResponseDTO<List<ResponseLocationClusterItemVO>> getClusteredLocations(@RequestParam BigDecimal latitude, @RequestParam BigDecimal longitude) {
-        List<ResponseLocationClusterItemVO> result = locationQueryService.getClusteredLocations(latitude, longitude);
+    @GetMapping("/clusters")
+    public ResponseDTO<List<ResponseLocationClusterItemVO>> getClusteredLocations(
+            @RequestParam BigDecimal latitude,
+            @RequestParam BigDecimal longitude,
+            @RequestParam int zoom,
+            @RequestParam BigDecimal latitudeMin,
+            @RequestParam BigDecimal latitudeMax,
+            @RequestParam BigDecimal longitudeMin,
+            @RequestParam BigDecimal longitudeMax
+    ) {
+        List<ResponseLocationClusterItemVO> result = locationQueryService.getClusteredLocationsInBounds(
+                latitude, longitude, zoom, latitudeMin, latitudeMax, longitudeMin, longitudeMax
+        );
+        return ResponseDTO.ok(result);
+    }
+
+    @GetMapping("/cluster/locations")
+    public ResponseDTO<List<ResponseLocationMapVO>> getClusterLocations(
+            @RequestParam BigDecimal latitude,
+            @RequestParam BigDecimal longitude,
+            @RequestParam int zoom
+    ) {
+        List<ResponseLocationMapVO> result = locationQueryService.getClusterLocations(latitude, longitude, zoom);
         return ResponseDTO.ok(result);
     }
 
@@ -42,26 +66,28 @@ public class LocationQueryController {
             @RequestParam(required = false) Long cursor,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "recent") String sort,
-            @RequestParam(required = false) Boolean onlyMine,
+            @RequestParam(required = false) Boolean isOurs,
             @RequestParam(required = false) Boolean certifiedOnly,
             @AuthenticationPrincipal CustomUserDetails user
     ) {
         Long memberId = user != null ? user.getMember().getMemberId() : null;
-        MomentFilterCondition condition = getMomentFilterCondition(locationId, cursor, size, sort, onlyMine, certifiedOnly, memberId);
+        Long coupleId = queryCoupleService.getCoupleIdByMemberId(memberId);
+        MomentFilterCondition condition = getMomentFilterCondition(locationId, cursor, size, sort, isOurs, certifiedOnly, memberId, coupleId);
 
         ResponseLocationMomentPageVO result = locationQueryService.getLocationWithMoments(condition);
         return ResponseDTO.ok(result);
     }
 
-    private MomentFilterCondition getMomentFilterCondition(Long locationId, Long cursor, int size, String sort, Boolean onlyMine, Boolean certifiedOnly, Long memberId) {
+    private MomentFilterCondition getMomentFilterCondition(Long locationId, Long cursor, int size, String sort, Boolean ours, Boolean certifiedOnly, Long memberId, Long coupleId) {
         return MomentFilterCondition.builder()
                 .locationId(locationId)
                 .cursor(cursor)
                 .size(size)
                 .sort(sort)
-                .onlyMine(onlyMine)
+                .isOurs(ours)
                 .certifiedOnly(certifiedOnly)
                 .memberId(memberId)
+                .coupleId(coupleId)
                 .build();
     }
 

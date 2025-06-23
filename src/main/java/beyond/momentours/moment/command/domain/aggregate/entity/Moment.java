@@ -20,13 +20,13 @@ public class Moment {
     @Column(name = "moment_id")
     private Long momentId;
 
-    @Column(name = "moment_title")
+    @Column(name = "moment_title", nullable = false)
     private String momentTitle;
 
-    @Column(name = "moment_category")
+    @Column(name = "moment_category", nullable = false)
     private String momentCategory;
 
-    @Column(name = "moment_content")
+    @Column(name = "moment_content", nullable = false)
     private String momentContent;
 
     @Column(name = "moment_certified")
@@ -41,13 +41,16 @@ public class Moment {
     @Column(name = "moment_view")
     private Long momentView;
 
-    @Column(name = "moment_status")
+    @Column(name = "moment_status", nullable = false, columnDefinition = "BOOLEAN DEFAULT true")
     private boolean momentStatus;
 
-    @Column(name = "created_at")
+    @Column(name = "moment_image_urls", nullable = false)
+    private String momentImageUrls;
+
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
     @Column(name = "location_id")
@@ -55,6 +58,9 @@ public class Moment {
 
     @Column(name = "member_id")
     private Long memberId;
+
+    @Column(name = "couple_id")
+    private Long coupleId;
 
     public void createMoment() {
         this.createdAt = LocalDateTime.now();

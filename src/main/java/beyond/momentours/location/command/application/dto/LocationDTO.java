@@ -18,7 +18,12 @@ public class LocationDTO {
     private BigDecimal longitude;
     private String locationName;
     private String address;
+    private String imageUrl;
     private LocationStatus locationStatus;
+    private String description;
+    private Double rating;
+    private Boolean isOpen;
+    private LocalDateTime closingTime;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

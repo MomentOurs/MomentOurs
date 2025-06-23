@@ -8,7 +8,10 @@ public enum ReportReason {
     OBSCENITY("Obscenity"),                     // 음란
     FALSE_INFORMATION("False Information"),     // 잘못된 정보
     POLITICAL_STATEMENT("Political Statement"), // 정치적 발언
-    ADVERTISING("Advertising");                 // 광고성 내용
+    ADVERTISING("Advertising"),                 // 광고성 내용
+    CLOSED("Closed"),                           // 폐업
+    RELOCATION("Relocation"),                   // 이전
+    WRONG_INFO("Wrong Info");                   // 잘못된 정보
 
     private final String reason;
 

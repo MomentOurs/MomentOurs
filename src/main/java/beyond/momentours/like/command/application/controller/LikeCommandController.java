@@ -3,6 +3,7 @@ package beyond.momentours.like.command.application.controller;
 import beyond.momentours.common.ResponseDTO;
 import beyond.momentours.like.command.application.service.LikeCommandService;
 import beyond.momentours.like.command.domain.aggregate.LikeType;
+import beyond.momentours.like.command.domain.dto.LikeRequestDTO;
 import beyond.momentours.member.command.application.dto.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,8 +17,8 @@ public class LikeCommandController {
     private final LikeCommandService likeCommandService;
 
     @PostMapping
-    public ResponseDTO<?> like(@RequestParam LikeType type, @RequestParam Long targetId, @AuthenticationPrincipal CustomUserDetails user) {
-        likeCommandService.like(user.getMember().getMemberId(), type, targetId);
+    public ResponseDTO<?> like(@RequestBody LikeRequestDTO request, @AuthenticationPrincipal CustomUserDetails user) {
+        likeCommandService.like(user.getMember().getMemberId(), request.getType(), request.getTargetId());
         return ResponseDTO.ok("좋아요 완료");
     }
 

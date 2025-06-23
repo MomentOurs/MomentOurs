@@ -10,9 +10,11 @@ import java.math.BigDecimal;
 @Builder
 @AllArgsConstructor
 public class ResponseLocationClusterItemVO {
-    private Long locationId;
+    private String locationIds;
+    private String locationId;
     private String locationName;
     private BigDecimal latitude;
     private BigDecimal longitude;
+    private Integer count;
     private Integer momentCount;
 }

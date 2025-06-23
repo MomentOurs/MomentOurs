@@ -14,5 +14,6 @@ public class RequestUpdateMomentVO {
     private String momentTitle;
     private String momentCategory;
     private String momentContent;
+    private String momentImageUrls;
     private boolean momentCommentStatus;
 }

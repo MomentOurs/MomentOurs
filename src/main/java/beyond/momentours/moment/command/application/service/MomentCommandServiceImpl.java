@@ -2,6 +2,7 @@ package beyond.momentours.moment.command.application.service;
 
 import beyond.momentours.common.exception.CommonException;
 import beyond.momentours.common.exception.ErrorCode;
+import beyond.momentours.couple.query.service.QueryCoupleService;
 import beyond.momentours.location.command.application.dto.LocationDTO;
 import beyond.momentours.location.command.application.service.LocationCommandService;
 import beyond.momentours.location.query.service.LocationQueryService;
@@ -24,10 +25,11 @@ public class MomentCommandServiceImpl implements MomentCommandService {
     private final LocationCommandService locationCommandService;
     private final LocationQueryService locationQueryService;
     private final MomentConverter momentConverter;
+    private final QueryCoupleService coupleService;
 
     @Transactional
     @Override
-    public MomentDTO createMoment(MomentDTO dto, Long memberId) {
+    public MomentDTO createMoment(MomentDTO dto, CustomUserDetails user) {
         LocationDTO location;
 
         if (dto.getLocationId() != null) {
@@ -38,7 +40,10 @@ public class MomentCommandServiceImpl implements MomentCommandService {
             throw new CommonException(ErrorCode.INVALID_LOCATION_DATA);
         }
 
-        Moment moment = momentConverter.fromDTOToEntity(dto, memberId, location.getLocationId());
+        Long memberId = user.getMember().getMemberId();
+        Long coupleId = coupleService.getCoupleIdByMemberId(memberId);
+
+        Moment moment = momentConverter.fromDTOToEntity(dto, memberId, coupleId, location.getLocationId());
         moment.createMoment();
         Moment saved = momentRepository.save(moment);
         return momentConverter.fromEntityToDTO(saved);
